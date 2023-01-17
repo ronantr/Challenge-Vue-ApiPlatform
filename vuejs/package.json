@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "@types/qs": "^6.9.7",
+    "dayjs": "^1.11.7",
+    "qs": "^6.11.0",
+    "vue-router": "^4.1.6"
+  }
+}
