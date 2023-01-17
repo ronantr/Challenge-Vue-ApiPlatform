@@ -3,8 +3,12 @@
     {$DEBUG}
     # HTTP/3 support
     servers {
-        protocols h1 h2 h3
+        protocol {
+            experimental_http3
+        }
+
     }
+    
 }
 
 {$SERVER_NAME}
