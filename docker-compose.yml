@@ -71,21 +71,13 @@ services:
       - POSTGRES_USER=${POSTGRES_USER:-api-platform}
     volumes:
       - db_data:/var/lib/postgresql/data:rw
-
       # you may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
       # - ./api/docker/db/data:/var/lib/postgresql/data:rw
 
 # Mercure is installed as a Caddy module, prevent the Flex recipe from installing another service
 ###> symfony/mercure-bundle ###
 ###< symfony/mercure-bundle ###
-  #vuejs:
-   # build: ./vuejs
-    #ports:
-    #- 8080:8080
-    #volumes:
-    #- ./vuejs:/project
-    #- /project/node_modules
-    #tty: true
+
 
 volumes:
   php_socket:
@@ -93,7 +85,6 @@ volumes:
   caddy_config:
 ###> doctrine/doctrine-bundle ###
   db_data:
-
 ###< doctrine/doctrine-bundle ###
 ###> symfony/mercure-bundle ###
 ###< symfony/mercure-bundle ###
