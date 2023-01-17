@@ -5,7 +5,7 @@ const API_URL = "https://localhost/";
 class AuthService {
   login(user) {
     return axios
-      .post(API_URL + "auth", {
+      .post(API_URL, {
         email: user.email,
         password: user.password,
       })
