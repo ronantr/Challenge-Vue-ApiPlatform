@@ -8,35 +8,38 @@ use App\Entity\Ticket;
 use App\Entity\TheaterGroup;
 use App\Entity\Event;
 use App\Entity\User;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
+use Faker\Factory;
 
-class TicketFixtures extends Fixture
+class TicketFixtures extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager): void
     {
+        $faker = Factory::create('fr_FR');
+
+        // get all theatergroups 
+        $customers = $manager->getRepository(User::class)->findAll();
         $events = $manager->getRepository(Event::class)->findAll();
-        $theatergroups = $manager->getRepository(TheaterGroup::class)->findAll();
-        $customer = $manager->getRepository(User::class)->findAll();
-
-
-        for ($i = 1; $i <= 5; $i++) {
-            $ticket = new Ticket();
-            $ticket->setPrice(rand(10, 50));
-            $ticket->addEvent($events[array_rand($events)]);
-            $ticket->setTheaterGroup($theatergroups[array_rand($theatergroups)]);
-            $ticket->setCustomer($customer[array_rand($customer)]);
-            $status = rand(1, 3);
-            if ($status === 1) {
-                $ticket->setStatus("reserved");
-            } elseif ($status === 2) {
-                $ticket->setStatus("failed");
-            } else {
-                $ticket->setStatus("cancelled");
-            }
-            
-            $manager->persist($ticket);
-            
+        for ($i = 0; $i < 20; $i++) {
+            $event = $faker->randomElement($events);
+            $object = (new Ticket())
+                ->setCustomer($faker->randomElement($customers))
+                ->setEvent($event)
+                ->setPrice($faker->randomFloat(2, 1, 100))
+                ->setStatus($faker->randomElement(['reserved', 'failed', 'cancelled']))
+                ->setTheaterGroup($event->getTheaterGroup());
+            $manager->persist($object);
         }
-        
         $manager->flush();
+    }
+
+
+    public function getDependencies()
+    {
+        return [
+            UserFixtures::class,
+            EventFixtures::class,
+
+        ];
     }
 }
