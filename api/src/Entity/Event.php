@@ -3,9 +3,11 @@
 namespace App\Entity;
 
 use App\Repository\EventRepository;
+use ApiPlatform\Metadata\ApiResource;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
+#[ApiResource]
 #[ORM\Entity(repositoryClass: EventRepository::class)]
 class Event
 {
