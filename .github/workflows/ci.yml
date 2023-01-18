@@ -18,6 +18,11 @@ jobs:
         run: docker compose pull --ignore-pull-failures || true
       - name: Start services
         run: docker compose up --build -d
+      - name: Run Vuejs tests
+        run: |
+          cd vuejs
+          npm install
+          npm run build
       - name: Wait for services
         run: |
           while status="$(docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" "$(docker compose ps -q php)")"; do
@@ -44,8 +49,3 @@ jobs:
           docker compose exec -T php bin/console -e test doctrine:migrations:migrate --no-interaction
       - name: Doctrine Schema Validator
         run: docker compose exec -T php bin/console doctrine:schema:validate --skip-sync
-      - name: Run Vuejs tests
-        run: |
-          cd vuejs
-          npm install
-          npm run preview -- --port 8080
