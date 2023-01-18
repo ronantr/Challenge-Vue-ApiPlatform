@@ -16,6 +16,7 @@ jobs:
         HOST: ${{ secrets.HOST }}
         USERNAME: ${{ secrets.USERNAME }}
         PORT: ${{ secrets.PORT }}
+        PASSWORD: ${{ secrets.PASSWORD }}
         KEY: ${{ secrets.SSHKEY }}
       with:
         source: "."
@@ -27,6 +28,7 @@ jobs:
         host: ${{ secrets.HOST }}
         USERNAME: ${{ secrets.USERNAME }}
         PORT: ${{ secrets.PORT }}
+        PASSWORD: ${{ secrets.PASSWORD }}
         KEY: ${{ secrets.SSHKEY }}
         script: |
           git clone https://github.com/ronantr/Challenge-Vue-ApiPlatform.git
