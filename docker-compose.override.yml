@@ -25,7 +25,16 @@ services:
     environment:
       MERCURE_EXTRA_DIRECTIVES: demo
 
-###> doctrine/doctrine-bundle ###
+  adminer:
+    image: adminer:latest
+    ports:
+      - 8080:8080
+    environment:
+      - ADMINER_DESIGN=dracula
+    depends_on:
+      - database
+
+  ###> doctrine/doctrine-bundle ###
   database:
     ports:
       - target: 5432
@@ -35,3 +44,5 @@ services:
 
 ###> symfony/mercure-bundle ###
 ###< symfony/mercure-bundle ###
+
+
