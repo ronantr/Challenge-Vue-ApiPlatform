@@ -29,6 +29,10 @@ use Symfony\Component\Validator\Constraints\Type;
 )]
 #[GetCollection]
 #[Post]
+#[Post(
+uriTemplate: "/register",
+denormalizationContext: ['groups' => [User::REGISTER]],
+)]
 #[Patch(
   denormalizationContext: ['groups' => [User::PATCH]],
 )]
@@ -40,7 +44,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
   const READ = 'user:read';
   const WRITE = 'user:write';
   const PATCH = 'user:patch';
-
+  const REGISTER = 'user:register';
 
   #[ORM\Id]
   #[ORM\GeneratedValue]
@@ -48,7 +52,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
   private ?int $id = null;
 
   #[ORM\Column(length: 180, unique: true, nullable: false)]
-  #[Groups([User::READ, User::WRITE])]
+  #[Groups([User::READ, User::WRITE, User::REGISTER])]
   #[Email]
   #[NotBlank]
   #[Type('string')]
@@ -61,7 +65,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
    * @var string The hashed password
    */
   #[ORM\Column(nullable: false)]
-  #[Groups([User::WRITE, User::PATCH])]
+  #[Groups([User::WRITE, User::PATCH, User::REGISTER])]
   #[NotBlank]
   #[NotCompromisedPassword]
   #[Type('string')]
@@ -72,19 +76,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
   private ?string $password = null;
 
   #[ORM\Column(length: 255)]
-  #[Groups([User::READ, User::WRITE, User::PATCH])]
+  #[Groups([User::READ, User::WRITE, User::PATCH, User::REGISTER])]
   #[NotBlank]
   #[Type('string')]
   private ?string $firstname = null;
 
   #[ORM\Column(length: 255)]
-  #[Groups([User::READ, User::WRITE, User::PATCH])]
+  #[Groups([User::READ, User::WRITE, User::PATCH, User::REGISTER])]
   #[NotBlank]
   #[Type('string')]
   private ?string $lastname = null;
 
   #[ORM\Column(options: ['default' => 0])]
-  #[Groups([User::READ])]
+  #[Groups([User::READ, User::WRITE])]
   private int $credit = 0;
 
   #[ORM\OneToMany(mappedBy: 'customer', targetEntity: Order::class)]
