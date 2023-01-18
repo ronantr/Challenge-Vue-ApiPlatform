@@ -47,6 +47,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'customer', targetEntity: Ticket::class)]
     private Collection $tickets;
 
+    #[ORM\ManyToOne(targetEntity: TheaterGroup::class, inversedBy: 'customers')]
+    #[ORM\JoinColumn(nullable: true)]
+    private $theater_group;
+
     public function __construct()
     {
         $this->orders = new ArrayCollection();
@@ -216,6 +220,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             }
         }
 
+        return $this;
+    }
+
+    public function getTheaterGroup(): ?TheaterGroup
+    {
+        return $this->theater_group;
+    }
+
+    public function setTheaterGroup(?TheaterGroup $theaterGroup): self
+    {
+        $this->theater_group = $theaterGroup;
         return $this;
     }
 }
