@@ -1,3 +1,4 @@
 auth:
-    path: /auth
-    methods: ['POST']
+  path: /login
+  methods: ["POST"]
+
