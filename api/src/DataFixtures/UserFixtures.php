@@ -10,6 +10,7 @@ class UserFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
+        //password = 'password'
         $password = '$2y$13$DaS5Nr.ER6ajgZhBVqNqm.wO8gqLyqEDvrTbHZiLCA5oYJE099NfO';
 
         $admin = new User();
