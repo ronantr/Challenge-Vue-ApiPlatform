@@ -15,19 +15,20 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotCompromisedPassword;
 use Symfony\Component\Validator\Constraints\Type;
 
 #[ApiResource(
-normalizationContext: ['groups' => [User::READ]],
-denormalizationContext: ['groups' => [User::WRITE]],
+  normalizationContext: ['groups' => [User::READ]],
+  denormalizationContext: ['groups' => [User::WRITE]],
 )]
 #[Get]
 #[GetCollection]
 #[Post]
 #[Patch(
-denormalizationContext: ['groups' => [User::PATCH]],
+  denormalizationContext: ['groups' => [User::PATCH]],
 )]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
@@ -63,8 +64,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
   #[NotCompromisedPassword]
   #[Type('string')]
   #[Regex(
-  pattern: '/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/',
-  message: 'Password must contain at least 8 characters, 1 uppercase letter, 1 lowercase letter, 1 number and 1 special character'
+    pattern: '/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/',
+    message: 'Password must contain at least 8 characters, 1 uppercase letter, 1 lowercase letter, 1 number and 1 special character'
   )]
   private ?string $password = null;
 
@@ -91,8 +92,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
   private Collection $tickets;
 
   #[ORM\ManyToOne(targetEntity: TheaterGroup::class, inversedBy: 'customers')]
-    #[ORM\JoinColumn(nullable: true)]
-    private $theater_group;
+  #[ORM\JoinColumn(nullable: true)]
+  private $theater_group;
 
   public function __construct()
   {
@@ -265,66 +266,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     return $this;
   }
 
-  public function addOrder(Order $order): self
-  {
-      if (!$this->orders->contains($order)) {
-          $this->orders[] = $order;
-          $order->setCustomer($this);
-      }
-
-      return $this;
-  }
-
-  public function removeOrder(Order $order): self
-  {
-      if ($this->orders->removeElement($order)) {
-          // set the owning side to null (unless already changed)
-          if ($order->getCustomer() === $this) {
-              $order->setCustomer(null);
-          }
-      }
-
-      return $this;
-  }
-
-  /**
-   * @return Collection<int, Ticket>
-   */
-  public function getTickets(): Collection
-  {
-      return $this->tickets;
-  }
-
-  public function addTicket(Ticket $ticket): self
-  {
-      if (!$this->tickets->contains($ticket)) {
-          $this->tickets[] = $ticket;
-          $ticket->setCustomer($this);
-      }
-
-      return $this;
-  }
-
-  public function removeTicket(Ticket $ticket): self
-  {
-      if ($this->tickets->removeElement($ticket)) {
-          // set the owning side to null (unless already changed)
-          if ($ticket->getCustomer() === $this) {
-              $ticket->setCustomer(null);
-          }
-      }
-
-      return $this;
-  }
-
   public function getTheaterGroup(): ?TheaterGroup
   {
-      return $this->theater_group;
+    return $this->theater_group;
   }
 
   public function setTheaterGroup(?TheaterGroup $theaterGroup): self
   {
-      $this->theater_group = $theaterGroup;
-      return $this;
+    $this->theater_group = $theaterGroup;
+    return $this;
   }
 }
