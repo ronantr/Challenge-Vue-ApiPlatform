@@ -7,35 +7,41 @@ use Doctrine\Persistence\ObjectManager;
 use App\Entity\Event;
 use App\Entity\Ticket;
 use App\Entity\TheaterGroup;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
+use Faker\Factory;
 
-class EventFixtures extends Fixture
+class EventFixtures extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager): void
     {
+        $faker = Factory::create('fr_FR');
+
         // get all theatergroups 
         $theatergroups = $manager->getRepository(TheaterGroup::class)->findAll();
         $tickets = $manager->getRepository(Ticket::class)->findAll();
-        
-        $event = new Event();
-        $event
-        ->setName("Event 1")
-        ->setDate(new \DateTime("2021-01-01"))
-        ->setLocation("Event 1 Location")
-        ->setDescription("Event 1 Description")
-        ->setImage("Event 1 Image")
-        ->setVideo("Event 1 Video")
-        ->setCapacity(100);
-        if (!empty($theatergroups)) {
-            $event->setTheaterGroup($theatergroups[array_rand($theatergroups)]);
+
+        for ($i = 0; $i < 10; $i++) {
+
+            $object = (new Event())
+                ->setName($faker->word)
+                ->setDate($faker->dateTimeBetween('now', '+2 months'))
+                ->setLocation($faker->address)
+                ->setDescription($faker->text)
+                ->setImage($faker->imageUrl())
+                ->setVideo($faker->url)
+                ->setCapacity(rand(50, 200))
+                ->setTheaterGroup($faker->randomElement($theatergroups));
+            $manager->persist($object);
         }
-        
-        if (!empty($tickets)) {
-            $event->setTicket($tickets[array_rand($tickets)]);
-        }
-        
-        $manager->persist($event);
-        $this->addReference('event', $event);
         $manager->flush();
-            
+    }
+
+
+    public function getDependencies()
+    {
+        return [
+            TheaterGroupFixtures::class,
+            UserFixtures::class,
+        ];
     }
 }
