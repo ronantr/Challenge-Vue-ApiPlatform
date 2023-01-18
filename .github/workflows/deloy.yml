@@ -19,7 +19,7 @@ jobs:
         KEY: ${{ secrets.SSHKEY }}
       with:
         source: "."
-        target: "/var/www/mywebsite"
+        target: "/root/Challenge-Vue-ApiPlatform"
 
     - name: Executing remote command
       uses: appleboy/ssh-action@master
