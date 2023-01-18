@@ -17,7 +17,7 @@ jobs:
         USERNAME: ${{ secrets.USERNAME }}
         PORT: ${{ secrets.PORT }}
         PASSWORD: ${{ secrets.PASSWORD }}
-        KEY: ${{ secrets.SSHKEY }}
+        #KEY: ${{ secrets.SSHKEY }}
       with:
         source: "."
         target: "/root/Challenge-Vue-ApiPlatform"
@@ -29,7 +29,7 @@ jobs:
         USERNAME: ${{ secrets.USERNAME }}
         PORT: ${{ secrets.PORT }}
         PASSWORD: ${{ secrets.PASSWORD }}
-        KEY: ${{ secrets.SSHKEY }}
+        #KEY: ${{ secrets.SSHKEY }}
         script: |
           git clone https://github.com/ronantr/Challenge-Vue-ApiPlatform.git
           cd Challenge-Vue-ApiPlatform
