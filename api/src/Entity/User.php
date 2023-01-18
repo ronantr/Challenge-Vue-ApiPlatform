@@ -265,58 +265,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     return $this;
   }
 
-  public function addOrder(Order $order): self
-  {
-      if (!$this->orders->contains($order)) {
-          $this->orders[] = $order;
-          $order->setCustomer($this);
-      }
-
-      return $this;
-  }
-
-  public function removeOrder(Order $order): self
-  {
-      if ($this->orders->removeElement($order)) {
-          // set the owning side to null (unless already changed)
-          if ($order->getCustomer() === $this) {
-              $order->setCustomer(null);
-          }
-      }
-
-      return $this;
-  }
-
-  /**
-   * @return Collection<int, Ticket>
-   */
-  public function getTickets(): Collection
-  {
-      return $this->tickets;
-  }
-
-  public function addTicket(Ticket $ticket): self
-  {
-      if (!$this->tickets->contains($ticket)) {
-          $this->tickets[] = $ticket;
-          $ticket->setCustomer($this);
-      }
-
-      return $this;
-  }
-
-  public function removeTicket(Ticket $ticket): self
-  {
-      if ($this->tickets->removeElement($ticket)) {
-          // set the owning side to null (unless already changed)
-          if ($ticket->getCustomer() === $this) {
-              $ticket->setCustomer(null);
-          }
-      }
-
-      return $this;
-  }
-
   public function getTheaterGroup(): ?TheaterGroup
   {
       return $this->theater_group;
