@@ -4,9 +4,8 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\TicketRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+
 #[ApiResource]
 #[ORM\Entity(repositoryClass: TicketRepository::class)]
 class Ticket
@@ -22,8 +21,8 @@ class Ticket
     #[ORM\Column(length: 255)]
     private ?string $status = null;
 
-    #[ORM\OneToMany(mappedBy: 'ticket', targetEntity: Event::class)]
-    private Collection $event;
+    #[ORM\ManyToOne(inversedBy: 'tickets')]
+    private ?Event $event = null;
 
     #[ORM\ManyToOne(inversedBy: 'tickets')]
     private ?User $customer = null;
@@ -34,7 +33,6 @@ class Ticket
 
     public function __construct()
     {
-        $this->event = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -66,35 +64,18 @@ class Ticket
         return $this;
     }
 
-    /**
-     * @return Collection<int, Event>
-     */
-    public function getEvent(): Collection
+    public function getEvent(): ?Event
     {
         return $this->event;
     }
 
-    public function addEvent(Event $event): self
+    public function setEvent(?Event $event): self
     {
-        if (!$this->event->contains($event)) {
-            $this->event[] = $event;
-            $event->setTicket($this);
-        }
+        $this->event = $event;
 
         return $this;
     }
 
-    public function removeEvent(Event $event): self
-    {
-        if ($this->event->removeElement($event)) {
-            // set the owning side to null (unless already changed)
-            if ($event->getTicket() === $this) {
-                $event->setTicket(null);
-            }
-        }
-
-        return $this;
-    }
 
     public function getCustomer(): ?User
     {
@@ -119,6 +100,4 @@ class Ticket
 
         return $this;
     }
-
-    
 }
