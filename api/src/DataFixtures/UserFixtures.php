@@ -2,16 +2,20 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\TheaterGroup;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
+use Faker\Factory;
 
-class UserFixtures extends Fixture
+class UserFixtures extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager): void
     {
+        $theaterGroups = $manager->getRepository(TheaterGroup::class)->findAll();
         $password = '$2y$13$DaS5Nr.ER6ajgZhBVqNqm.wO8gqLyqEDvrTbHZiLCA5oYJE099NfO';
-
+        $faker = Factory::create('fr_FR');
         $admin = new User();
 
         $admin
@@ -34,18 +38,26 @@ class UserFixtures extends Fixture
 
         $manager->persist($user);
 
-        $moderator = new User();
+        $organisator = new User();
 
-        $moderator
-            ->setEmail("moderator@test.fr")
-            ->setFirstname("moderator")
-            ->setLastname("moderator")
-            ->setRoles(['ROLE_MODERATOR'])
+        $organisator
+            ->setEmail("organisator@test.fr")
+            ->setFirstname("organisator")
+            ->setLastname("organisator")
+            ->setRoles(['ROLE_ORGANISATOR'])
             ->setPassword($password)
-            ->setCredit(0);
+            ->setCredit(0)
+            ->setTheaterGroup($faker->randomElement($theaterGroups));
 
-        $manager->persist($moderator);
+        $manager->persist($organisator);
 
         $manager->flush();
+    }
+
+    public function getDependencies()
+    {
+        return [
+            TheaterGroupFixtures::class,
+        ];
     }
 }
