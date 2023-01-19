@@ -8,11 +8,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - uses: actions/checkout@v3
     - name: Create build
       run: |
-        zip -r build.zip . 
-        ls -all
-    - uses: actions/checkout@v1
+        zip -r build.zip .     
 
     - name: Copy repository contents via scp
       uses: appleboy/scp-action@master
