@@ -10,7 +10,6 @@ jobs:
     steps:
     - name: Create build
       run: |
-        cat > web_app/.env.local <<- EOT
         zip -r build.zip Challenge-Vue-ApiPlatform -x Challenge-Vue-ApiPlatform/.github
         ls -all
     - uses: actions/checkout@v1
