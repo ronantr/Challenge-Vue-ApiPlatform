@@ -2,48 +2,50 @@
 
 namespace App\DataFixtures;
 
-
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserFixtures extends Fixture
 {
-    private $passwordHasher;
-
-    public function __construct(UserPasswordHasherInterface $passwordHasher)
-    {
-        $this->passwordHasher = $passwordHasher;
-    }
-
     public function load(ObjectManager $manager): void
     {
-        $faker = \Faker\Factory::create('fr_FR');
-        // Admin
-        $admin = (new User())
-            ->setEmail('admin@admin.com')
-            ->setRoles(['ROLE_ADMIN']);
-        $adminPassword = $this->passwordHasher->hashPassword($admin, "admin");
-        $admin->setPassword($adminPassword);
+        $password = '$2y$13$DaS5Nr.ER6ajgZhBVqNqm.wO8gqLyqEDvrTbHZiLCA5oYJE099NfO';
+
+        $admin = new User();
+
+        $admin
+            ->setEmail('admin@test.fr')
+            ->setFirstname("admin")
+            ->setLastname("admin")
+            ->setRoles(['ROLE_ADMIN'])
+            ->setPassword($password)
+            ->setCredit(0);
+
         $manager->persist($admin);
 
-        // User
         $user = (new User())
-            ->setEmail("user@test.com")
-            ->setRoles(['ROLE_USER']);
-        $userPassword = $this->passwordHasher->hashPassword($user, "user");
-        $user->setPassword($userPassword);
+            ->setEmail("user@test.fr")
+            ->setFirstname("user")
+            ->setLastname("user")
+            ->setRoles(['ROLE_USER'])
+            ->setPassword($password)
+            ->setCredit(0);
+
         $manager->persist($user);
 
-        // Moderator
-        $moderator = (new User())
-            ->setEmail("moderator@test.com")
-            ->setRoles(['ROLE_MODERATOR']);
-        $moderatorPassword = $this->passwordHasher->hashPassword($moderator, "moderator");
-        $moderator->setPassword($moderatorPassword);
+        $moderator = new User();
+
+        $moderator
+            ->setEmail("moderator@test.fr")
+            ->setFirstname("moderator")
+            ->setLastname("moderator")
+            ->setRoles(['ROLE_MODERATOR'])
+            ->setPassword($password)
+            ->setCredit(0);
+
         $manager->persist($moderator);
+
         $manager->flush();
     }
 }

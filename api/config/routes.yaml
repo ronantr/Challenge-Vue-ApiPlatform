@@ -1,3 +1,4 @@
-authentication_token:
-    path: /authentication_token
-    methods: ['POST']
+auth:
+  path: /login
+  methods: ["POST"]
+
