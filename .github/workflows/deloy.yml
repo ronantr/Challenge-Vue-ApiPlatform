@@ -11,7 +11,7 @@ jobs:
     - name: Create build
       run: |
         cat > web_app/.env.local <<- EOT
-        zip -r build.zip web_app -x web_app/.github
+        zip -r build.zip Challenge-Vue-ApiPlatform -x Challenge-Vue-ApiPlatform/.github
         ls -all
     - uses: actions/checkout@v1
 
@@ -36,7 +36,7 @@ jobs:
         PASSWORD: ${{ secrets.PASSWORD }}
         #KEY: ${{ secrets.SSHKEY }}
         script: |
-          unzip -o build.zip
+          unzip -o Challenge-Vue-ApiPlatform.zip
           cd build
           npm install
           npm run build
