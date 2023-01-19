@@ -5,7 +5,6 @@ import store from "./store";
 
 // import "bootstrap";
 // import "bootstrap/dist/css/bootstrap.min.css";
-// import { FontAwesomeIcon } from "./plugins/font-awesome";
 // import "./assets/main.css";
 
 import "./index.css";
@@ -13,5 +12,4 @@ const app = createApp(App);
 
 app.use(router);
 app.use(store);
-app.component("font-awesome-icon", FontAwesomeIcon);
 app.mount("#app");
