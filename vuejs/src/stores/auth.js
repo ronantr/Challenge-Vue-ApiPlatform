@@ -1,15 +1,15 @@
 import { defineStore } from "pinia";
-import { computed, ref, watchEffect } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { axios } from "../libs";
 import decode from "jwt-decode";
 import dayjs from "dayjs";
 
-export const useAuth = defineStore("auth", () => {
+export const useAuthStore = defineStore("auth", () => {
   const user = ref(null);
   const isAuthenticated = computed(() => !!user.value);
   const isAdmin = ref(false);
 
-  watchEffect(async () => {
+  onMounted(async () => {
     const token = localStorage.getItem("token");
 
     if (!token) {
