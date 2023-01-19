@@ -1,6 +1,5 @@
 <script setup>
 import { Form, Field, ErrorMessage } from "vee-validate";
-import { defineProps } from "vue";
 
 defineProps({
     schema: {

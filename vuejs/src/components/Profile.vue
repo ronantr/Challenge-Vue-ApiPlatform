@@ -74,16 +74,17 @@
 
 <script>
 export default {
-  name: 'Profile',
-  computed: {
-    currentUser() {
-      return this.$store.state.auth.user;
-    }
-  },
-  mounted() {
-    if (!this.currentUser) {
-      this.$router.push('/login');
-    }
-  }
+    name: "Profile",
+    computed: {
+        // TODO: update with pinia
+        currentUser() {
+            return "todo";
+        },
+    },
+    mounted() {
+        if (!this.currentUser) {
+            this.$router.push("/login");
+        }
+    },
 };
 </script>
