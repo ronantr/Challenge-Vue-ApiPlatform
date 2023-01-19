@@ -34,9 +34,8 @@ jobs:
         PASSWORD: ${{ secrets.PASSWORD }}
         #KEY: ${{ secrets.SSHKEY }}
         script: |
-          unzip -o Challenge-Vue-ApiPlatform.zip
-          cd Challenge-Vue-ApiPlatform
-          cd pwa
+          unzip -o /root/Challenge-Vue-ApiPlatform.zip
+          cd /root/Challenge-Vue-ApiPlatform/vuejs
           npm install
           npm run build
           cd ..
