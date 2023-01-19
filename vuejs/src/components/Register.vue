@@ -1,6 +1,9 @@
 <script setup>
 import DynamicForm from "./DynamicForm.vue";
 import * as yup from "yup";
+import { useAuth } from "../stores";
+
+const { register } = useAuth();
 
 const schema = {
     fields: [
@@ -42,18 +45,6 @@ const schema = {
         },
     ],
 };
-
-async function register(user) {
-    const response = await fetch("https://localhost/register", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(user),
-    });
-
-    console.debug(response);
-}
 </script>
 
 <template>

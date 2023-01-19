@@ -1,3 +1,12 @@
+<script setup>
+import { useAuth } from "./stores";
+import { storeToRefs } from "pinia";
+
+const auth = useAuth();
+const { logout } = auth;
+const { user, isAuthenticated, isAdmin } = storeToRefs(auth);
+</script>
+
 <template>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@5.8.55/css/materialdesignicons.min.css">
   <link rel="stylesheet" href="https://unpkg.com/buefy/dist/buefy.min.css">
@@ -56,34 +65,3 @@
     </div>
   </div>
 </template>
-
-<script>
-
-export default {
-  computed: {
-    currentUser() {
-      return this.$store.state.auth.user;
-    },
-    showAdminBoard() {
-      if (this.currentUser && this.currentUser['roles']) {
-        return this.currentUser['roles'].includes('ROLE_ADMIN');
-      }
-
-      return false;
-    },
-    showModeratorBoard() {
-      if (this.currentUser && this.currentUser['roles']) {
-        return this.currentUser['roles'].includes('ROLE_MODERATOR');
-      }
-
-      return false;
-    }
-  },
-  methods: {
-    logOut() {
-      this.$store.dispatch('auth/logout');
-      this.$router.push('/login');
-    }
-  }
-};
-</script>
