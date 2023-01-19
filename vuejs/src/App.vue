@@ -1,59 +1,64 @@
 <template>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@5.8.55/css/materialdesignicons.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/buefy/dist/buefy.min.css">
   <div id="app">
-    <nav class="navbar navbar-expand navbar-dark bg-dark">
-      <a href="/" class="navbar-brand">VUE</a>
-      <div class="navbar-nav mr-auto">
-        <li class="nav-item">
-          <router-link to="/home" class="nav-link">
-            <font-awesome-icon icon="home" /> Home
-          </router-link>
-        </li>
-        <li v-if="showAdminBoard" class="nav-item">
-          <router-link to="/admin" class="nav-link">Admin Board</router-link>
-        </li>
-        <li v-if="showModeratorBoard" class="nav-item">
-          <router-link to="/mod" class="nav-link">Moderator Board</router-link>
-        </li>
-        <li class="nav-item">
-          <router-link v-if="currentUser" to="/user" class="nav-link">User</router-link>
-        </li>
-      </div>
+    <nav class="bg-gray-900">
+      <div class="container mx-auto flex items-center justify-between px-4 py-3">
+        <a href="/" class="text-white">VUE</a>
+        <div class="flex">
+          <div class="ml-4">
+            <router-link to="/home" class="text-white hover:text-gray-500">
+              <font-awesome-icon icon="home" /> Home
+            </router-link>
+          </div>
+          <div v-if="showAdminBoard" class="ml-4">
+            <router-link to="/admin" class="text-white hover:text-gray-500">Admin Board</router-link>
+          </div>
+          <div v-if="showModeratorBoard" class="ml-4">
+            <router-link to="/mod" class="text-white hover:text-gray-500">Moderator Board</router-link>
+          </div>
+          <div class="ml-4">
+            <router-link v-if="currentUser" to="/user" class="text-white hover:text-gray-500">User</router-link>
+          </div>
+        </div>
 
-      <div v-if="!currentUser" class="navbar-nav ml-auto">
-        <li class="nav-item">
-          <router-link to="/register" class="nav-link">
-            <font-awesome-icon icon="user-plus" /> Sign Up
-          </router-link>
-        </li>
-        <li class="nav-item">
-          <router-link to="/login" class="nav-link">
-            <font-awesome-icon icon="sign-in-alt" /> Login
-          </router-link>
-        </li>
-      </div>
+        <div v-if="!currentUser" class="ml-auto">
+          <div class="ml-4">
+            <router-link to="/register" class="text-white hover:text-gray-500">
+              <font-awesome-icon icon="user-plus" /> Sign Up
+            </router-link>
+          </div>
+          <div class="ml-4">
+            <router-link to="/login" class="text-white hover:text-gray-500">
+              <font-awesome-icon icon="sign-in-alt" /> Login
+            </router-link>
+          </div>
+        </div>
 
-      <div v-if="currentUser" class="navbar-nav ml-auto">
-        <li class="nav-item">
-          <router-link to="/profile" class="nav-link">
-            <font-awesome-icon icon="user" />
-            {{ currentUser.email }}
-          </router-link>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" @click.prevent="logOut">
-            <font-awesome-icon icon="sign-out-alt" /> LogOut
-          </a>
-        </li>
+        <div v-if="currentUser" class="ml-auto">
+          <li class="">
+            <router-link to="/profile" class="text-blue-500">
+              <font-awesome-icon icon="user" />
+              {{ currentUser.email }}
+            </router-link>
+          </li>
+          <li class="">
+            <a class="text-blue-500" @click.prevent="logOut">
+              <font-awesome-icon icon="sign-out-alt" /> LogOut
+            </a>
+          </li>
+        </div>
       </div>
     </nav>
 
-    <div class="container">
+    <div class="p-4">
       <router-view />
     </div>
   </div>
 </template>
 
 <script>
+
 export default {
   computed: {
     currentUser() {
