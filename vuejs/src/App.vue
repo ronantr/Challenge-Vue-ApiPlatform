@@ -4,7 +4,7 @@
   <div id="app">
     <nav class="bg-gray-900">
       <div class="container mx-auto flex items-center justify-between px-4 py-3">
-        <a href="/" class="text-white">VUE</a>
+       
         <div class="flex">
           <div class="ml-4">
             <router-link to="/home" class="text-white hover:text-gray-500">
