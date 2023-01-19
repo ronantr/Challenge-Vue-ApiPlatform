@@ -14,6 +14,6 @@ export default defineConfig({
   build: {
     outDir: '../pwa/dist',
     emptyOutDir: true,
-}
+},
 
 })
