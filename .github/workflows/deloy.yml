@@ -8,6 +8,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Create build
+      run: |
+        cat > web_app/.env.local <<- EOT
+        zip -r build.zip web_app -x web_app/.github
+        ls -all
     - uses: actions/checkout@v1
 
     - name: Copy repository contents via scp
@@ -19,8 +24,8 @@ jobs:
         PASSWORD: ${{ secrets.PASSWORD }}
         #KEY: ${{ secrets.SSHKEY }}
       with:
-        source: "."
-        target: "/root/Challenge-Vue-ApiPlatform"
+        source: "build.zip"
+        target: "/root"
 
     - name: Executing remote command
       uses: appleboy/ssh-action@master
@@ -31,9 +36,8 @@ jobs:
         PASSWORD: ${{ secrets.PASSWORD }}
         #KEY: ${{ secrets.SSHKEY }}
         script: |
-          git clone https://github.com/ronantr/Challenge-Vue-ApiPlatform.git
-          cd Challenge-Vue-ApiPlatform
-          cd vuejs 
+          unzip -o build.zip
+          cd build
           npm install
           npm run build
           cd ..
