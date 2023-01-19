@@ -1,7 +1,9 @@
+import { storeToRefs } from "pinia";
 import { createWebHistory, createRouter } from "vue-router";
 import Home from "../components/Home.vue";
 import Login from "../components/Login.vue";
 import Register from "../components/Register.vue";
+import { useAuthStore } from "../stores/auth";
 // lazy-loaded
 const Profile = () => import("../components/Profile.vue");
 const BoardAdmin = () => import("../components/BoardAdmin.vue");
@@ -57,18 +59,20 @@ const router = createRouter({
   routes,
 });
 
-// router.beforeEach((to, from, next) => {
-//   const publicPages = ['/login', '/register', '/home'];
-//   const authRequired = !publicPages.includes(to.path);
-//   const loggedIn = localStorage.getItem('user');
+router.beforeEach((to, _from, next) => {
+  const authStore = useAuthStore();
+  const { isAuthenticated } = storeToRefs(authStore);
 
-//   // trying to access a restricted page + not logged in
-//   // redirect to login page
-//   if (authRequired && !loggedIn) {
-//     next('/login');
-//   } else {
-//     next();
-//   }
-// });
+  console.debug("isAuthenticated: ", isAuthenticated.value);
+
+  const publicPaths = ["/login", "/register", "/home"];
+  const isPublic = !publicPaths.includes(to.path);
+
+  if (!isPublic && !isAuthenticated) {
+    return next("/login");
+  }
+
+  next();
+});
 
 export default router;
