@@ -1,9 +1,9 @@
 <script setup>
 import * as yup from "yup";
 import DynamicForm from "./DynamicForm.vue";
-import { useAuth } from "../stores";
+import { useAuthStore } from "../stores";
 
-const { login } = useAuth();
+const { login } = useAuthStore();
 
 const schema = {
     fields: [
