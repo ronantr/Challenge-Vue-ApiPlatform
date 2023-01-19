@@ -1,25 +1,26 @@
 <template>
-  <div class="col-md-12">
-    <div class="card card-container">
+  <div class="bg-black h-screen flex items-center justify-center">
+    <div class="bg-white p-6 rounded-lg">
       <img
         id="profile-img"
         src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
-        class="profile-img-card"
-      />
+        class="profile-img-card rounded-full mx-auto mb-6"
+        />
+        <h2 class="text-lg text-center font-medium mb-4">Login</h2>
       <Form @submit="handleLogin" :validation-schema="schema">
-        <div class="form-group">
-          <label for="email">Email</label>
-          <Field name="email" type="text" class="form-control" />
-          <ErrorMessage name="email" class="error-feedback" />
+        <div class="mb-4">
+          <label class="block text-gray-700 mb-2" for="email">Email</label>
+          <Field name="email" type="text" class="border-2 rounded-lg w-full py-2 px-3 text-gray-700 leading-tight" />
+          <ErrorMessage name="email" class="error-feedback text-red-500" />
         </div>
-        <div class="form-group">
+        <div class="mb-4">
           <label for="password">Password</label>
-          <Field name="password" type="password" class="form-control" />
-          <ErrorMessage name="password" class="error-feedback" />
+          <Field name="password" type="password" class="border-2 rounded-lg w-full py-2 px-3 text-gray-700 leading-tight" />
+          <ErrorMessage name="password" class="error-feedback text-red-500" />
         </div>
 
-        <div class="form-group">
-          <button class="btn btn-primary btn-block" :disabled="loading">
+        <div class="flex items-center justify-between">
+          <button class="bg-blue-500 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg" :disabled="loading">
             <span
               v-show="loading"
               class="spinner-border spinner-border-sm"
@@ -27,9 +28,10 @@
             <span>Login</span>
           </button>
         </div>
+        <a class="text-blue-500 hover:underline" href="#">Forgot password?</a>
 
         <div class="form-group">
-          <div v-if="message" class="alert alert-danger" role="alert">
+          <div v-if="message" class="text-red-500 mt-4" role="alert">
             {{ message }}
           </div>
         </div>
