@@ -45,9 +45,9 @@ jobs:
       - name: Doctrine Schema Validator
         run: docker compose exec -T php bin/console doctrine:schema:validate --skip-sync
   build:
-
+    
     runs-on: ubuntu-latest
-
+    needs: tests
     steps:
     - uses: actions/checkout@v1
     - name: Zip Folder
