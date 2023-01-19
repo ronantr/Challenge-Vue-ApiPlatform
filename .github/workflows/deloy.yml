@@ -10,7 +10,7 @@ jobs:
     steps:
     - name: Create build
       run: |
-        zip -r build.zip Challenge-Vue-ApiPlatform -x Challenge-Vue-ApiPlatform/.github
+        zip -r build.zip . -x Challenge-Vue-ApiPlatform/.github
         ls -all
     - uses: actions/checkout@v1
 
