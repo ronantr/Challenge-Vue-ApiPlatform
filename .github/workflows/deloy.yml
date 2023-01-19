@@ -22,7 +22,7 @@ jobs:
         PASSWORD: ${{ secrets.PASSWORD }}
         #KEY: ${{ secrets.SSHKEY }}
       with:
-        source: "build.zip"
+        source: "Challenge-Vue-ApiPlatform.zip"
         target: "/root"
 
     - name: Executing remote command
