@@ -2,26 +2,26 @@
 
 namespace App\Repository;
 
-use App\Entity\TheaterGroup;
+use App\Entity\Transaction;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<TheaterGroup>
+ * @extends ServiceEntityRepository<Transaction>
  *
- * @method TheaterGroup|null find($id, $lockMode = null, $lockVersion = null)
- * @method TheaterGroup|null findOneBy(array $criteria, array $orderBy = null)
- * @method TheaterGroup[]    findAll()
- * @method TheaterGroup[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Transaction|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Transaction|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Transaction[]    findAll()
+ * @method Transaction[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class TheaterGroupRepository extends ServiceEntityRepository
+class TransactionRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, TheaterGroup::class);
+        parent::__construct($registry, Transaction::class);
     }
 
-    public function add(TheaterGroup $entity, bool $flush = false): void
+    public function add(Transaction $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -30,7 +30,7 @@ class TheaterGroupRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(TheaterGroup $entity, bool $flush = false): void
+    public function remove(Transaction $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 
@@ -40,7 +40,7 @@ class TheaterGroupRepository extends ServiceEntityRepository
     }
 
 //    /**
-//     * @return TheaterGroup[] Returns an array of TheaterGroup objects
+//     * @return Transaction[] Returns an array of Transaction objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -54,7 +54,7 @@ class TheaterGroupRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?TheaterGroup
+//    public function findOneBySomeField($value): ?Transaction
 //    {
 //        return $this->createQueryBuilder('t')
 //            ->andWhere('t.exampleField = :val')

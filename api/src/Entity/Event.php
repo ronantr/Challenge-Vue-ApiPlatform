@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\EventRepository;
 use ApiPlatform\Metadata\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -35,13 +37,19 @@ class Event
     private ?string $video = null;
 
     #[ORM\ManyToOne(inversedBy: 'events')]
-    private ?TheaterGroup $theater_group = null;
+    private ?User $theater_group = null;
 
     #[ORM\Column]
     private ?int $capacity = null;
 
-    #[ORM\ManyToOne(inversedBy: 'event')]
-    private ?Ticket $ticket = null;
+    #[ORM\OneToMany(mappedBy: 'event', targetEntity: Ticket::class)]
+    private Collection $tickets;
+
+
+    public function __construct()
+    {
+        $this->tickets = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -120,12 +128,12 @@ class Event
         return $this;
     }
 
-    public function getTheaterGroup(): ?TheaterGroup
+    public function getTheaterGroup(): ?User
     {
         return $this->theater_group;
     }
 
-    public function setTheaterGroup(?TheaterGroup $theater_group): self
+    public function setTheaterGroup(?User $theater_group): self
     {
         $this->theater_group = $theater_group;
 
@@ -144,15 +152,32 @@ class Event
         return $this;
     }
 
-    public function getTicket(): ?Ticket
+    /**
+     * @return Collection<int, Ticket>
+     */
+    public function getTickets(): Collection
     {
-        return $this->ticket;
+        return $this->tickets;
     }
 
-    public function setTicket(?Ticket $ticket): self
+    public function addTicket(Ticket $ticket): self
     {
-        $this->ticket = $ticket;
+        if (!$this->tickets->contains($ticket)) {
+            $this->tickets[] = $ticket;
+            $ticket->setEvent($this);
+        }
 
+        return $this;
+    }
+
+    public function removeTicket(Ticket $ticket): self
+    {
+        if ($this->tickets->removeElement($ticket)) {
+            // set the owning side to null (unless already changed)
+            if ($ticket->getEvent() === $this) {
+                $ticket->setEvent(null);
+            }
+        }
         return $this;
     }
 }
