@@ -92,17 +92,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
   #[ORM\OneToMany(mappedBy: 'customer', targetEntity: Order::class)]
   private Collection $orders;
 
-  #[ORM\OneToMany(mappedBy: 'customer', targetEntity: Ticket::class)]
-  private Collection $tickets;
+  #[ORM\OneToMany(mappedBy: 'theater_group', targetEntity: Event::class)]
+  private Collection $events;
 
-  #[ORM\ManyToOne(targetEntity: TheaterGroup::class, inversedBy: 'customers')]
-  #[ORM\JoinColumn(nullable: true)]
-  private $theater_group;
+  #[ORM\Column(length: 255, nullable: true)]
+  private ?string $theater_group_name = null;
+
+  #[ORM\Column(length: 255, nullable: true)]
+  private ?string $theater_group_email = null;
+
+  #[ORM\OneToMany(mappedBy: 'customers', targetEntity: Transaction::class)]
+  private Collection $transactions;
 
   public function __construct()
   {
     $this->orders = new ArrayCollection();
-    $this->tickets = new ArrayCollection();
+    $this->events = new ArrayCollection();
+    $this->transactions = new ArrayCollection();
   }
 
   public function getId(): ?int
@@ -241,43 +247,88 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     return $this;
   }
 
+
   /**
-   * @return Collection<int, Ticket>
+   * @return Collection<int, Event>
    */
-  public function getTickets(): Collection
+  public function getEvents(): Collection
   {
-    return $this->tickets;
+    return $this->events;
   }
 
-  public function addTicket(Ticket $ticket): self
+  public function addEvent(Event $event): self
   {
-    if (!$this->tickets->contains($ticket)) {
-      $this->tickets[] = $ticket;
-      $ticket->setCustomer($this);
+    if (!$this->events->contains($event)) {
+      $this->events[] = $event;
+      $event->setTheaterGroup($this);
     }
 
     return $this;
   }
 
-  public function removeTicket(Ticket $ticket): self
+  public function removeEvent(Event $event): self
   {
-    if ($this->tickets->removeElement($ticket)) {
+    if ($this->events->removeElement($event)) {
       // set the owning side to null (unless already changed)
-      if ($ticket->getCustomer() === $this) {
-        $ticket->setCustomer(null);
+      if ($event->getTheaterGroup() === $this) {
+        $event->setTheaterGroup(null);
       }
     }
     return $this;
   }
 
-  public function getTheaterGroup(): ?TheaterGroup
+
+  public function getTheaterGroupName(): ?string
   {
-    return $this->theater_group;
+    return $this->theater_group_name;
   }
 
-  public function setTheaterGroup(?TheaterGroup $theaterGroup): self
+  public function setTheaterGroupName(?string $theater_group_name): self
   {
-    $this->theater_group = $theaterGroup;
+    $this->theater_group_name = $theater_group_name;
+
+    return $this;
+  }
+
+  public function getTheaterGroupEmail(): ?string
+  {
+    return $this->theater_group_email;
+  }
+
+  public function setTheaterGroupEmail(?string $theater_group_email): self
+  {
+    $this->theater_group_email = $theater_group_email;
+
+    return $this;
+  }
+
+  /**
+   * @return Collection<int, Transaction>
+   */
+  public function getTransactions(): Collection
+  {
+    return $this->transactions;
+  }
+
+  public function addTransaction(Transaction $transaction): self
+  {
+    if (!$this->transactions->contains($transaction)) {
+      $this->transactions[] = $transaction;
+      $transaction->setCustomers($this);
+    }
+
+    return $this;
+  }
+
+  public function removeTransaction(Transaction $transaction): self
+  {
+    if ($this->transactions->removeElement($transaction)) {
+      // set the owning side to null (unless already changed)
+      if ($transaction->getCustomers() === $this) {
+        $transaction->setCustomers(null);
+      }
+    }
+
     return $this;
   }
 }
