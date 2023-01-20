@@ -1,5 +1,5 @@
 <script setup>
-import DynamicForm from "./DynamicForm.vue";
+import DynamicForm from "../components/DynamicForm.vue";
 import * as yup from "yup";
 import { useAuthStore } from "../stores";
 import { storeToRefs } from "pinia";
