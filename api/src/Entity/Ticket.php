@@ -25,11 +25,7 @@ class Ticket
     private ?Event $event = null;
 
     #[ORM\ManyToOne(inversedBy: 'tickets')]
-    private ?User $customer = null;
-
-    #[ORM\ManyToOne(inversedBy: 'tickets')]
-    private ?TheaterGroup $theater_group = null;
-
+    private ?Order $order = null;
 
     public function __construct()
     {
@@ -77,26 +73,14 @@ class Ticket
     }
 
 
-    public function getCustomer(): ?User
+    public function getOrder(): ?Order
     {
-        return $this->customer;
+        return $this->order;
     }
 
-    public function setCustomer(?User $customer): self
+    public function setOrder(?Order $order): self
     {
-        $this->customer = $customer;
-
-        return $this;
-    }
-
-    public function getTheaterGroup(): ?TheaterGroup
-    {
-        return $this->theater_group;
-    }
-
-    public function setTheaterGroup(?TheaterGroup $theater_group): self
-    {
-        $this->theater_group = $theater_group;
+        $this->order = $order;
 
         return $this;
     }
