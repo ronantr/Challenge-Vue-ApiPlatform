@@ -4,39 +4,35 @@ namespace App\DataFixtures;
 
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use App\Entity\Ticket;
-use App\Entity\Event;
-use App\Entity\Order;
+use App\Entity\Transaction;
+use App\Entity\User;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Faker\Factory;
 
-class TicketFixtures extends Fixture implements DependentFixtureInterface
+class TransactionFixtures extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager): void
     {
         $faker = Factory::create('fr_FR');
 
-        $events = $manager->getRepository(Event::class)->findAll();
-        $orders = $manager->getRepository(Order::class)->findAll();
+        $customers = $manager->getRepository(User::class)->findAll();
+
         for ($i = 0; $i < 20; $i++) {
-            $event = $faker->randomElement($events);
-            $object = (new Ticket())
-                ->setEvent($event)
-                ->setPrice($faker->randomFloat(2, 1, 100))
-                ->setOrder($faker->randomElement($orders))
+
+            $object = (new Transaction())
+                ->setAmount($faker->randomFloat(2, 1, 100))
+                ->setDate($faker->dateTimeBetween('now', '+2 months'))
+                ->setCustomers($faker->randomElement($customers))
                 ->setStatus($faker->randomElement(['reserved', 'failed', 'cancelled']));
             $manager->persist($object);
         }
         $manager->flush();
     }
 
-
     public function getDependencies()
     {
         return [
-            EventFixtures::class,
-            OrderFixtures::class,
-
+            UserFixtures::class,
         ];
     }
 }
