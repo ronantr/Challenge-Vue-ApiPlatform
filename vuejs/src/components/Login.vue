@@ -2,8 +2,24 @@
 import * as yup from "yup";
 import DynamicForm from "./DynamicForm.vue";
 import { useAuthStore } from "../stores";
+import { useRouter } from "vue-router";
+import { watch } from "vue";
+import { storeToRefs } from "pinia";
 
-const { login } = useAuthStore();
+const router = useRouter();
+const authStore = useAuthStore();
+const { login } = authStore;
+const { isAuthenticated, isAdmin } = storeToRefs(authStore);
+
+watch(isAuthenticated, () => {
+    if (isAdmin) {
+        return router.push({ name: "admin" });
+    }
+
+    if (isAuthenticated) {
+        return router.push({ name: "home" });
+    }
+});
 
 const schema = {
     fields: [
