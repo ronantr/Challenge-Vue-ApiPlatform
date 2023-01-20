@@ -1,4 +1,3 @@
-import { storeToRefs } from "pinia";
 import { createWebHistory, createRouter } from "vue-router";
 import Home from "../components/Home.vue";
 import Login from "../components/Login.vue";
@@ -22,10 +21,12 @@ const routes = [
   },
   {
     path: "/login",
+    name: "login",
     component: Login,
   },
   {
     path: "/register",
+    name: "register",
     component: Register,
   },
   {
@@ -59,17 +60,21 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach((to, _from, next) => {
+router.beforeEach(async (to, _from, next) => {
   const authStore = useAuthStore();
-  const { isAuthenticated } = storeToRefs(authStore);
-
-  console.debug("isAuthenticated: ", isAuthenticated.value);
-
   const publicPaths = ["/login", "/register", "/home"];
-  const isPublic = !publicPaths.includes(to.path);
+  const isPublic = publicPaths.includes(to.path);
 
-  if (!isPublic && !isAuthenticated) {
-    return next("/login");
+  if (!authStore.isAttempted) {
+    await authStore.attempt();
+  }
+
+  if (!isPublic && !authStore.isAuthenticated) {
+    return next({ name: "login" });
+  }
+
+  if (isPublic && authStore.isAuthenticated) {
+    return next({ name: "home" });
   }
 
   next();

@@ -45,8 +45,6 @@ export const useAuthStore = defineStore("auth", () => {
     if (token) {
       localStorage.setItem("token", token);
 
-      axios.defaults.headers["Authorization"] = "Bearer " + token;
-
       const decodedToken = decode(token);
 
       const { data } = await axios.get("/users/" + decodedToken.sub);
@@ -54,6 +52,7 @@ export const useAuthStore = defineStore("auth", () => {
       if (data["@id"]) {
         user.value = data;
         isAdmin.value = decodedToken.roles.includes("ROLE_ADMIN");
+        axios.defaults.headers["Authorization"] = "Bearer " + token;
       }
     }
   }
