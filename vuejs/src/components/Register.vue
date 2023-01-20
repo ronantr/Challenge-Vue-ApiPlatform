@@ -25,14 +25,14 @@ const schema = {
     fields: [
         {
             label: "First name",
-            name: "firstname",
+            name: "firstName",
             as: "input",
             type: "text",
             rules: yup.string().required("First name is required!"),
         },
         {
             label: "Last Name",
-            name: "lastname",
+            name: "lastName",
             as: "input",
             type: "text",
             rules: yup.string().required("Last name is required!"),

@@ -4,7 +4,6 @@ namespace App\DataFixtures;
 
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
 
@@ -22,7 +21,8 @@ class UserFixtures extends Fixture
             ->setLastname("admin")
             ->setRoles(['ROLE_ADMIN'])
             ->setPassword($password)
-            ->setCredit(0);
+            ->setCredit(0)
+            ->setIsVerified(true);
 
         $manager->persist($admin);
 
@@ -32,7 +32,8 @@ class UserFixtures extends Fixture
             ->setLastname("user")
             ->setRoles(['ROLE_USER'])
             ->setPassword($password)
-            ->setCredit(0);
+            ->setCredit(0)
+            ->setIsVerified(true);
 
         $manager->persist($user);
 
@@ -46,7 +47,8 @@ class UserFixtures extends Fixture
             ->setTheaterGroupEmail($faker->email)
             ->setTheaterGroupName($faker->company)
             ->setPassword($password)
-            ->setCredit(0);
+            ->setCredit(0)
+            ->setIsVerified(true);
 
         $manager->persist($theater);
 
