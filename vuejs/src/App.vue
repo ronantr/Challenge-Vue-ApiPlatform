@@ -1,89 +1,82 @@
-<template>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@5.8.55/css/materialdesignicons.min.css">
-  <link rel="stylesheet" href="https://unpkg.com/buefy/dist/buefy.min.css">
-  <div id="app">
-    <nav class="bg-gray-900">
-      <div class="container mx-auto flex items-center justify-between px-4 py-3">
-       
-        <div class="flex">
-          <div class="ml-4">
-            <router-link to="/home" class="text-white hover:text-gray-500">
-              <font-awesome-icon icon="home" /> Home
-            </router-link>
-          </div>
-          <div v-if="showAdminBoard" class="ml-4">
-            <router-link to="/admin" class="text-white hover:text-gray-500">Admin Board</router-link>
-          </div>
-          <div v-if="showModeratorBoard" class="ml-4">
-            <router-link to="/mod" class="text-white hover:text-gray-500">Moderator Board</router-link>
-          </div>
-          <div class="ml-4">
-            <router-link v-if="currentUser" to="/user" class="text-white hover:text-gray-500">User</router-link>
-          </div>
-        </div>
+<script setup>
+import { useAuthStore } from "./stores";
+import { storeToRefs } from "pinia";
 
-        <div v-if="!currentUser" class="ml-auto">
-          <div class="ml-4">
-            <router-link to="/register" class="text-white hover:text-gray-500">
-              <font-awesome-icon icon="user-plus" /> Sign Up
-            </router-link>
-          </div>
-          <div class="ml-4">
-            <router-link to="/login" class="text-white hover:text-gray-500">
-              <font-awesome-icon icon="sign-in-alt" /> Login
-            </router-link>
-          </div>
-        </div>
-
-        <div v-if="currentUser" class="ml-auto">
-          <li class="">
-            <router-link to="/profile" class="text-blue-500">
-              <font-awesome-icon icon="user" />
-              {{ currentUser.email }}
-            </router-link>
-          </li>
-          <li class="">
-            <a class="text-blue-500" @click.prevent="logOut">
-              <font-awesome-icon icon="sign-out-alt" /> LogOut
-            </a>
-          </li>
-        </div>
-      </div>
-    </nav>
-
-    <div class="p-4">
-      <router-view />
-    </div>
-  </div>
-</template>
-
-<script>
-
-export default {
-  computed: {
-    currentUser() {
-      return this.$store.state.auth.user;
-    },
-    showAdminBoard() {
-      if (this.currentUser && this.currentUser['roles']) {
-        return this.currentUser['roles'].includes('ROLE_ADMIN');
-      }
-
-      return false;
-    },
-    showModeratorBoard() {
-      if (this.currentUser && this.currentUser['roles']) {
-        return this.currentUser['roles'].includes('ROLE_MODERATOR');
-      }
-
-      return false;
-    }
-  },
-  methods: {
-    logOut() {
-      this.$store.dispatch('auth/logout');
-      this.$router.push('/login');
-    }
-  }
-};
+const authStore = useAuthStore();
+const { logout } = authStore;
+const { user, isAuthenticated, isAdmin } = storeToRefs(authStore);
 </script>
+
+<template>
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@mdi/font@5.8.55/css/materialdesignicons.min.css"
+    />
+    <div id="app">
+        <nav class="bg-gray-900">
+            <div
+                class="container mx-auto flex items-center justify-between px-4 py-3"
+            >
+                <div class="flex">
+                    <div class="ml-4">
+                        <router-link
+                            to="/home"
+                            class="text-white hover:text-gray-500"
+                        >
+                            <font-awesome-icon icon="home" /> Home
+                        </router-link>
+                    </div>
+                    <div v-if="isAdmin" class="ml-4">
+                        <router-link
+                            to="/admin"
+                            class="text-white hover:text-gray-500"
+                            >Admin Board</router-link
+                        >
+                    </div>
+                    <div class="ml-4">
+                        <router-link
+                            v-if="isAuthenticated"
+                            to="/user"
+                            class="text-white hover:text-gray-500"
+                            >User</router-link
+                        >
+                    </div>
+                </div>
+                <div v-if="!isAuthenticated" class="ml-auto">
+                    <div class="ml-4">
+                        <router-link
+                            to="/register"
+                            class="text-white hover:text-gray-500"
+                        >
+                            <font-awesome-icon icon="user-plus" /> Sign Up
+                        </router-link>
+                    </div>
+                    <div class="ml-4">
+                        <router-link
+                            to="/login"
+                            class="text-white hover:text-gray-500"
+                        >
+                            <font-awesome-icon icon="sign-in-alt" /> Login
+                        </router-link>
+                    </div>
+                </div>
+                <div v-if="isAuthenticated" class="ml-auto">
+                    <div class="ml-4">
+                        <router-link to="/profile" class="text-blue-500">
+                            <font-awesome-icon icon="user" />
+                            {{ user.email }}
+                        </router-link>
+                    </div>
+                    <div class="ml-4">
+                        <a class="text-blue-500" @click.prevent="logout">
+                            <font-awesome-icon icon="sign-out-alt" /> Log out
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <div class="p-4">
+            <router-view />
+        </div>
+    </div>
+</template>

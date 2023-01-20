@@ -2,6 +2,7 @@ import { createWebHistory, createRouter } from "vue-router";
 import Home from "../components/Home.vue";
 import Login from "../components/Login.vue";
 import Register from "../components/Register.vue";
+import { useAuthStore } from "../stores/auth";
 // lazy-loaded
 const Profile = () => import("../components/Profile.vue");
 const BoardAdmin = () => import("../components/BoardAdmin.vue");
@@ -20,10 +21,12 @@ const routes = [
   },
   {
     path: "/login",
+    name: "login",
     component: Login,
   },
   {
     path: "/register",
+    name: "register",
     component: Register,
   },
   {
@@ -57,18 +60,24 @@ const router = createRouter({
   routes,
 });
 
-// router.beforeEach((to, from, next) => {
-//   const publicPages = ['/login', '/register', '/home'];
-//   const authRequired = !publicPages.includes(to.path);
-//   const loggedIn = localStorage.getItem('user');
+router.beforeEach(async (to, _from, next) => {
+  const authStore = useAuthStore();
+  const publicPaths = ["/login", "/register", "/home"];
+  const isPublic = publicPaths.includes(to.path);
 
-//   // trying to access a restricted page + not logged in
-//   // redirect to login page
-//   if (authRequired && !loggedIn) {
-//     next('/login');
-//   } else {
-//     next();
-//   }
-// });
+  if (!authStore.isAttempted) {
+    await authStore.attempt();
+  }
+
+  if (!isPublic && !authStore.isAuthenticated) {
+    return next({ name: "login" });
+  }
+
+  if (isPublic && authStore.isAuthenticated) {
+    return next({ name: "home" });
+  }
+
+  next();
+});
 
 export default router;
