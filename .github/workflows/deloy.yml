@@ -1,0 +1,85 @@
+name: Deploy
+
+push:
+    branches:    
+      - master 
+
+jobs:
+  tests:
+    name: Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Pull images
+        run: docker compose pull --ignore-pull-failures || true
+      - name: Start services
+        run: docker compose up --build -d
+      - name: Run Vuejs tests
+        run: |
+          cd vuejs
+          npm install
+          npm run build
+      - name: Wait for services
+        run: |
+          while status="$(docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" "$(docker compose ps -q php)")"; do
+            case $status in
+              starting) sleep 1;;
+              healthy) exit 0;;
+              unhealthy)
+                docker compose ps
+                docker compose logs
+                exit 1
+              ;;
+            esac
+          done
+          exit 1
+      - name: Check HTTP reachability
+        run: curl -v -o /dev/null http://localhost
+      - name: Check API reachability
+        run: curl -vk -o /dev/null https://localhost
+      - name: Check PWA reachability
+        run: "curl -vk -o /dev/null -H 'Accept: text/html' https://localhost"
+      - name: Create test database
+        run: |
+          docker-compose exec -T php bin/console -e test doctrine:database:create
+          docker-compose exec -T php bin/console -e test doctrine:migrations:migrate --no-interaction
+      - name: Doctrine Schema Validator
+        run: docker-compose exec -T php bin/console doctrine:schema:validate --skip-sync
+  build:
+    
+    runs-on: ubuntu-latest
+    needs: tests
+    steps:
+    - uses: actions/checkout@v1
+    - name: Zip Folder
+      run: |
+        zip -r Challenge-Vue-ApiPlatform.zip . -x ".git/*" ".github/*" 
+
+    - name: Copy repository contents via scp
+      uses: appleboy/scp-action@master
+      env:
+        HOST: ${{ secrets.HOST }}
+        USERNAME: ${{ secrets.USERNAME }}
+        PORT: ${{ secrets.PORT }}
+        PASSWORD: ${{ secrets.PASSWORD }}
+        #KEY: ${{ secrets.SSHKEY }}
+      with:
+        source: "Challenge-Vue-ApiPlatform.zip"
+        target: "/root"
+
+    - name: Executing remote command
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        USERNAME: ${{ secrets.USERNAME }}
+        PORT: ${{ secrets.PORT }}
+        PASSWORD: ${{ secrets.PASSWORD }}
+        #KEY: ${{ secrets.SSHKEY }}
+        script: |
+          unzip -o /root/Challenge-Vue-ApiPlatform.zip
+          cd /root/Challenge-Vue-ApiPlatform/vuejs
+          npm install
+          npm run build
+          cd ..
+          docker stack deploy
