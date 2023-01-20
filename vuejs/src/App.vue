@@ -1,15 +1,10 @@
 <script setup>
 import { useAuthStore } from "./stores";
 import { storeToRefs } from "pinia";
-import { onBeforeMount } from "vue";
 
 const authStore = useAuthStore();
-const { attempt, logout } = authStore;
-const { user, isAuthenticated, isAdmin, isAttempted } = storeToRefs(authStore);
-
-onBeforeMount(() => {
-    attempt();
-});
+const { logout } = authStore;
+const { user, isAuthenticated, isAdmin } = storeToRefs(authStore);
 </script>
 
 <template>
@@ -17,7 +12,6 @@ onBeforeMount(() => {
         rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/@mdi/font@5.8.55/css/materialdesignicons.min.css"
     />
-    <link rel="stylesheet" href="https://unpkg.com/buefy/dist/buefy.min.css" />
     <div id="app">
         <nav class="bg-gray-900">
             <div
@@ -32,31 +26,23 @@ onBeforeMount(() => {
                             <font-awesome-icon icon="home" /> Home
                         </router-link>
                     </div>
-                    <div v-if="showAdminBoard" class="ml-4">
+                    <div v-if="isAdmin" class="ml-4">
                         <router-link
                             to="/admin"
                             class="text-white hover:text-gray-500"
                             >Admin Board</router-link
                         >
                     </div>
-                    <div v-if="showModeratorBoard" class="ml-4">
-                        <router-link
-                            to="/mod"
-                            class="text-white hover:text-gray-500"
-                            >Moderator Board</router-link
-                        >
-                    </div>
                     <div class="ml-4">
                         <router-link
-                            v-if="currentUser"
+                            v-if="isAuthenticated"
                             to="/user"
                             class="text-white hover:text-gray-500"
                             >User</router-link
                         >
                     </div>
                 </div>
-
-                <div v-if="!currentUser" class="ml-auto">
+                <div v-if="!isAuthenticated" class="ml-auto">
                     <div class="ml-4">
                         <router-link
                             to="/register"
@@ -74,23 +60,21 @@ onBeforeMount(() => {
                         </router-link>
                     </div>
                 </div>
-
-                <div v-if="currentUser" class="ml-auto">
-                    <li class="">
+                <div v-if="isAuthenticated" class="ml-auto">
+                    <div class="ml-4">
                         <router-link to="/profile" class="text-blue-500">
                             <font-awesome-icon icon="user" />
-                            {{ currentUser.email }}
+                            {{ user.email }}
                         </router-link>
-                    </li>
-                    <li class="">
-                        <a class="text-blue-500" @click.prevent="logOut">
-                            <font-awesome-icon icon="sign-out-alt" /> LogOut
+                    </div>
+                    <div class="ml-4">
+                        <a class="text-blue-500" @click.prevent="logout">
+                            <font-awesome-icon icon="sign-out-alt" /> Log out
                         </a>
-                    </li>
+                    </div>
                 </div>
             </div>
         </nav>
-
         <div class="p-4">
             <router-view />
         </div>

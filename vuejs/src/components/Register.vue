@@ -12,11 +12,11 @@ const { register } = authStore;
 const { isAuthenticated, isAdmin } = storeToRefs(authStore);
 
 watch(isAuthenticated, () => {
-    if (isAdmin) {
+    if (isAdmin.value) {
         return router.push({ name: "admin" });
     }
 
-    if (isAuthenticated) {
+    if (isAuthenticated.value) {
         return router.push({ name: "home" });
     }
 });
