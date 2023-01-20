@@ -24,9 +24,7 @@ use Symfony\Component\Validator\Constraints\Type;
   normalizationContext: ['groups' => [User::READ]],
   denormalizationContext: ['groups' => [User::WRITE]],
 )]
-#[Get(
-  security: 'is_granted("ROLE_THEATER")',
-)]
+#[Get]
 #[GetCollection]
 #[Post]
 #[Post(
