@@ -380,46 +380,4 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     return $this;
   }
-
-  /**
-   * @return Collection<int, Token>
-   */
-  public function getTokens(): Collection
-  {
-    return $this->tokens;
-  }
-
-  public function addToken(Token $token): self
-  {
-    if (!$this->tokens->contains($token)) {
-      $this->tokens[] = $token;
-      $token->setCustomer($this);
-    }
-
-    return $this;
-  }
-
-  public function removeToken(Token $token): self
-  {
-    if ($this->tokens->removeElement($token)) {
-      // set the owning side to null (unless already changed)
-      if ($token->getCustomer() === $this) {
-        $token->setCustomer(null);
-      }
-    }
-
-    return $this;
-  }
-
-  public function isVerified(): ?bool
-  {
-    return $this->isVerified;
-  }
-
-  public function setIsVerified(bool $isVerified): self
-  {
-    $this->isVerified = $isVerified;
-
-    return $this;
-  }
 }
