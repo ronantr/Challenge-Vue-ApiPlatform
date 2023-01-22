@@ -7,6 +7,7 @@ import { useAuthStore } from "../stores/auth";
 // lazy-loaded
 const Profile = () => import("../pages/Profile.vue");
 const Admin = () => import("../pages/Admin.vue");
+const Verify = () => import("../pages/Verify.vue");
 
 const routes = [
   {
@@ -27,6 +28,7 @@ const routes = [
   {
     path: "/verify",
     name: "verify",
+    component: Verify,
   },
   {
     path: "/profile",

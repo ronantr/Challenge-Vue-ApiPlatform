@@ -82,14 +82,21 @@ export const useAuthStore = defineStore("auth", () => {
   }
 
   async function verify(confirmationToken) {
-    const { data } = await axios.post("/verify", { token: confirmationToken });
+    try {
+      const { data } = await axios.post("/verify", {
+        token: confirmationToken,
+      });
 
-    const { token } = data;
+      const { token } = data;
 
-    if (token) {
-      localStorage.setItem("token", token);
+      if (token) {
+        localStorage.setItem("token", token);
 
-      isVerified.value = true;
+        isVerified.value = true;
+      }
+    } catch (error) {
+      // TODO: Handle error
+      console.error("TODO: handle email verification errors", error);
     }
   }
 
