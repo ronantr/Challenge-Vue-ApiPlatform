@@ -3,13 +3,13 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Post;
 use App\Repository\TokenRepository;
 use Doctrine\ORM\Mapping as ORM;
 use App\Controller\VerifyTokenController;
 
 #[ApiResource]
-#[Get(uriTemplate: '/verify', controller: VerifyTokenController::class)]
+#[Post(uriTemplate: '/verify', controller: VerifyTokenController::class)]
 #[ORM\Entity(repositoryClass: TokenRepository::class)]
 class Token
 {
