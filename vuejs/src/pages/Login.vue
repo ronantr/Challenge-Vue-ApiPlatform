@@ -17,7 +17,7 @@ watch(isAuthenticated, () => {
     }
 
     if (isAuthenticated.value) {
-        return router.push({ name: "home" });
+        return router.push({ name: "profile" });
     }
 });
 
