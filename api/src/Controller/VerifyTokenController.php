@@ -25,11 +25,19 @@ class VerifyTokenController extends AbstractController
     $tokenRepository = $entityManager->getRepository(Token::class);
 
     $request = $this->requestStack->getCurrentRequest();
- 
-    $confirmationToken = $request->query->get('token');
+
+    $content = $request->getContent();
+
+    $data = json_decode($content, true);
+
+    $confirmationToken = $data['token'] ?? null;
 
     if (!$confirmationToken) {
       throw new UnprocessableEntityHttpException('Token is required');    
+    }
+
+    if (!is_string($confirmationToken)) {
+      throw new UnprocessableEntityHttpException('Token must be a string');
     }
 
     $existingToken = $tokenRepository->findOneBy(['id' => $confirmationToken]);

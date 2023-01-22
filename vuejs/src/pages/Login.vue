@@ -12,38 +12,38 @@ const { login } = authStore;
 const { isAuthenticated, isAdmin } = storeToRefs(authStore);
 
 watch(isAuthenticated, () => {
-  if (isAdmin.value) {
-    return router.push({ name: "admin" });
-  }
+    if (isAdmin.value) {
+        return router.push({ name: "admin" });
+    }
 
-  if (isAuthenticated.value) {
-    return router.push({ name: "home" });
-  }
+    if (isAuthenticated.value) {
+        return router.push({ name: "profile" });
+    }
 });
 
 const schema = {
-  fields: [
-    {
-      label: "Email",
-      name: "email",
-      as: "input",
-      type: "email",
-      rules: yup
-        .string()
-        .email("Email is invalid!")
-        .required("Email is required!"),
-    },
-    {
-      label: "Password",
-      name: "password",
-      as: "input",
-      type: "password",
-      rules: yup.string().required("Password is required!"),
-    },
-  ],
+    fields: [
+        {
+            label: "Email",
+            name: "email",
+            as: "input",
+            type: "email",
+            rules: yup
+                .string()
+                .email("Email is invalid!")
+                .required("Email is required!"),
+        },
+        {
+            label: "Password",
+            name: "password",
+            as: "input",
+            type: "password",
+            rules: yup.string().required("Password is required!"),
+        },
+    ],
 };
 </script>
 
 <template>
-  <DynamicForm :schema="schema" :onSubmit="login" />
+    <DynamicForm :schema="schema" :onSubmit="login" />
 </template>
