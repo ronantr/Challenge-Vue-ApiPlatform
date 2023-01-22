@@ -3,8 +3,10 @@ import { computed, ref } from "vue";
 import { axios } from "../libs";
 import decode from "jwt-decode";
 import dayjs from "dayjs";
+import { useRouter } from "vue-router";
 
 export const useAuthStore = defineStore("auth", () => {
+  const router = useRouter();
   const user = ref(null);
   const isAuthenticated = computed(() => !!user.value);
   const isAdmin = ref(false);
@@ -63,6 +65,8 @@ export const useAuthStore = defineStore("auth", () => {
     user.value = null;
 
     delete axios.defaults.headers["Authorization"];
+
+    router.push({ name: "home" });
   }
 
   async function register(credentials) {
