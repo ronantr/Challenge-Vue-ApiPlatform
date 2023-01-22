@@ -11,6 +11,8 @@ export const useAuthStore = defineStore("auth", () => {
   const isAuthenticated = computed(() => !!user.value);
   const isAdmin = ref(false);
   const isAttempted = ref(false);
+  // TODO: Use it to welcome the user on the profile page
+  const isVerified = ref(false);
 
   async function attempt() {
     try {
@@ -79,14 +81,28 @@ export const useAuthStore = defineStore("auth", () => {
     }
   }
 
+  async function verify(confirmationToken) {
+    const { data } = await axios.post("/verify", { token: confirmationToken });
+
+    const { token } = data;
+
+    if (token) {
+      localStorage.setItem("token", token);
+
+      isVerified.value = true;
+    }
+  }
+
   return {
     attempt,
     isAdmin,
     isAttempted,
     isAuthenticated,
+    isVerified,
     login,
     logout,
     register,
     user,
+    verify,
   };
 });
