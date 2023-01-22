@@ -3,6 +3,7 @@ import Home from "../pages/Home.vue";
 import Login from "../pages/Login.vue";
 import Register from "../pages/Register.vue";
 import { useAuthStore } from "../stores/auth";
+
 // lazy-loaded
 const Profile = () => import("../pages/Profile.vue");
 const Admin = () => import("../pages/Admin.vue");
@@ -14,10 +15,6 @@ const routes = [
     component: Home,
   },
   {
-    path: "/home",
-    component: Home,
-  },
-  {
     path: "/login",
     name: "login",
     component: Login,
@@ -26,6 +23,10 @@ const routes = [
     path: "/register",
     name: "register",
     component: Register,
+  },
+  {
+    path: "/verify",
+    name: "verify",
   },
   {
     path: "/profile",
@@ -46,10 +47,22 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach(async (to, _from, next) => {
+router.beforeEach(async ({ name, query }, _from, next) => {
   const authStore = useAuthStore();
-  const publicPaths = ["/login", "/register", "/home"];
-  const isPublic = publicPaths.includes(to.path);
+  const authRoutes = ["login", "register", "verify"];
+  const publicRoutes = [...authRoutes, "home"];
+  const isAuth = authRoutes.includes(name);
+  const isPublic = publicRoutes.includes(name);
+
+  if (name === "verify") {
+    const { token } = query;
+
+    if (!token) {
+      return next({ name: "home" });
+    }
+
+    await authStore.verify(token);
+  }
 
   if (!authStore.isAttempted) {
     await authStore.attempt();
@@ -59,8 +72,8 @@ router.beforeEach(async (to, _from, next) => {
     return next({ name: "login" });
   }
 
-  if (isPublic && authStore.isAuthenticated) {
-    return next({ name: "home" });
+  if (isAuth && authStore.isAuthenticated) {
+    return next({ name: "profile" });
   }
 
   next();
