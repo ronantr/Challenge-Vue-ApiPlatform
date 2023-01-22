@@ -36,6 +36,10 @@ class VerifyTokenController extends AbstractController
       throw new UnprocessableEntityHttpException('Token is required');    
     }
 
+    if (!is_string($confirmationToken)) {
+      throw new UnprocessableEntityHttpException('Token must be a string');
+    }
+
     $existingToken = $tokenRepository->findOneBy(['id' => $confirmationToken]);
 
     if (!$existingToken) {
