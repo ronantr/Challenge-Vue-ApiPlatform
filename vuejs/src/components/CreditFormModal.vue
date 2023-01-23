@@ -94,7 +94,6 @@ let stripe;
 const amount = ref(null);
 
 let cardElement = null;
-console.log("user", import.meta.env.VITE_APP_STRIPE_PUBLIC_KEY);
 onMounted(async () => {
     stripe = await loadStripe(import.meta.env.VITE_APP_STRIPE_PUBLIC_KEY);
     cardElement = stripe.elements().create("card");
@@ -110,25 +109,28 @@ const closeModal = () => {
     console.log("closeModal");
     isOpen.value = false;
 };
-
+const resetForm = () => {
+    amount.value = null;
+    cardElement.clear();
+};
 async function handleSubmit() {
     console.log("handlePayment");
     console.log("cardElement", cardElement);
 
     try {
         const { token } = await stripe.createToken(cardElement);
-        console.log("token", token);
-
-        console.log("user", { ...user.value });
-        console.log("user", user.value["@id"]);
         // Send the token, user ID, and amount to the API endpoint
         const response = await axios.post(`${user.value["@id"]}/payment/pay`, {
             token: token.id,
-            userId: user.id,
             amount: amount.value,
         });
         // Handle successful response
-        console.log(response.data);
+        if (response.status === 200) {
+            // Show success message
+            console.log("Payment succeeded");
+            closeModal();
+            resetForm();
+        }
     } catch (error) {
         // Handle error
         console.log(error);
