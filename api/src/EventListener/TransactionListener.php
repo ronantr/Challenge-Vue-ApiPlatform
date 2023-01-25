@@ -1,23 +1,40 @@
 <?php
 
+namespace App\EventListener;
+
 use App\Entity\Transaction;
 use App\Repository\LevelRepository;
 use App\Service\UserLevelService;
+use Doctrine\ORM\Event\LifecycleEventArgs;
+use Symfony\Component\Security\Core\Security;
 
-class TransactionListener
+class TransactionListener 
 {
     private $levelRepository;
     private $userLevelService;
+    private $security;
 
-    public function __construct(LevelRepository $levelRepository, UserLevelService $userLevelService)
+    public function __construct(LevelRepository $levelRepository, UserLevelService $userLevelService,Security $security)
     {
         $this->levelRepository = $levelRepository;
         $this->userLevelService = $userLevelService;
+        $this->security = $security;
 
     }
 
-    public function prePersist(Transaction $transaction)
+    public function prePersist(LifecycleEventArgs $event)
     {
+        $entity = $event->getEntity();
+        if (!$entity instanceof Transaction) {
+            return;
+        }
+        if (!$this->security->isGranted('ROLE_USER')) {
+            return;
+        }
+        
+
+        $transaction = $event->getEntity();
+        // dd($transaction);
         $user = $transaction->getUser();
         $points = $user->getPoints();
         // Calculate the new points for the user
