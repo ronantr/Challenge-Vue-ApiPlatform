@@ -120,8 +120,13 @@ async function handleSubmit() {
     try {
         const { token } = await stripe.createToken(cardElement);
         // Send the token, user ID, and amount to the API endpoint
-        const response = await axios.post(`${user.value["@id"]}/payment/pay`, {
+        // const response = await axios.post(`${user.value["@id"]}/payment/pay`, {
+        //     token: token.id,
+        //     amount: amount.value,
+        // });
+        const response = await axios.post("transactions", {
             token: token.id,
+            user: user.value["@id"],
             amount: amount.value,
         });
         // Handle successful response

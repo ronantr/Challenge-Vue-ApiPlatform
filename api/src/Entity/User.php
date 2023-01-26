@@ -101,13 +101,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
   #[ORM\Column(length: 255, nullable: true)]
   private ?string $theater_group_email = null;
 
-  #[ORM\OneToMany(mappedBy: 'users', targetEntity: Transaction::class)]
+  #[ORM\OneToMany(mappedBy: 'user', targetEntity: Transaction::class)]
   private Collection $transactions;
 
+  #[Groups([User::READ])]
   #[ORM\ManyToOne(inversedBy: 'users')]
   #[ORM\JoinColumn(nullable: true)]
   private ?Level $level = null;
 
+  #[Groups([User::READ])]
   #[ORM\Column]
   private ?int $points = null;
 

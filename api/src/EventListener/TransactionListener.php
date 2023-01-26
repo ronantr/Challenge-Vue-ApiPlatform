@@ -24,6 +24,7 @@ class TransactionListener
 
     public function prePersist(LifecycleEventArgs $event)
     {
+        
         $entity = $event->getEntity();
         if (!$entity instanceof Transaction) {
             return;
@@ -32,7 +33,6 @@ class TransactionListener
             return;
         }
         
-
         $transaction = $event->getEntity();
         // dd($transaction);
         $user = $transaction->getUser();
@@ -43,9 +43,6 @@ class TransactionListener
         // Update the user's points
         $user->setPoints($newPoints);
 
-        //update credit
-         $transaction->getUser()->addCredit($transaction->getAmount());
-
         // Retrieve the bonus percentage for the user's current level
         $bonusPercentage = $transaction->getUser()->getLevel()->getBonusPercentage();
 
@@ -53,8 +50,12 @@ class TransactionListener
         $bonus = $transaction->getAmount() * ($bonusPercentage / 100);
         $transaction->setBonusAmount($bonus);
 
+        //update credit (amount + bonus)
+        $transaction->getUser()->addCredit($transaction->getAmount() + $transaction->getBonusAmount());
+
         // Add the bonus to the transaction amount
-        $transaction->setAmount($transaction->getAmount() + $bonus);
+        $transaction->setAmount($transaction->getAmount());
+
 
         // Update the user's level if the user's points exceeds the required points for the next level
         $level = $user->getLevel();
