@@ -4,23 +4,35 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
+use App\Controller\TransactionController;
 use App\Repository\TransactionRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints\GreaterThan;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 #[ORM\Entity(repositoryClass: TransactionRepository::class)]
-#[ApiResource(operations: [
-    new Get(),
+#[ApiResource(
+    denormalizationContext: ['groups' => [Transaction::WRITE]],
+    normalizationContext: ['groups' => [Transaction::READ]],
+    operations: [
+        new Get(),
     new Post(
-        name: 'post_transaction', 
-        controller: CreateBookPublication::class
-    )
-])]
+        controller: TransactionController::class,
+        denormalizationContext: ['groups' => [Transaction::WRITE]],
+    ),
+    new GetCollection(),
+],
+)
+]
 class Transaction
 {
+    const READ = 'transaction:read';
+    const WRITE = 'transaction:write';
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column()]
@@ -29,17 +41,26 @@ class Transaction
     #[ORM\Column]
     #[NotBlank(message: 'Merci de renseigner un montant')]
     #[GreaterThan(value: 0, message: 'Le montant doit être supérieur à 0')]
+    #[Groups([Transaction::WRITE, Transaction::READ])]
     private ?float $amount = null;
 
+    #[Groups([Transaction::WRITE])]
+    private ?string $token ="";
+
+    #[Groups([Transaction::READ])]
     #[ORM\Column]
     private ?float $bonusAmount= null;
 
+    #[Groups([Transaction::READ])]
     #[ORM\Column(length: 255)]
     private ?string $status = null;
 
+    #[Groups([Transaction::READ])]
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $date = null;
 
+    #[NotBlank()]
+    #[Groups([Transaction::WRITE,Transaction::READ])]
     #[ORM\ManyToOne(inversedBy: 'transactions')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
@@ -105,6 +126,18 @@ class Transaction
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getToken(): ?string
+    {
+        return $this->token;
+    }
+
+    public function setToken(string $token): self
+    {
+        $this->token = $token;
 
         return $this;
     }

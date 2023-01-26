@@ -3,6 +3,7 @@ namespace App\Service;
 
 use App\Entity\User;
 use App\Repository\LevelRepository;
+use Symfony\Component\HttpFoundation\Response;
 
 class UserLevelService
 {
@@ -14,6 +15,7 @@ class UserLevelService
 
     public function updateUserLevel(User $user)
     {
+        
         $level = $user->getLevel();
         $points = $user->getPoints();
         $pointsRequired = $level->getPointsRequired();
