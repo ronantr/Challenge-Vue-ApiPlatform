@@ -19,6 +19,8 @@ use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotCompromisedPassword;
 use Symfony\Component\Validator\Constraints\Type;
+use Symfony\Component\Security\Core\Annotation\IsGranted;
+use Symfony\Component\Security\Core\Security;
 
 #[ApiResource(
 normalizationContext: ['groups' => [User::READ]],
@@ -63,7 +65,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
    * @var string The hashed password
    */
   #[ORM\Column(nullable: false)]
-  #[Groups([User::WRITE, User::PATCH, User::REGISTER])]
+  #[Groups([User::WRITE, User::REGISTER])]
   #[NotBlank]
   #[NotCompromisedPassword]
   #[Type('string')]
@@ -86,7 +88,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
   private ?string $lastName = null;
 
   #[ORM\Column(options: ['default' => 0])]
-  #[Groups([User::READ, User::WRITE])]
+  #[Patch([
+    'security' => "is_granted('ROLE_ADMIN')",
+    'security_message' => 'Only admins can update a credit'
+  ])]
+  #[Groups([User::READ, User::WRITE,User::PATCH])]
   private int $credit = 0;
 
   #[ORM\OneToMany(mappedBy: 'customer', targetEntity: Order::class)]
@@ -101,9 +107,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
   #[ORM\Column(length: 255, nullable: true)]
   private ?string $theater_group_email = null;
 
-  #[ORM\OneToMany(mappedBy: 'customers', targetEntity: Transaction::class)]
+  #[ORM\OneToMany(mappedBy: 'user', targetEntity: Transaction::class)]
   private Collection $transactions;
 
+  #[Groups([User::READ])]
+  #[ORM\ManyToOne(inversedBy: 'users')]
+  #[ORM\JoinColumn(nullable: true)]
+  private ?Level $level = null;
+
+  #[Groups([User::READ])]
+  #[ORM\Column]
+  private ?int $points = 0;
   #[ORM\OneToMany(mappedBy: 'customer', targetEntity: Token::class, orphanRemoval: true)]
   private Collection $tokens;
 
@@ -220,7 +234,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
   public function setCredit(int $credit): self
   {
     $this->credit = $credit;
+    return $this;
+  }
 
+  public function addCredit(int $credit): self
+  {
+    $this->credit += $credit;
     return $this;
   }
 
@@ -321,7 +340,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
   {
     if (!$this->transactions->contains($transaction)) {
       $this->transactions[] = $transaction;
-      $transaction->setCustomers($this);
+      $transaction->setUser($this);
     }
 
     return $this;
@@ -331,12 +350,37 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
   {
     if ($this->transactions->removeElement($transaction)) {
       // set the owning side to null (unless already changed)
-      if ($transaction->getCustomers() === $this) {
-        $transaction->setCustomers(null);
+      if ($transaction->getUser() === $this) {
+        $transaction->setUser(null);
       }
     }
 
     return $this;
+  }
+
+  public function getLevel(): ?Level
+  {
+      return $this->level;
+  }
+
+  public function setLevel(?Level $level): self
+  {
+      $this->level = $level;
+
+      return $this;
+  }
+
+
+  public function getPoints(): ?int
+  {
+      return $this->points;
+  }
+
+  public function setPoints(int $points): self
+  {
+      $this->points = $points;
+
+      return $this;
   }
 
   /**
