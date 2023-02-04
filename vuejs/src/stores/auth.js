@@ -4,6 +4,7 @@ import { axios } from "../libs";
 import decode from "jwt-decode";
 import dayjs from "dayjs";
 import { useRouter } from "vue-router";
+import { useStorage } from "@vueuse/core";
 
 export const useAuthStore = defineStore("auth", () => {
   const router = useRouter();
@@ -13,72 +14,51 @@ export const useAuthStore = defineStore("auth", () => {
   const isAttempted = ref(false);
   // TODO: Use it to welcome the user on the profile page
   const isVerified = ref(false);
+  const token = useStorage("token", null);
+
+  function setToken(value) {
+    token.value = value;
+    axios.defaults.headers["Authorization"] = "Bearer " + value;
+  }
+
+  function setUser(value) {
+    user.value = value;
+  }
 
   async function attempt() {
     try {
-      const token = localStorage.getItem("token");
-
-      if (!token) {
+      if (!token.value) {
         return;
       }
 
-      const decodedToken = decode(token);
-      const isExpired = dayjs().isAfter(dayjs.unix(decodedToken.exp));
+      const { exp, roles, sub } = decode(token.value);
+      const isExpired = dayjs().isAfter(dayjs.unix(exp));
 
       if (isExpired) {
-        return localStorage.removeItem("token");
+        token.value = null;
+
+        return;
       }
 
-      const { data } = await axios.get("/users/" + decodedToken.sub);
+      const { data } = await axios.get("/users/" + sub);
 
-      if (data["@id"]) {
-        user.value = data;
-        isAdmin.value = decodedToken.roles.includes("ROLE_ADMIN");
-        axios.defaults.headers["Authorization"] = "Bearer " + token;
-      }
+      user.value = data;
+      isAdmin.value = roles.includes("ROLE_ADMIN");
+      axios.defaults.headers["Authorization"] = "Bearer " + token;
+    } catch (error) {
+      token.value = null;
     } finally {
       isAttempted.value = true;
     }
   }
 
-  async function login(credentials) {
-    const { data } = await axios.post("/login", credentials);
-
-    const { token } = data;
-
-    if (token) {
-      localStorage.setItem("token", token);
-
-      const decodedToken = decode(token);
-
-      const { data } = await axios.get("/users/" + decodedToken.sub);
-
-      if (data["@id"]) {
-        user.value = data;
-        isAdmin.value = decodedToken.roles.includes("ROLE_ADMIN");
-        axios.defaults.headers["Authorization"] = "Bearer " + token;
-      }
-    }
-  }
-
   function logout() {
-    localStorage.removeItem("token");
-
+    token.value = null;
     user.value = null;
 
     delete axios.defaults.headers["Authorization"];
 
     router.push({ name: "home" });
-  }
-
-  async function register(credentials) {
-    const { data } = await axios.post("/register", credentials);
-
-    if (data["@id"]) {
-      user.value = data;
-
-      login(credentials);
-    }
   }
 
   async function verify(confirmationToken) {
@@ -87,13 +67,8 @@ export const useAuthStore = defineStore("auth", () => {
         token: confirmationToken,
       });
 
-      const { token } = data;
-
-      if (token) {
-        localStorage.setItem("token", token);
-
-        isVerified.value = true;
-      }
+      token.value = data.token;
+      isVerified.value = true;
     } catch (error) {
       // TODO: Handle error
       console.error("TODO: handle email verification errors", error);
@@ -106,10 +81,10 @@ export const useAuthStore = defineStore("auth", () => {
     isAttempted,
     isAuthenticated,
     isVerified,
-    login,
     logout,
-    register,
     user,
     verify,
+    setToken,
+    setUser,
   };
 });

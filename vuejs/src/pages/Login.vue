@@ -1,25 +1,16 @@
 <script setup>
 import { object, string } from "yup";
 import DynamicForm from "../components/DynamicForm.vue";
-import { useAuthStore } from "../stores";
 import { useRouter } from "vue-router";
-import { watch } from "vue";
-import { storeToRefs } from "pinia";
+import decode from "jwt-decode";
+import { useAuthStore } from "../stores";
+import { axios } from "../libs";
+import { useToast } from "vue-toastification";
 
+const toast = useToast();
 const router = useRouter();
 const authStore = useAuthStore();
-const { login } = authStore;
-const { isAuthenticated, isAdmin } = storeToRefs(authStore);
-
-watch(isAuthenticated, () => {
-    if (isAdmin.value) {
-        return router.push({ name: "admin" });
-    }
-
-    if (isAuthenticated.value) {
-        return router.push({ name: "profile" });
-    }
-});
+const { setUser, setToken } = authStore;
 
 const validationSchema = object({
     email: string().email().required(),
@@ -40,13 +31,43 @@ const fields = [
         type: "password",
     },
 ];
+
+async function onSubmit(credentials) {
+    try {
+        const response = await axios.post("/login", credentials);
+        const { token } = response.data;
+
+        setToken(token);
+
+        const { roles, sub } = decode(token);
+        const { data } = await axios.get("/users/" + sub);
+        const isAdmin = roles.includes("ROLE_ADMIN");
+
+        setUser({
+            ...data,
+            isAdmin,
+        });
+
+        if (isAdmin) {
+            return router.push({ name: "admin" });
+        }
+
+        return router.push({ name: "profile" });
+    } catch (error) {
+        if (error.status === 401) {
+            return toast.error(error.data.message);
+        }
+
+        toast.error("Something went wrong");
+    }
+}
 </script>
 
 <template>
     <DynamicForm
         :validation-schema="validationSchema"
         :fields="fields"
-        :on-submit="login"
+        :on-submit="onSubmit"
     />
     <RouterLink to="reset-password">I forgot my password</RouterLink>
 </template>
