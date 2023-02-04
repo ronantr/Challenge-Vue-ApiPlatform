@@ -15,15 +15,23 @@ class TransactionFixtures extends Fixture implements DependentFixtureInterface
     {
         $faker = Factory::create('fr_FR');
 
-        $customers = $manager->getRepository(User::class)->findAll();
+        $users = $manager->getRepository(User::class)->findAll();
 
         for ($i = 0; $i < 20; $i++) {
-
+            $amount =$faker->randomFloat(2, 1, 100);
+            $user = $faker->randomElement($users);
+            $bonus = 0;
+            if($user->getLevel()!==null)
+            {
+                $bonus = $user->getLevel()->getBonusPercentage();
+            }
+            $bonusAmount = $amount * $bonus; 
             $object = (new Transaction())
-                ->setAmount($faker->randomFloat(2, 1, 100))
+                ->setAmount($amount)
                 ->setDate($faker->dateTimeBetween('now', '+2 months'))
-                ->setCustomers($faker->randomElement($customers))
-                ->setStatus($faker->randomElement(['reserved', 'failed', 'cancelled']));
+                ->setUser($user)
+                ->setStatus($faker->randomElement(['reserved', 'failed', 'cancelled']))
+                ->setBonusAmount($bonusAmount);
             $manager->persist($object);
         }
         $manager->flush();
