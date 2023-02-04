@@ -19,6 +19,8 @@ use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotCompromisedPassword;
 use Symfony\Component\Validator\Constraints\Type;
+use Symfony\Component\Security\Core\Annotation\IsGranted;
+use Symfony\Component\Security\Core\Security;
 
 #[ApiResource(
   normalizationContext: ['groups' => [User::READ]],
@@ -63,7 +65,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
    * @var string The hashed password
    */
   #[ORM\Column(nullable: false)]
-  #[Groups([User::WRITE, User::PATCH, User::REGISTER])]
+  #[Groups([User::WRITE, User::REGISTER])]
   #[NotBlank]
   #[NotCompromisedPassword]
   #[Type('string')]
@@ -86,7 +88,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
   private ?string $lastname = null;
 
   #[ORM\Column(options: ['default' => 0])]
-  #[Groups([User::READ, User::WRITE])]
+  #[Patch([
+    'security' => "is_granted('ROLE_ADMIN')",
+    'security_message' => 'Only admins can update a credit'
+  ])]
+  #[Groups([User::READ, User::WRITE,User::PATCH])]
   private int $credit = 0;
 
   #[ORM\OneToMany(mappedBy: 'customer', targetEntity: Order::class)]
@@ -111,7 +117,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
   #[Groups([User::READ])]
   #[ORM\Column]
-  private ?int $points = null;
+  private ?int $points = 0;
 
   public function __construct()
   {

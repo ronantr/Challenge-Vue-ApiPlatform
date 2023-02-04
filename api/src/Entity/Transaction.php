@@ -13,18 +13,31 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints\GreaterThan;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Metadata\ApiFilter;
 
 #[ORM\Entity(repositoryClass: TransactionRepository::class)]
 #[ApiResource(
     denormalizationContext: ['groups' => [Transaction::WRITE]],
-    normalizationContext: ['groups' => [Transaction::READ]],
+    normalizationContext: ['groups' => [Transaction::READ]
+
+],
     operations: [
-        new Get(),
+        new Get(
+    security: "is_granted('view', object)",
+
+        ),
     new Post(
         controller: TransactionController::class,
         denormalizationContext: ['groups' => [Transaction::WRITE]],
     ),
-    new GetCollection(),
+    new GetCollection(
+        // filters: [
+        //     SearchFilter::class => ['properties' => ['user' => 'exact']],
+        //     OrderFilter::class => ['properties' => ['date' => 'DESC']],
+        // ],
+    ),
 ],
 )
 ]
