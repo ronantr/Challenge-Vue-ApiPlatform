@@ -1,6 +1,6 @@
 <script setup>
 import * as yup from "yup";
-import DynamicForm from "./DynamicForm.vue";
+import DynamicForm from "../components/DynamicForm.vue";
 import { useAuthStore } from "../stores";
 import { useRouter } from "vue-router";
 import { watch } from "vue";
@@ -17,7 +17,7 @@ watch(isAuthenticated, () => {
     }
 
     if (isAuthenticated.value) {
-        return router.push({ name: "home" });
+        return router.push({ name: "profile" });
     }
 });
 

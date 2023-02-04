@@ -18,6 +18,8 @@ security:
       pattern: ^/_(profiler|wdt)
       security: false
     main:
+      pattern: ^/
+      user_checker: App\Security\UserChecker
       stateless: true
       provider: app_user_provider
       json_login:
@@ -34,6 +36,7 @@ security:
     - { path: '^/users/[0-9]+', roles: PUBLIC_ACCESS, method: GET }
     - { path: ^/users$, roles: ROLE_ADMIN }
     - { path: ^/register, roles: PUBLIC_ACCESS, method: POST }
+    - { path: ^/verify, roles: PUBLIC_ACCESS, method: POST }
     - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
 
 
