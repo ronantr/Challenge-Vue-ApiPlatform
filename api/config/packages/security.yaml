@@ -37,6 +37,8 @@ security:
     - { path: ^/users$, roles: ROLE_ADMIN }
     - { path: ^/register, roles: PUBLIC_ACCESS, method: POST }
     - { path: ^/verify, roles: PUBLIC_ACCESS, method: POST }
+    - { path: ^/reset-password, roles: PUBLIC_ACCESS, method: POST }
+    - { path: ^/update-password, roles: PUBLIC_ACCESS, method: PATCH }
     - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
 
 

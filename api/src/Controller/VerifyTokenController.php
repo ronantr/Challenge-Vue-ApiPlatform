@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\Entity\Token;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
@@ -40,7 +40,7 @@ class VerifyTokenController extends AbstractController
       throw new UnprocessableEntityHttpException('Token must be a string');
     }
 
-    $existingToken = $tokenRepository->findOneBy(['id' => $confirmationToken]);
+    $existingToken = $tokenRepository->find($confirmationToken);
 
     if (!$existingToken) {
       throw new NotFoundHttpException('Token not found');
@@ -53,14 +53,12 @@ class VerifyTokenController extends AbstractController
 
       $entityManager->flush();
 
-      return new Response('Token is expired', 401);
+      return new JsonResponse(["message" => "Token is expired"], 401);
     }
 
     $user = $existingToken->getCustomer();
 
     $user->setIsVerified(true);
-
-    $entityManager->persist($user);
 
     $entityManager->remove($existingToken);
 
@@ -68,6 +66,6 @@ class VerifyTokenController extends AbstractController
 
     $token = $this->JWTManager->create($user);
 
-    return $this->json(['token' => $token]);
+    return new JsonResponse(["token" => $token]);
   }
 }

@@ -1,6 +1,6 @@
 <script setup>
 import DynamicForm from "../components/DynamicForm.vue";
-import * as yup from "yup";
+import { object, string } from "yup";
 import { useAuthStore } from "../stores";
 import { storeToRefs } from "pinia";
 import { watch } from "vue";
@@ -21,48 +21,51 @@ watch(isAuthenticated, () => {
     }
 });
 
-const schema = {
-    fields: [
-        {
-            label: "First name",
-            name: "firstName",
-            as: "input",
-            type: "text",
-            rules: yup.string().required("First name is required!"),
-        },
-        {
-            label: "Last Name",
-            name: "lastName",
-            as: "input",
-            type: "text",
-            rules: yup.string().required("Last name is required!"),
-        },
-        {
-            label: "Email",
-            name: "email",
-            as: "input",
-            type: "email",
-            rules: yup
-                .string()
-                .email("Email is invalid!")
-                .max(50, "Must be maximum 50 characters!")
-                .required("Email is required!"),
-        },
-        {
-            label: "Password",
-            name: "password",
-            as: "input",
-            type: "password",
-            rules: yup
-                .string()
-                .min(6, "Must be at least 6 characters!")
-                .max(40, "Must be maximum 40 characters!")
-                .required("Password is required!"),
-        },
-    ],
-};
+const validationSchema = object({
+    firstName: string().required("First name is required!"),
+    lastName: string().required("Last name is required!"),
+    email: string()
+        .email()
+        .max(50, "Must be maximum 50 characters!")
+        .required("Email is required!"),
+    password: string()
+        .min(6, "Must be at least 6 characters!")
+        .max(40, "Must be maximum 40 characters!")
+        .required("Password is required!"),
+});
+
+const fields = [
+    {
+        label: "First name",
+        name: "firstName",
+        as: "input",
+        type: "text",
+    },
+    {
+        label: "Last Name",
+        name: "lastName",
+        as: "input",
+        type: "text",
+    },
+    {
+        label: "Email",
+        name: "email",
+        as: "input",
+        type: "email",
+    },
+    {
+        label: "Password",
+        name: "password",
+        as: "input",
+        type: "password",
+    },
+];
 </script>
 
 <template>
-    <DynamicForm :schema="schema" :onSubmit="register" />
+    <DynamicForm
+        :validation-schema="validationSchema"
+        :fields="fields"
+        :on-submit="register"
+    />
 </template>

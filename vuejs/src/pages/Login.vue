@@ -1,5 +1,5 @@
 <script setup>
-import * as yup from "yup";
+import { object, string } from "yup";
 import DynamicForm from "../components/DynamicForm.vue";
 import { useAuthStore } from "../stores";
 import { useRouter } from "vue-router";
@@ -21,29 +21,32 @@ watch(isAuthenticated, () => {
     }
 });
 
-const schema = {
-    fields: [
-        {
-            label: "Email",
-            name: "email",
-            as: "input",
-            type: "email",
-            rules: yup
-                .string()
-                .email("Email is invalid!")
-                .required("Email is required!"),
-        },
-        {
-            label: "Password",
-            name: "password",
-            as: "input",
-            type: "password",
-            rules: yup.string().required("Password is required!"),
-        },
-    ],
-};
+const validationSchema = object({
+    email: string().email().required(),
+    password: string().required(),
+});
+
+const fields = [
+    {
+        label: "Email",
+        name: "email",
+        as: "input",
+        type: "email",
+    },
+    {
+        label: "Password",
+        name: "password",
+        as: "input",
+        type: "password",
+    },
+];
 </script>
 
 <template>
-    <DynamicForm :schema="schema" :onSubmit="login" />
+    <DynamicForm
+        :validation-schema="validationSchema"
+        :fields="fields"
+        :on-submit="login"
+    />
+    <RouterLink to="reset-password">I forgot my password</RouterLink>
 </template>

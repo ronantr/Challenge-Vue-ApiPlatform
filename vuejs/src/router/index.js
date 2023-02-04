@@ -8,6 +8,8 @@ import { useAuthStore } from "../stores/auth";
 const Profile = () => import("../pages/Profile.vue");
 const Admin = () => import("../pages/Admin.vue");
 const Verify = () => import("../pages/Verify.vue");
+const UpdatePassword = () => import("../pages/UpdatePassword.vue");
+const ResetPassword = () => import("../pages/ResetPassword.vue");
 
 const routes = [
   {
@@ -31,6 +33,24 @@ const routes = [
     component: Verify,
   },
   {
+    path: "/update-password",
+    name: "update-password",
+    component: UpdatePassword,
+    props: ({ query }) => ({ token: query.token }),
+    beforeEnter: ({ query }) => {
+      const { token } = query;
+
+      if (!token) {
+        return { name: "home" };
+      }
+    },
+  },
+  {
+    path: "/reset-password",
+    name: "reset-password",
+    component: ResetPassword,
+  },
+  {
     path: "/profile",
     name: "profile",
     // lazy-loaded
@@ -52,9 +72,14 @@ const router = createRouter({
 router.beforeEach(async ({ name, query }, _from, next) => {
   const authStore = useAuthStore();
   const authRoutes = ["login", "register", "verify"];
-  const publicRoutes = [...authRoutes, "home"];
-  const isAuth = authRoutes.includes(name);
-  const isPublic = publicRoutes.includes(name);
+  const publicRoutes = [
+    ...authRoutes,
+    "home",
+    "update-password",
+    "reset-password",
+  ];
+  const isAuthRoute = authRoutes.includes(name);
+  const isPublicRoute = publicRoutes.includes(name);
 
   if (name === "verify") {
     const { token } = query;
@@ -70,11 +95,11 @@ router.beforeEach(async ({ name, query }, _from, next) => {
     await authStore.attempt();
   }
 
-  if (!isPublic && !authStore.isAuthenticated) {
+  if (!isPublicRoute && !authStore.isAuthenticated) {
     return next({ name: "login" });
   }
 
-  if (isAuth && authStore.isAuthenticated) {
+  if (isAuthRoute && authStore.isAuthenticated) {
     return next({ name: "profile" });
   }
 
