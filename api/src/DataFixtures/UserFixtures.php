@@ -26,8 +26,8 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
             ->setRoles(['ROLE_ADMIN'])
             ->setPassword($password)
             ->setCredit(0)
-            ->setPoints(0);
-
+            ->setPoints(0)
+            ->setIsVerified(true);
 
         $manager->persist($admin);
 
@@ -39,7 +39,8 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
             ->setPassword($password)
             ->setCredit(0)
             ->setPoints(0)
-            ->setLevel($manager->getRepository(Level::class)->findOneByLevelNumber(1));
+            ->setLevel($manager->getRepository(Level::class)->findOneByLevelNumber(1))
+            ->setIsVerified(true);
 
         $manager->persist($user);
 
@@ -54,8 +55,8 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
             ->setTheaterGroupName($faker->company)
             ->setPassword($password)
             ->setCredit(0)
-            ->setPoints(0);
-            
+            ->setPoints(0)
+            ->setIsVerified(true);
 
         $manager->persist($theater);
 

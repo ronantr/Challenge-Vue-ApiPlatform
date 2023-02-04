@@ -1,5 +1,5 @@
 <script setup>
-import DynamicForm from "./DynamicForm.vue";
+import DynamicForm from "../components/DynamicForm.vue";
 import * as yup from "yup";
 import { useAuthStore } from "../stores";
 import { storeToRefs } from "pinia";
@@ -17,7 +17,7 @@ watch(isAuthenticated, () => {
     }
 
     if (isAuthenticated.value) {
-        return router.push({ name: "home" });
+        return router.push({ name: "profile" });
     }
 });
 
@@ -25,14 +25,14 @@ const schema = {
     fields: [
         {
             label: "First name",
-            name: "firstname",
+            name: "firstName",
             as: "input",
             type: "text",
             rules: yup.string().required("First name is required!"),
         },
         {
             label: "Last Name",
-            name: "lastname",
+            name: "lastName",
             as: "input",
             type: "text",
             rules: yup.string().required("Last name is required!"),

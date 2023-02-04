@@ -23,8 +23,8 @@ use Symfony\Component\Security\Core\Annotation\IsGranted;
 use Symfony\Component\Security\Core\Security;
 
 #[ApiResource(
-  normalizationContext: ['groups' => [User::READ]],
-  denormalizationContext: ['groups' => [User::WRITE]],
+normalizationContext: ['groups' => [User::READ]],
+denormalizationContext: ['groups' => [User::WRITE]],
 )]
 #[Get]
 #[GetCollection]
@@ -34,7 +34,7 @@ uriTemplate: "/register",
 denormalizationContext: ['groups' => [User::REGISTER]],
 )]
 #[Patch(
-  denormalizationContext: ['groups' => [User::PATCH]],
+denormalizationContext: ['groups' => [User::PATCH]],
 )]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
@@ -70,8 +70,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
   #[NotCompromisedPassword]
   #[Type('string')]
   #[Regex(
-    pattern: '/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/',
-    message: 'Password must contain at least 8 characters, 1 uppercase letter, 1 lowercase letter, 1 number and 1 special character'
+  pattern: '/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/',
+  message: 'Password must contain at least 8 characters, 1 uppercase letter, 1 lowercase letter, 1 number and 1 special character'
   )]
   private ?string $password = null;
 
@@ -79,13 +79,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
   #[Groups([User::READ, User::WRITE, User::PATCH, User::REGISTER])]
   #[NotBlank]
   #[Type('string')]
-  private ?string $firstname = null;
+  private ?string $firstName = null;
 
   #[ORM\Column(length: 255)]
   #[Groups([User::READ, User::WRITE, User::PATCH, User::REGISTER])]
   #[NotBlank]
   #[Type('string')]
-  private ?string $lastname = null;
+  private ?string $lastName = null;
 
   #[ORM\Column(options: ['default' => 0])]
   #[Patch([
@@ -118,12 +118,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
   #[Groups([User::READ])]
   #[ORM\Column]
   private ?int $points = 0;
+  #[ORM\OneToMany(mappedBy: 'customer', targetEntity: Token::class, orphanRemoval: true)]
+  private Collection $tokens;
+
+  #[ORM\Column(options: ['default' => false])]
+  private ?bool $isVerified = false;
 
   public function __construct()
   {
     $this->orders = new ArrayCollection();
     $this->events = new ArrayCollection();
     $this->transactions = new ArrayCollection();
+    $this->tokens = new ArrayCollection();
   }
 
   public function getId(): ?int
@@ -198,24 +204,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
   public function getFirstname(): ?string
   {
-    return $this->firstname;
+    return $this->firstName;
   }
 
-  public function setFirstname(string $firstname): self
+  public function setFirstname(string $firstName): self
   {
-    $this->firstname = $firstname;
+    $this->firstName = $firstName;
 
     return $this;
   }
 
   public function getLastname(): ?string
   {
-    return $this->lastname;
+    return $this->lastName;
   }
 
-  public function setLastname(string $lastname): self
+  public function setLastname(string $lastName): self
   {
-    $this->lastname = $lastname;
+    $this->lastName = $lastName;
 
     return $this;
   }
@@ -375,5 +381,47 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
       $this->points = $points;
 
       return $this;
+  }
+
+  /**
+   * @return Collection<int, Token>
+   */
+  public function getTokens(): Collection
+  {
+    return $this->tokens;
+  }
+
+  public function addToken(Token $token): self
+  {
+    if (!$this->tokens->contains($token)) {
+      $this->tokens[] = $token;
+      $token->setCustomer($this);
+    }
+
+    return $this;
+  }
+
+  public function removeToken(Token $token): self
+  {
+    if ($this->tokens->removeElement($token)) {
+      // set the owning side to null (unless already changed)
+      if ($token->getCustomer() === $this) {
+        $token->setCustomer(null);
+      }
+    }
+
+    return $this;
+  }
+
+  public function isVerified(): ?bool
+  {
+    return $this->isVerified;
+  }
+
+  public function setIsVerified(bool $isVerified): self
+  {
+    $this->isVerified = $isVerified;
+
+    return $this;
   }
 }

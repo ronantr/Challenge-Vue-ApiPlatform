@@ -3,12 +3,16 @@ import { computed, ref } from "vue";
 import { axios } from "../libs";
 import decode from "jwt-decode";
 import dayjs from "dayjs";
+import { useRouter } from "vue-router";
 
 export const useAuthStore = defineStore("auth", () => {
+  const router = useRouter();
   const user = ref(null);
   const isAuthenticated = computed(() => !!user.value);
   const isAdmin = ref(false);
   const isAttempted = ref(false);
+  // TODO: Use it to welcome the user on the profile page
+  const isVerified = ref(false);
 
   async function attempt() {
     try {
@@ -63,6 +67,8 @@ export const useAuthStore = defineStore("auth", () => {
     user.value = null;
 
     delete axios.defaults.headers["Authorization"];
+
+    router.push({ name: "home" });
   }
 
   async function register(credentials) {
@@ -75,14 +81,35 @@ export const useAuthStore = defineStore("auth", () => {
     }
   }
 
+  async function verify(confirmationToken) {
+    try {
+      const { data } = await axios.post("/verify", {
+        token: confirmationToken,
+      });
+
+      const { token } = data;
+
+      if (token) {
+        localStorage.setItem("token", token);
+
+        isVerified.value = true;
+      }
+    } catch (error) {
+      // TODO: Handle error
+      console.error("TODO: handle email verification errors", error);
+    }
+  }
+
   return {
     attempt,
     isAdmin,
     isAttempted,
     isAuthenticated,
+    isVerified,
     login,
     logout,
     register,
     user,
+    verify,
   };
 });
