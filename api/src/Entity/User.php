@@ -33,6 +33,8 @@ denormalizationContext: ['groups' => [User::WRITE]],
 #[Post(
 uriTemplate: "/register",
 denormalizationContext: ['groups' => [User::REGISTER]],
+output: false,
+status: 201,
 )]
 #[Patch(
 denormalizationContext: ['groups' => [User::PATCH]],
