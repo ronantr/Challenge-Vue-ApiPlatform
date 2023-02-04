@@ -1,25 +1,11 @@
 <script setup>
 import DynamicForm from "../components/DynamicForm.vue";
 import { object, string } from "yup";
-import { useAuthStore } from "../stores";
-import { storeToRefs } from "pinia";
-import { watch } from "vue";
-import { useRouter } from "vue-router";
+import { axios } from "../libs";
+import { useToast } from "vue-toastification";
+import { isConstraintViolation, formatConstraintViolation } from "../errors";
 
-const router = useRouter();
-const authStore = useAuthStore();
-const { register } = authStore;
-const { isAuthenticated, isAdmin } = storeToRefs(authStore);
-
-watch(isAuthenticated, () => {
-    if (isAdmin.value) {
-        return router.push({ name: "admin" });
-    }
-
-    if (isAuthenticated.value) {
-        return router.push({ name: "profile" });
-    }
-});
+const toast = useToast();
 
 const validationSchema = object({
     firstName: string().required("First name is required!"),
@@ -60,12 +46,35 @@ const fields = [
         type: "password",
     },
 ];
+
+async function onSubmit(credentials, { setErrors, resetForm }) {
+    try {
+        await axios.post("/register", credentials);
+
+        resetForm();
+
+        toast.success(
+            "You have successfully registered ! An email has been sent to you, please confirm your account.",
+            {
+                timeout: false,
+            }
+        );
+    } catch (error) {
+        if (isConstraintViolation(error)) {
+            const errors = formatConstraintViolation(error);
+
+            return setErrors(errors);
+        }
+
+        toast.error("Something went wrong!");
+    }
+}
 </script>
 
 <template>
     <DynamicForm
         :validation-schema="validationSchema"
         :fields="fields"
-        :on-submit="register"
+        :on-submit="onSubmit"
     />
 </template>
