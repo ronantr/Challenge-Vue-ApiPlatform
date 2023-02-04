@@ -1,7 +1,10 @@
 <script setup>
 import { object, string } from "yup";
+import { useToast } from "vue-toastification";
 import DynamicForm from "../components/DynamicForm.vue";
 import { axios } from "../libs";
+
+const toast = useToast();
 
 const validationSchema = object({
     email: string().required().email(),
@@ -16,15 +19,19 @@ const fields = [
     },
 ];
 
-function resetPassword({ email }) {
+async function onSubmit(values, { resetForm }) {
     try {
-        const { data } = axios.post("/reset-password", {
-            email,
-        });
+        const { data } = await axios.post("/reset-password", values);
 
-        console.log("TODO: handle reset succes", data);
+        resetForm();
+
+        toast.success(data.message);
     } catch (error) {
-        console.error(error);
+        if (error.status) {
+            return toast.error(error.data["hydra:description"]);
+        }
+
+        toast.error("Something went wrong");
     }
 }
 </script>
@@ -33,6 +40,6 @@ function resetPassword({ email }) {
     <DynamicForm
         :validation-schema="validationSchema"
         :fields="fields"
-        :on-submit="resetPassword"
+        :on-submit="onSubmit"
     />
 </template>
