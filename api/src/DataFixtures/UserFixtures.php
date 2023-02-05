@@ -14,7 +14,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
     public function load(ObjectManager $manager): void
     {
         //get levelNumber 1
-        dd($level = $manager->getRepository(Level::class)->findOneByLevelNumber(1));
+        $level = $manager->getRepository(Level::class)->findOneByLevelNumber(1);
         
         $password = '$2y$13$DaS5Nr.ER6ajgZhBVqNqm.wO8gqLyqEDvrTbHZiLCA5oYJE099NfO';
         $faker = Factory::create('fr_FR');
