@@ -54,7 +54,7 @@ class PaymentController extends AbstractController
             $em->flush();
 
             $transaction = new Transaction();
-            $transaction->setCustomers($user);
+            $transaction->setUser($user);
             $transaction->setAmount($charge->amount);
             $transaction->setStatus($charge->status);
 
