@@ -9,12 +9,19 @@
                 />
             </div>
             <div class="w-2/3 p-4">
-                <h3 class="text-lg font-medium text-gray-700 mb-2">John Doe</h3>
-                <p class="text-gray-700 font-medium mb-2">johndoe@test.fr</p>
+                <h3 class="text-lg font-medium text-gray-700 mb-2">
+                    {{ currentUser.lastname }} {{ currentUser.firstname }}
+                </h3>
+                <p class="text-gray-700 font-medium mb-2">
+                    {{ currentUser.email }}
+                </p>
                 <h3 class="text-lg font-medium text-gray-700 mb-2">
                     Votre crédit :
-                    <p class="text-red-400 font-medium">50€</p>
+                    <p class="text-red-400 font-medium">
+                        {{ currentUser.credit }}€
+                    </p>
                 </h3>
+                <CreditFormModal />
             </div>
         </div>
         <section class="bg-gray-100 p-6 rounded-lg">
@@ -75,19 +82,23 @@
     </div>
 </template>
 
-<script>
-export default {
-    name: "Profile",
-    computed: {
-        // TODO: update with pinia
-        currentUser() {
-            return "todo";
-        },
-    },
-    mounted() {
-        if (!this.currentUser) {
-            this.$router.push("/login");
-        }
-    },
-};
+<script setup>
+import CreditFormModal from "../components/CreditFormModal.vue";
+import { computed } from "vue";
+import { useRouter } from "vue-router";
+import { storeToRefs } from "pinia";
+import { useAuthStore } from "../stores";
+
+const authStore = useAuthStore();
+const router = useRouter();
+const currentUser = computed(() => {
+    const { user } = storeToRefs(authStore);
+    return user.value;
+});
+
+if (!currentUser.value) {
+    router.push("/login");
+}
+
+console.log("test", currentUser.value);
 </script>
