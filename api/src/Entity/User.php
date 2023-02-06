@@ -127,6 +127,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
   #[ORM\Column(options: ['default' => false])]
   private ?bool $isVerified = false;
 
+  #[ORM\OneToOne(mappedBy: 'representative', cascade: ['persist', 'remove'])]
+  private ?TheaterGroup $theaterGroup = null;
+
   public function __construct()
   {
     $this->orders = new ArrayCollection();
@@ -426,5 +429,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     $this->isVerified = $isVerified;
 
     return $this;
+  }
+
+  public function getTheaterGroup(): ?TheaterGroup
+  {
+      return $this->theaterGroup;
+  }
+
+  public function setTheaterGroup(?TheaterGroup $theaterGroup): self
+  {
+      // unset the owning side of the relation if necessary
+      if ($theaterGroup === null && $this->theaterGroup !== null) {
+          $this->theaterGroup->setRepresentative(null);
+      }
+
+      // set the owning side of the relation if necessary
+      if ($theaterGroup !== null && $theaterGroup->getRepresentative() !== $this) {
+          $theaterGroup->setRepresentative($this);
+      }
+
+      $this->theaterGroup = $theaterGroup;
+
+      return $this;
   }
 }
