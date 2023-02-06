@@ -4,12 +4,17 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Patch;
 use App\Repository\TokenRepository;
 use Doctrine\ORM\Mapping as ORM;
 use App\Controller\VerifyTokenController;
+use App\Controller\ResetPasswordController;
+use App\Controller\UpdatePasswordController;
 
 #[ApiResource]
 #[Post(uriTemplate: '/verify', controller: VerifyTokenController::class)]
+#[Patch(uriTemplate: '/update-password', controller: UpdatePasswordController::class, formats: 'json')]
+#[Post(uriTemplate: '/reset-password', controller: ResetPasswordController::class)]
 #[ORM\Entity(repositoryClass: TokenRepository::class)]
 class Token
 {
