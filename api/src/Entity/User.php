@@ -21,6 +21,7 @@ use Symfony\Component\Validator\Constraints\NotCompromisedPassword;
 use Symfony\Component\Validator\Constraints\Type;
 use Symfony\Component\Security\Core\Annotation\IsGranted;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Validator\Constraints\Regex;
 
 #[ApiResource(
 normalizationContext: ['groups' => [User::READ]],
@@ -32,6 +33,8 @@ denormalizationContext: ['groups' => [User::WRITE]],
 #[Post(
 uriTemplate: "/register",
 denormalizationContext: ['groups' => [User::REGISTER]],
+output: false,
+status: 201,
 )]
 #[Patch(
 denormalizationContext: ['groups' => [User::PATCH]],

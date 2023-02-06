@@ -1,49 +1,73 @@
 <script setup>
-import * as yup from "yup";
+import { object, string } from "yup";
 import DynamicForm from "../components/DynamicForm.vue";
-import { useAuthStore } from "../stores";
 import { useRouter } from "vue-router";
-import { watch } from "vue";
-import { storeToRefs } from "pinia";
+import decode from "jwt-decode";
+import { useAuthStore } from "../stores";
+import { axios } from "../libs";
+import { useToast } from "vue-toastification";
 
+const toast = useToast();
 const router = useRouter();
 const authStore = useAuthStore();
-const { login } = authStore;
-const { isAuthenticated, isAdmin } = storeToRefs(authStore);
+const { setUser, setToken } = authStore;
 
-watch(isAuthenticated, () => {
-    if (isAdmin.value) {
-        return router.push({ name: "admin" });
-    }
-
-    if (isAuthenticated.value) {
-        return router.push({ name: "profile" });
-    }
+const validationSchema = object({
+    email: string().email().required(),
+    password: string().required(),
 });
 
-const schema = {
-    fields: [
-        {
-            label: "Email",
-            name: "email",
-            as: "input",
-            type: "email",
-            rules: yup
-                .string()
-                .email("Email is invalid!")
-                .required("Email is required!"),
-        },
-        {
-            label: "Password",
-            name: "password",
-            as: "input",
-            type: "password",
-            rules: yup.string().required("Password is required!"),
-        },
-    ],
-};
+const fields = [
+    {
+        label: "Email",
+        name: "email",
+        as: "input",
+        type: "email",
+    },
+    {
+        label: "Password",
+        name: "password",
+        as: "input",
+        type: "password",
+    },
+];
+
+async function onSubmit(credentials) {
+    try {
+        const response = await axios.post("/login", credentials);
+        const { token } = response.data;
+
+        setToken(token);
+
+        const { roles, sub } = decode(token);
+        const { data } = await axios.get("/users/" + sub);
+        const isAdmin = roles.includes("ROLE_ADMIN");
+
+        setUser({
+            ...data,
+            isAdmin,
+        });
+
+        if (isAdmin) {
+            return router.push({ name: "admin" });
+        }
+
+        return router.push({ name: "profile" });
+    } catch (error) {
+        if (error.status === 401) {
+            return toast.error(error.data.message);
+        }
+
+        toast.error("Something went wrong");
+    }
+}
 </script>
 
 <template>
-    <DynamicForm :schema="schema" :onSubmit="login" />
+    <DynamicForm
+        :validation-schema="validationSchema"
+        :fields="fields"
+        :on-submit="onSubmit"
+    />
+    <RouterLink to="reset-password">I forgot my password</RouterLink>
 </template>
