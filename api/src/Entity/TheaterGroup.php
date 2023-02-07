@@ -41,7 +41,7 @@ class TheaterGroup
   private ?User $representative = null;
 
   #[ORM\Column(options: ['default' => false])]
-
+  #[ApiProperty(security: 'is_granted("ROLE_ADMIN")')]
   private ?bool $isVerified = false;
 
   #[ORM\Column(length: 255)]
