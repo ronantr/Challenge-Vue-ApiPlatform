@@ -68,8 +68,24 @@ class MediaObject
   #[ORM\Column(nullable: true)]
   public ?string $filePath = null;
 
+  #[ORM\ManyToOne(inversedBy: 'mediaObjects')]
+  #[ORM\JoinColumn(nullable: false)]
+  private ?User $owner = null;
+
   public function getId(): ?int
   {
     return $this->id;
+  }
+
+  public function getOwner(): ?User
+  {
+      return $this->owner;
+  }
+
+  public function setOwner(?User $owner): self
+  {
+      $this->owner = $owner;
+
+      return $this;
   }
 }

@@ -130,12 +130,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
   #[ORM\OneToOne(mappedBy: 'representative', cascade: ['persist', 'remove'])]
   private ?TheaterGroup $theaterGroup = null;
 
+  #[ORM\OneToMany(mappedBy: 'owner', targetEntity: MediaObject::class)]
+  private Collection $mediaObjects;
+
   public function __construct()
   {
     $this->orders = new ArrayCollection();
     $this->events = new ArrayCollection();
     $this->transactions = new ArrayCollection();
     $this->tokens = new ArrayCollection();
+    $this->mediaObjects = new ArrayCollection();
   }
 
   public function getId(): ?int
@@ -449,6 +453,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
       }
 
       $this->theaterGroup = $theaterGroup;
+
+      return $this;
+  }
+
+  /**
+   * @return Collection<int, MediaObject>
+   */
+  public function getMediaObjects(): Collection
+  {
+      return $this->mediaObjects;
+  }
+
+  public function addMediaObject(MediaObject $mediaObject): self
+  {
+      if (!$this->mediaObjects->contains($mediaObject)) {
+          $this->mediaObjects[] = $mediaObject;
+          $mediaObject->setOwner($this);
+      }
+
+      return $this;
+  }
+
+  public function removeMediaObject(MediaObject $mediaObject): self
+  {
+      if ($this->mediaObjects->removeElement($mediaObject)) {
+          // set the owning side to null (unless already changed)
+          if ($mediaObject->getOwner() === $this) {
+              $mediaObject->setOwner(null);
+          }
+      }
 
       return $this;
   }
