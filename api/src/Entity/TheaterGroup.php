@@ -23,7 +23,6 @@ denormalizationContext: ['groups' => [User::WRITE]],
 #[Post(
 uriTemplate: '/join',
 denormalizationContext: ['groups' => [TheaterGroup::WRITE]],
-
 )]
 #[Patch]
 #[ORM\Entity(repositoryClass: TheaterGroupRepository::class)]
