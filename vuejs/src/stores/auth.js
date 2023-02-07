@@ -18,7 +18,10 @@ export const useAuthStore = defineStore("auth", () => {
 
   function setToken(value) {
     token.value = value;
-    axios.defaults.headers["Authorization"] = "Bearer " + value;
+
+    axios.defaults.headers = {
+      Authorization: "Bearer " + token.value,
+    };
   }
 
   function setUser(value) {
@@ -44,7 +47,10 @@ export const useAuthStore = defineStore("auth", () => {
 
       user.value = data;
       isAdmin.value = roles.includes("ROLE_ADMIN");
-      axios.defaults.headers["Authorization"] = "Bearer " + token.value;
+
+      axios.defaults.headers = {
+        Authorization: "Bearer " + token.value,
+      };
     } catch (error) {
       token.value = null;
     } finally {
