@@ -8,6 +8,7 @@ import { useAuthStore } from "../stores/auth";
 const Profile = () => import("../pages/Profile.vue");
 const Admin = () => import("../pages/Admin.vue");
 const Verify = () => import("../pages/Verify.vue");
+const Join = () => import("../pages/Join.vue");
 const UpdatePassword = () => import("../pages/UpdatePassword.vue");
 const ResetPassword = () => import("../pages/ResetPassword.vue");
 
@@ -55,6 +56,11 @@ const routes = [
     name: "profile",
     // lazy-loaded
     component: Profile,
+  },
+  {
+    path: "/join",
+    name: "join",
+    component: Join,
   },
   {
     path: "/admin",
