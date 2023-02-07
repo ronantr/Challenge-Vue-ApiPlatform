@@ -38,6 +38,8 @@ class TheaterGroup
   private ?int $id = null;
 
   #[ORM\OneToOne(inversedBy: 'theaterGroup', cascade: ['persist', 'remove'])]
+  #[ORM\JoinColumn(nullable: false)]
+  #[Groups([TheaterGroup::READ, TheaterGroup::WRITE])]
   private ?User $representative = null;
 
   #[ORM\Column(options: ['default' => false])]
