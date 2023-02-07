@@ -14,8 +14,8 @@ defineProps({
 </script>
 
 <template>
-    <div class="bg-black h-screen flex items-center justify-center">
-        <div class="bg-white p-6 rounded-lg">
+    <div class="bg-gray-900 h-screen flex items-center justify-center mt-5">
+        <div class="bg-white p-6 rounded-lg w-1/3">
             <img
                 id="profile-img"
                 src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"

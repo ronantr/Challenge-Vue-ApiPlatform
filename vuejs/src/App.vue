@@ -69,7 +69,7 @@ const { user, isAuthenticated, isAdmin, isAttempted } = storeToRefs(authStore);
                     </div>
                 </div>
             </nav>
-            <div class="p-4">
+            <div class="p-0">
                 <router-view />
             </div>
         </div>

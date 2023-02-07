@@ -4,42 +4,86 @@ namespace App\Entity;
 
 use App\Repository\EventRepository;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
-#[ApiResource]
+#[ApiResource(
+    denormalizationContext: ['groups' => [Event::WRITE]],
+    normalizationContext: ['groups' => [Event::READ]],
+
+    operations: [
+        
+        // new Post(
+        //     security: "is_granted('ROLE_USER')",
+        // ),
+        // new Put(
+        //     security: "is_granted('edit', object)",
+        // ),
+        // new Delete(
+        //     security: "is_granted('delete', object)",
+        // ),
+    ],
+)]
+#[GetCollection]
+#[Get]
+#[Post(security: "is_granted('ROLE_USER')")]
+#[Put(security: "is_granted('edit', object)")]
+#[Delete(security: "is_granted('delete', object)")]
 #[ORM\Entity(repositoryClass: EventRepository::class)]
 class Event
 {
+    const READ = 'event:read';
+    const WRITE = 'event:write';
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column()]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups([Event::READ, Event::WRITE])]
+    #[NotBlank(message: 'Merci de renseigner un nom')]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups([Event::READ, Event::WRITE])]
+    #[NotBlank(message: 'Merci de renseigner une date')]
     private ?\DateTimeInterface $date = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups([Event::READ, Event::WRITE])]
+    #[NotBlank(message: 'Merci de renseigner un lieu')]
     private ?string $location = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups([Event::READ, Event::WRITE])]
+    #[NotBlank(message: 'Merci de renseigner une description')]
     private ?string $description = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups([Event::READ, Event::WRITE])]
     private ?string $image = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups([Event::READ, Event::WRITE])]
     private ?string $video = null;
 
     #[ORM\ManyToOne(inversedBy: 'events')]
+    #[Groups([Event::READ])]
     private ?User $theater_group = null;
 
     #[ORM\Column]
+    #[Groups([Event::READ, Event::WRITE])]
+    #[NotBlank(message: 'Merci de renseigner une capacité')]
     private ?int $capacity = null;
 
     #[ORM\OneToMany(mappedBy: 'event', targetEntity: Ticket::class)]

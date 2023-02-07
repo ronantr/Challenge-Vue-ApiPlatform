@@ -102,9 +102,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
   private Collection $events;
 
   #[ORM\Column(length: 255, nullable: true)]
+  #[Groups([Event::READ])]
   private ?string $theater_group_name = null;
 
   #[ORM\Column(length: 255, nullable: true)]
+  #[Groups([Event::READ])]
   private ?string $theater_group_email = null;
 
   #[ORM\OneToMany(mappedBy: 'user', targetEntity: Transaction::class)]
