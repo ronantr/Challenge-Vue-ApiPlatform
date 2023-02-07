@@ -9,6 +9,7 @@ const Profile = () => import("../pages/Profile.vue");
 const Admin = () => import("../pages/Admin.vue");
 const Verify = () => import("../pages/Verify.vue");
 const Join = () => import("../pages/Join.vue");
+const Upload = () => import("../pages/Upload.vue");
 const UpdatePassword = () => import("../pages/UpdatePassword.vue");
 const ResetPassword = () => import("../pages/ResetPassword.vue");
 
@@ -61,6 +62,11 @@ const routes = [
     path: "/join",
     name: "join",
     component: Join,
+  },
+  {
+    path: "/upload",
+    name: "upload",
+    component: Upload,
   },
   {
     path: "/admin",
