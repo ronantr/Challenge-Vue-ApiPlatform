@@ -44,7 +44,7 @@ export const useAuthStore = defineStore("auth", () => {
 
       user.value = data;
       isAdmin.value = roles.includes("ROLE_ADMIN");
-      axios.defaults.headers["Authorization"] = "Bearer " + token;
+      axios.defaults.headers["Authorization"] = "Bearer " + token.value;
     } catch (error) {
       token.value = null;
     } finally {
