@@ -57,6 +57,12 @@ class MediaObject
 
   #[Vich\UploadableField(mapping: "media_object", fileNameProperty: "filePath")]
   #[Assert\NotNull(groups: ['media_object_create'])]
+  #[Assert\File(
+        maxSize: '1024k',
+        maxSizeMessage: 'The file is too large ({{ size }} {{ suffix }}). Allowed maximum size is {{ limit }} {{ suffix }}.',
+        mimeTypes: ['application/pdf', 'application/x-pdf'],
+        mimeTypesMessage: 'Please upload a valid PDF',
+    )]
   public ?File $file = null;
 
   #[ORM\Column(nullable: true)]
