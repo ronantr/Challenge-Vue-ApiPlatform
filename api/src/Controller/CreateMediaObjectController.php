@@ -22,6 +22,10 @@ final class CreateMediaObjectController extends AbstractController
     $mediaObject = new MediaObject();
     $mediaObject->file = $uploadedFile;
 
+    $owner = $this->getUser();
+
+    $mediaObject->setOwner($owner);
+
     return $mediaObject;
   }
 }
