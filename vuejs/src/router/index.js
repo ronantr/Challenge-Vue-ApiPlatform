@@ -6,13 +6,13 @@ import { useAuthStore } from "../stores/auth";
 
 // lazy-loaded
 const Profile = () => import("../pages/Profile.vue");
-const Admin = () => import("../pages/Admin.vue");
 const Verify = () => import("../pages/Verify.vue");
 const Join = () => import("../pages/Join.vue");
 const Upload = () => import("../pages/Upload.vue");
 const UpdatePassword = () => import("../pages/UpdatePassword.vue");
 const ResetPassword = () => import("../pages/ResetPassword.vue");
 const Theater = () => import("../pages/Theater.vue");
+const NotFound = () => import("../pages/Errors/NotFound.vue");
 
 const routes = [
   {
@@ -75,10 +75,9 @@ const routes = [
     component: Theater,
   },
   {
-    path: "/admin",
-    name: "admin",
-    // lazy-loaded
-    component: Admin,
+    path: "/:pathMatch(.*)*",
+    name: "not-found",
+    component: NotFound,
   },
 ];
 
