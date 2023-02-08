@@ -24,8 +24,8 @@ class EventFixtures extends Fixture implements DependentFixtureInterface
                 ->setDate($faker->dateTimeBetween('now', '+2 months'))
                 ->setLocation($faker->address)
                 ->setDescription($faker->text)
-                ->setImage($faker->imageUrl())
-                ->setVideo($faker->url)
+                ->setImageName($faker->imageUrl())
+                ->setVideoName($faker->url)
                 ->setCapacity(rand(50, 200))
                 ->setTheaterGroup($faker->randomElement($theaterGroup));
             $manager->persist($object);
