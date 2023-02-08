@@ -13,6 +13,8 @@ use ApiPlatform\Metadata\ApiProperty;
 use Symfony\Component\Serializer\Annotation\Groups;
 use App\Entity\User;
 use App\Entity\MediaObject;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ApiResource(
 normalizationContext: ['groups' => [User::READ]],
@@ -28,6 +30,8 @@ securityPostDenormalizeMessage: 'You already have a theater group submission tha
 )]
 #[Patch]
 #[ORM\Entity(repositoryClass: TheaterGroupRepository::class)]
+#[UniqueEntity(fields: ['name'], message: 'This name is already used.', repositoryMethod: 'findNotClosedTheaterGroupsByName')]
+#[UniqueEntity(fields: ['phoneNumber'], message: 'This phone number is already used.', repositoryMethod: 'findNotClosedTheaterGroupsByPhoneNumber')]
 class TheaterGroup
 {
   const READ = 'theaterGroup:read';
@@ -39,7 +43,7 @@ class TheaterGroup
   #[ORM\Column()]
   private ?int $id = null;
 
-  #[ORM\OneToOne(inversedBy: 'theaterGroup', cascade: ['persist', 'remove'])]
+  #[ORM\ManyToOne(inversedBy: 'theaterGroups')]
   #[ORM\JoinColumn(nullable: false)]
   #[Groups([TheaterGroup::READ, TheaterGroup::WRITE])]
   private ?User $representative = null;
@@ -51,10 +55,14 @@ class TheaterGroup
 
   #[ORM\Column(length: 255)]
   #[Groups([TheaterGroup::READ, TheaterGroup::WRITE])]
+  #[Assert\NotBlank(message: 'Please enter a name')]
+  #[Assert\Length(min: 3, max: 255)]
   private ?string $name = null;
 
   #[ORM\Column(length: 255)]
   #[Groups([TheaterGroup::READ, TheaterGroup::WRITE])]
+  #[Assert\NotBlank(message: 'Please enter a phone number')]
+  #[Assert\Regex(pattern: '/^\+((?:9[679]|8[035789]|6[789]|5[90]|42|3[578]|2[1-689])|9[0-58]|8[1246]|6[0-6]|5[1-8]|4[013-9]|3[0-469]|2[70]|7|1)(?:\W*\d){0,13}\d$/', message: 'Invalid phone number')]
   private ?string $phoneNumber = null;
 
   #[ORM\OneToOne(targetEntity: MediaObject::class)]

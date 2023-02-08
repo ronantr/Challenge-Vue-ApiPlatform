@@ -35,7 +35,7 @@ final class SetRepresentativeSubscriber implements EventSubscriberInterface
       return;
     }
 
-    $representative =  $this->security->getUser();
+    $representative = $this->security->getUser();
 
     $theaterGroup->setRepresentative($representative);
    
