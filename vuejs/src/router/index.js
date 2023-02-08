@@ -12,6 +12,7 @@ const Join = () => import("../pages/Join.vue");
 const Upload = () => import("../pages/Upload.vue");
 const UpdatePassword = () => import("../pages/UpdatePassword.vue");
 const ResetPassword = () => import("../pages/ResetPassword.vue");
+const Theater = () => import("../pages/Theater.vue");
 
 const routes = [
   {
@@ -67,6 +68,11 @@ const routes = [
     path: "/upload",
     name: "upload",
     component: Upload,
+  },
+  {
+    path: "/theater",
+    name: "theater",
+    component: Theater,
   },
   {
     path: "/admin",

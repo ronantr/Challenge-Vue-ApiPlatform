@@ -23,6 +23,8 @@ denormalizationContext: ['groups' => [User::WRITE]],
 #[Post(
 uriTemplate: '/join',
 denormalizationContext: ['groups' => [TheaterGroup::WRITE]],
+securityPostDenormalize: 'is_granted("theater_group_create", object)',
+securityPostDenormalizeMessage: 'You already have a theater group submission that is not closed.',
 )]
 #[Patch]
 #[ORM\Entity(repositoryClass: TheaterGroupRepository::class)]
@@ -42,9 +44,10 @@ class TheaterGroup
   #[Groups([TheaterGroup::READ, TheaterGroup::WRITE])]
   private ?User $representative = null;
 
-  #[ORM\Column(options: ['default' => false])]
+  #[ORM\Column(length: 255, options: ['default' => 'pending'])]
+  #[Assert\Choice(['pending', 'verified', 'closed'])]
   #[ApiProperty(security: 'is_granted("ROLE_ADMIN")')]
-  private ?bool $isVerified = false;
+  private ?string $status = "pending";
 
   #[ORM\Column(length: 255)]
   #[Groups([TheaterGroup::READ, TheaterGroup::WRITE])]
@@ -76,14 +79,14 @@ class TheaterGroup
     return $this;
   }
 
-  public function isVerified(): ?bool
+  public function getStatus(): ?string
   {
-    return $this->isVerified;
+    return $this->status;
   }
 
-  public function setIsVerified(bool $isVerified): self
+  public function setStatus(string $status): self
   {
-    $this->isVerified = $isVerified;
+    $this->status = $status;
 
     return $this;
   }
