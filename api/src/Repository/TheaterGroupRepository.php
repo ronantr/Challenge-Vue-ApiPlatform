@@ -39,6 +39,18 @@ class TheaterGroupRepository extends ServiceEntityRepository
         }
     }
 
+
+    public function findNotClosedTheaterGroupsByUser($user): array
+    {
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.representative = :user')
+            ->andWhere('t.status != :status')
+            ->setParameter('user', $user)
+            ->setParameter('status', 'closed')
+            ->getQuery()
+            ->getResult();
+    }
+
 //    /**
 //     * @return TheaterGroup[] Returns an array of TheaterGroup objects
 //     */
