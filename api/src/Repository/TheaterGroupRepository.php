@@ -39,16 +39,37 @@ class TheaterGroupRepository extends ServiceEntityRepository
         }
     }
 
-
-    public function findNotClosedTheaterGroupsByUser($user): array
+    public function findNotClosedTheaterGroupsByRepresentative($representative): array
     {
         return $this->createQueryBuilder('t')
-            ->andWhere('t.representative = :user')
+            ->andWhere('t.representative = :representative')
             ->andWhere('t.status != :status')
-            ->setParameter('user', $user)
+            ->setParameter('representative', $representative)
             ->setParameter('status', 'closed')
             ->getQuery()
             ->getResult();
+    }
+
+    public function findNotClosedTheaterGroupsByPhoneNumber($phoneNumber): array
+    {
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.phoneNumber = :phoneNumber')
+            ->andWhere('t.status != :status')
+            ->setParameter('phoneNumber', $phoneNumber)
+            ->setParameter('status', 'closed')
+            ->getQuery()
+            ->getResult();   
+    }
+
+    public function findNotClosedTheaterGroupsByName($name): array
+    {
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.name = :name')
+            ->andWhere('t.status != :status')
+            ->setParameter('name', $name)
+            ->setParameter('status', 'closed')
+            ->getQuery()
+            ->getResult();   
     }
 
 //    /**

@@ -34,8 +34,8 @@ class TheaterGroupVoter extends Voter
 
   private function canCreate($representative): bool
   {
-    $unverifiedTheaterGroup = $this->theaterGroupRepository->findNotClosedTheaterGroupsByUser($representative);
+    $notClosedTheaterGroup = $this->theaterGroupRepository->findNotClosedTheaterGroupsByRepresentative($representative);
 
-    return $unverifiedTheaterGroup === null;
+    return count($notClosedTheaterGroup) === 0;
   }
 }
