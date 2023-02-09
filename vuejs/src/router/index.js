@@ -12,6 +12,9 @@ const Upload = () => import("../pages/Upload.vue");
 const UpdatePassword = () => import("../pages/UpdatePassword.vue");
 const ResetPassword = () => import("../pages/ResetPassword.vue");
 const Theater = () => import("../pages/Theater.vue");
+const Admin = () => import("../pages/Admin/Admin.vue");
+const AdminTheaterGroups = () => import("../pages/Admin/TheaterGroups.vue");
+const AdminTheaterGroup = () => import("../pages/Admin/TheaterGroup.vue");
 const NotFound = () => import("../pages/Errors/NotFound.vue");
 
 const routes = [
@@ -75,6 +78,24 @@ const routes = [
     component: Theater,
   },
   {
+    path: "/admin",
+    name: "admin",
+    component: Admin,
+    children: [
+      {
+        path: "theater-groups",
+        name: "admin-theater-groups",
+        component: AdminTheaterGroups,
+      },
+      {
+        path: "theater-groups/:id",
+        name: "admin-theater-group",
+        component: AdminTheaterGroup,
+        props: ({ params }) => ({ id: params.id }),
+      },
+    ],
+  },
+  {
     path: "/:pathMatch(.*)*",
     name: "not-found",
     component: NotFound,
@@ -89,14 +110,18 @@ const router = createRouter({
 router.beforeEach(async ({ name, query }, _from, next) => {
   const authStore = useAuthStore();
   const authRoutes = ["login", "register", "verify"];
+  const adminRoutes = ["admin-theater-groups"];
+
   const publicRoutes = [
     ...authRoutes,
     "home",
     "update-password",
     "reset-password",
   ];
+
   const isAuthRoute = authRoutes.includes(name);
   const isPublicRoute = publicRoutes.includes(name);
+  const isAdminRoute = adminRoutes.includes(name);
 
   if (name === "verify") {
     const { token } = query;
@@ -118,6 +143,10 @@ router.beforeEach(async ({ name, query }, _from, next) => {
 
   if (isAuthRoute && authStore.isAuthenticated) {
     return next({ name: "profile" });
+  }
+
+  if (isAdminRoute && !authStore.isAdmin) {
+    return next({ name: "not-found" });
   }
 
   next();

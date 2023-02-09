@@ -92,5 +92,6 @@ export const useAuthStore = defineStore("auth", () => {
     verify,
     setToken,
     setUser,
+    token,
   };
 });
