@@ -72,9 +72,13 @@ async function onSubmit(credentials, { setErrors, resetForm }) {
 </script>
 
 <template>
-    <DynamicForm
-        :validation-schema="validationSchema"
-        :fields="fields"
-        :on-submit="onSubmit"
-    />
+    <div class="flex justify-center">
+        <div class="flex flex-col max-w-md p-6 rounded-md sm:p-10 dark:bg-gray-900 dark:text-gray-100">
+            <div class="mb-8 text-center">
+                <h1 class="my-3 text-4xl font-bold">S'inscrire</h1>
+                <p class="text-sm dark:text-gray-400">Inscrivez-vous afin de gérer votre espace</p>
+            </div>
+            <DynamicForm :validation-schema="validationSchema" :fields="fields" :on-submit="onSubmit" />
+        </div>
+    </div>
 </template>

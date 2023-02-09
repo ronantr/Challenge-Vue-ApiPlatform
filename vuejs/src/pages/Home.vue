@@ -36,7 +36,7 @@
     <section class="bg-gray-900 text-white">
         <div>
             <h2 class="text-xl font-medium text-center my-4">
-                Actuellement au cinéma
+                Actuellement au théatre
             </h2>
             <div class="flex flex-wrap justify-center">
                 <div
