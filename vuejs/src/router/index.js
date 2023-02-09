@@ -107,10 +107,9 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach(async ({ name, query }, _from, next) => {
+router.beforeEach(async ({ name, path, query }, _from, next) => {
   const authStore = useAuthStore();
   const authRoutes = ["login", "register", "verify"];
-  const adminRoutes = ["admin-theater-groups"];
 
   const publicRoutes = [
     ...authRoutes,
@@ -121,7 +120,7 @@ router.beforeEach(async ({ name, query }, _from, next) => {
 
   const isAuthRoute = authRoutes.includes(name);
   const isPublicRoute = publicRoutes.includes(name);
-  const isAdminRoute = adminRoutes.includes(name);
+  const isAdminRoute = path.startsWith("/admin");
 
   if (name === "verify") {
     const { token } = query;
