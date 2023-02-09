@@ -136,6 +136,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     $this->tokens = new ArrayCollection();
     $this->mediaObjects = new ArrayCollection();
     $this->theaterGroups = new ArrayCollection();
+
+    $this->roles = ['ROLE_USER'];
   }
 
   public function getId(): ?int
