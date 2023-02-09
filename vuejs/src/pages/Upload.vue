@@ -1,7 +1,7 @@
 <script setup>
 import DynamicForm from "../components/DynamicForm.vue";
 import { object, mixed } from "yup";
-import { axios } from "../libs";
+import { apiFetch } from "../utils/apiFetch";
 
 const validationSchema = object({
     file: mixed().required(),
@@ -21,7 +21,9 @@ async function onSubmit({ file }) {
 
     formData.append("file", file);
 
-    await axios.post("/media_objects", formData);
+    await apiFetch("/media_objects", formData, {
+        method: "POST",
+    });
 }
 </script>
 

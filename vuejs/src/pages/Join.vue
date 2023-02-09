@@ -3,8 +3,8 @@ import { object, string } from "yup";
 import { useToast } from "vue-toastification";
 import { useRouter } from "vue-router";
 import DynamicForm from "../components/DynamicForm.vue";
-import { axios } from "../libs";
 import { formatConstraintViolation, isConstraintViolation } from "../errors";
+import { apiFetch } from "../utils/apiFetch";
 
 const toast = useToast();
 const router = useRouter();
@@ -36,9 +36,9 @@ const fields = [
 
 async function onSubmit(fields, { setErrors }) {
     try {
-        await axios.post("/join", fields);
+        await apiFetch("/join", fields, { method: "POST" });
 
-        router.push("/theater");
+        router.push("/theater-group");
     } catch (error) {
         if (isConstraintViolation(error)) {
             const errors = formatConstraintViolation(error);

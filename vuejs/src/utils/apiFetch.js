@@ -6,7 +6,7 @@ export async function apiFetch(endpoint, body, options = {}) {
 
   const headers = {
     "Content-Type": "application/json",
-    Authorization: "Bearer " + token,
+    ...(token ? { Authorization: "Bearer " + token } : {}),
     ...options.headers,
   };
 
@@ -25,7 +25,9 @@ export async function apiFetch(endpoint, body, options = {}) {
     throw error;
   }
 
-  const data = response.json();
+  const data = await response.json();
 
-  return data;
+  return {
+    data,
+  };
 }

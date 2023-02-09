@@ -1,9 +1,9 @@
 <script setup>
 import DynamicForm from "../components/DynamicForm.vue";
 import { object, string } from "yup";
-import { axios } from "../libs";
 import { useToast } from "vue-toastification";
 import { isConstraintViolation, formatConstraintViolation } from "../errors";
+import { apiFetch } from "../utils/apiFetch";
 
 const toast = useToast();
 
@@ -49,7 +49,9 @@ const fields = [
 
 async function onSubmit(credentials, { setErrors, resetForm }) {
     try {
-        await axios.post("/register", credentials);
+        await apiFetch("/register", credentials, {
+            method: "POST",
+        });
 
         resetForm();
 
