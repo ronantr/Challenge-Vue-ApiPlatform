@@ -1,16 +1,15 @@
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
-import { axios } from "../libs";
 import decode from "jwt-decode";
 import dayjs from "dayjs";
 import { useRouter } from "vue-router";
 import { useStorage } from "@vueuse/core";
+import { apiFetch } from "../utils/apiFetch";
 
 export const useAuthStore = defineStore("auth", () => {
   const router = useRouter();
   const user = ref(null);
   const isAuthenticated = computed(() => !!user.value);
-  const isAdmin = ref(false);
   const isAttempted = ref(false);
   // TODO: Use it to welcome the user on the profile page
   const isVerified = ref(false);
@@ -18,7 +17,6 @@ export const useAuthStore = defineStore("auth", () => {
 
   function setToken(value) {
     token.value = value;
-    axios.defaults.headers["Authorization"] = "Bearer " + value;
   }
 
   function setUser(value) {
@@ -40,11 +38,13 @@ export const useAuthStore = defineStore("auth", () => {
         return;
       }
 
-      const { data } = await axios.get("/users/" + sub);
+      const { data } = await apiFetch("/users/" + sub);
+      const isAdmin = roles.includes("ROLE_ADMIN");
 
-      user.value = data;
-      isAdmin.value = roles.includes("ROLE_ADMIN");
-      axios.defaults.headers["Authorization"] = "Bearer " + token;
+      setUser({
+        ...data,
+        isAdmin,
+      });
     } catch (error) {
       token.value = null;
     } finally {
@@ -56,16 +56,20 @@ export const useAuthStore = defineStore("auth", () => {
     token.value = null;
     user.value = null;
 
-    delete axios.defaults.headers["Authorization"];
-
     router.push({ name: "home" });
   }
 
   async function verify(confirmationToken) {
     try {
-      const { data } = await axios.post("/verify", {
-        token: confirmationToken,
-      });
+      const { data } = await apiFetch(
+        "/verify",
+        {
+          token: confirmationToken,
+        },
+        {
+          method: "POST",
+        }
+      );
 
       token.value = data.token;
       isVerified.value = true;
@@ -77,7 +81,6 @@ export const useAuthStore = defineStore("auth", () => {
 
   return {
     attempt,
-    isAdmin,
     isAttempted,
     isAuthenticated,
     isVerified,
@@ -86,5 +89,6 @@ export const useAuthStore = defineStore("auth", () => {
     verify,
     setToken,
     setUser,
+    token,
   };
 });

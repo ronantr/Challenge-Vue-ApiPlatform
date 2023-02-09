@@ -6,10 +6,20 @@ import { useAuthStore } from "../stores/auth";
 
 // lazy-loaded
 const Profile = () => import("../pages/Profile.vue");
-const Admin = () => import("../pages/Admin.vue");
 const Verify = () => import("../pages/Verify.vue");
+const Join = () => import("../pages/Join.vue");
+const Upload = () => import("../pages/Upload.vue");
 const UpdatePassword = () => import("../pages/UpdatePassword.vue");
 const ResetPassword = () => import("../pages/ResetPassword.vue");
+const Admin = () => import("../pages/Admin/Admin.vue");
+const AdminTheaterGroups = () => import("../pages/Admin/TheaterGroups.vue");
+const AdminTheaterGroup = () => import("../pages/Admin/TheaterGroup.vue");
+const NotFound = () => import("../pages/Errors/NotFound.vue");
+const TheaterGroup = () => import("../pages/TheaterGroup/TheaterGroup.vue");
+const TheaterGroupEvents = () => import("../pages/TheaterGroup/Events.vue");
+const TheaterGroupEvent = () => import("../pages/TheaterGroup/Event.vue");
+const TheaterGroupInformation = () =>
+  import("../pages/TheaterGroup/Information.vue");
 
 const routes = [
   {
@@ -57,10 +67,63 @@ const routes = [
     component: Profile,
   },
   {
+    path: "/join",
+    name: "join",
+    component: Join,
+  },
+  {
+    path: "/upload",
+    name: "upload",
+    component: Upload,
+  },
+  {
+    path: "/theater-group/:id",
+    name: "theater-group",
+    component: TheaterGroup,
+    props: ({ params }) => ({ id: params.id }),
+    children: [
+      {
+        path: "",
+        name: "theater-group",
+        component: TheaterGroupInformation,
+        props: ({ params }) => ({ id: params.id }),
+      },
+      {
+        path: "events",
+        name: "theater-group-events",
+        component: TheaterGroupEvents,
+        props: ({ params }) => ({ id: params.id }),
+      },
+      {
+        path: "event/:id",
+        name: "theater-group-event",
+        component: TheaterGroupEvent,
+        props: ({ params }) => ({ id: params.id }),
+      },
+    ],
+  },
+  {
     path: "/admin",
     name: "admin",
-    // lazy-loaded
     component: Admin,
+    children: [
+      {
+        path: "theater-groups",
+        name: "admin-theater-groups",
+        component: AdminTheaterGroups,
+      },
+      {
+        path: "theater-group/:id",
+        name: "admin-theater-group",
+        component: AdminTheaterGroup,
+        props: ({ params }) => ({ id: params.id }),
+      },
+    ],
+  },
+  {
+    path: "/:pathMatch(.*)*",
+    name: "not-found",
+    component: NotFound,
   },
 ];
 
@@ -69,17 +132,20 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach(async ({ name, query }, _from, next) => {
+router.beforeEach(async ({ name, path, query }, _from, next) => {
   const authStore = useAuthStore();
   const authRoutes = ["login", "register", "verify"];
+
   const publicRoutes = [
     ...authRoutes,
     "home",
     "update-password",
     "reset-password",
   ];
+
   const isAuthRoute = authRoutes.includes(name);
   const isPublicRoute = publicRoutes.includes(name);
+  const isAdminRoute = path.startsWith("/admin");
 
   if (name === "verify") {
     const { token } = query;
@@ -101,6 +167,10 @@ router.beforeEach(async ({ name, query }, _from, next) => {
 
   if (isAuthRoute && authStore.isAuthenticated) {
     return next({ name: "profile" });
+  }
+
+  if (isAdminRoute && !authStore.user?.isAdmin) {
+    return next({ name: "not-found" });
   }
 
   next();
