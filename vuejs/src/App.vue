@@ -24,7 +24,7 @@ const { user, isAuthenticated, isAdmin, isAttempted } = storeToRefs(authStore);
                                 to="/"
                                 class="text-white hover:text-gray-500"
                             >
-                                <font-awesome-icon icon="home" /> Home
+                                <FontAwesomeIcon icon="home" /> Home
                             </router-link>
                         </div>
                         <div v-if="isAdmin" class="ml-4">
@@ -41,7 +41,7 @@ const { user, isAuthenticated, isAdmin, isAttempted } = storeToRefs(authStore);
                                 to="/register"
                                 class="text-white hover:text-gray-500"
                             >
-                                <font-awesome-icon icon="user-plus" /> Sign Up
+                                <FontAwesomeIcon icon="user-plus" /> Sign Up
                             </router-link>
                         </div>
                         <div class="ml-4">
@@ -49,21 +49,20 @@ const { user, isAuthenticated, isAdmin, isAttempted } = storeToRefs(authStore);
                                 to="/login"
                                 class="text-white hover:text-gray-500"
                             >
-                                <font-awesome-icon icon="sign-in-alt" /> Login
+                                <FontAwesomeIcon icon="sign-in-alt" /> Login
                             </router-link>
                         </div>
                     </div>
                     <div v-if="isAuthenticated" class="ml-auto">
                         <div class="ml-4">
                             <router-link to="/profile" class="text-blue-500">
-                                <font-awesome-icon icon="user" />
+                                <FontAwesomeIcon icon="user" />
                                 {{ user.email }}
                             </router-link>
                         </div>
                         <div class="ml-4">
                             <a class="text-blue-500" @click.prevent="logout">
-                                <font-awesome-icon icon="sign-out-alt" /> Log
-                                out
+                                <FontAwesomeIcon icon="sign-out-alt" /> Log out
                             </a>
                         </div>
                     </div>
