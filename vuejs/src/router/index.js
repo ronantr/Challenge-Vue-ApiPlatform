@@ -11,11 +11,15 @@ const Join = () => import("../pages/Join.vue");
 const Upload = () => import("../pages/Upload.vue");
 const UpdatePassword = () => import("../pages/UpdatePassword.vue");
 const ResetPassword = () => import("../pages/ResetPassword.vue");
-const TheaterGroup = () => import("../pages/TheaterGroup.vue");
 const Admin = () => import("../pages/Admin/Admin.vue");
 const AdminTheaterGroups = () => import("../pages/Admin/TheaterGroups.vue");
 const AdminTheaterGroup = () => import("../pages/Admin/TheaterGroup.vue");
 const NotFound = () => import("../pages/Errors/NotFound.vue");
+const TheaterGroup = () => import("../pages/TheaterGroup/TheaterGroup.vue");
+const TheaterGroupEvents = () => import("../pages/TheaterGroup/Events.vue");
+const TheaterGroupEvent = () => import("../pages/TheaterGroup/Event.vue");
+const TheaterGroupInformation = () =>
+  import("../pages/TheaterGroup/Information.vue");
 
 const routes = [
   {
@@ -77,6 +81,26 @@ const routes = [
     name: "theater-group",
     component: TheaterGroup,
     props: ({ params }) => ({ id: params.id }),
+    children: [
+      {
+        path: "",
+        name: "theater-group",
+        component: TheaterGroupInformation,
+        props: ({ params }) => ({ id: params.id }),
+      },
+      {
+        path: "events",
+        name: "theater-group-events",
+        component: TheaterGroupEvents,
+        props: ({ params }) => ({ id: params.id }),
+      },
+      {
+        path: "event/:id",
+        name: "theater-group-event",
+        component: TheaterGroupEvent,
+        props: ({ params }) => ({ id: params.id }),
+      },
+    ],
   },
   {
     path: "/admin",
