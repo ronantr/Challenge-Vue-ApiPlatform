@@ -10,7 +10,6 @@ export const useAuthStore = defineStore("auth", () => {
   const router = useRouter();
   const user = ref(null);
   const isAuthenticated = computed(() => !!user.value);
-  const isAdmin = ref(false);
   const isAttempted = ref(false);
   // TODO: Use it to welcome the user on the profile page
   const isVerified = ref(false);
@@ -44,9 +43,12 @@ export const useAuthStore = defineStore("auth", () => {
       }
 
       const { data } = await axios.get("/users/" + sub);
+      const isAdmin = roles.includes("ROLE_ADMIN");
 
-      user.value = data;
-      isAdmin.value = roles.includes("ROLE_ADMIN");
+      setUser({
+        ...data,
+        isAdmin,
+      });
 
       axios.defaults.headers = {
         Authorization: "Bearer " + token.value,
@@ -83,7 +85,6 @@ export const useAuthStore = defineStore("auth", () => {
 
   return {
     attempt,
-    isAdmin,
     isAttempted,
     isAuthenticated,
     isVerified,

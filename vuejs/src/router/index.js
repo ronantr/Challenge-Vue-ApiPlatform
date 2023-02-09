@@ -145,7 +145,7 @@ router.beforeEach(async ({ name, query }, _from, next) => {
     return next({ name: "profile" });
   }
 
-  if (isAdminRoute && !authStore.isAdmin) {
+  if (isAdminRoute && !authStore.user?.isAdmin) {
     return next({ name: "not-found" });
   }
 
