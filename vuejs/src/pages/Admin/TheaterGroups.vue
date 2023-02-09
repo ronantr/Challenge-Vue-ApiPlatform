@@ -1,8 +1,8 @@
 <script setup>
 import { ref, onMounted } from "vue";
-import { axios } from "../../libs";
 import { useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
+import { apiFetch } from "../../utils/apiFetch";
 
 const theaterGroups = ref([]);
 const isLoading = ref(true);
@@ -11,7 +11,7 @@ const toast = useToast();
 
 onMounted(async () => {
     try {
-        const { data } = await axios.get("/theater_groups");
+        const { data } = await apiFetch("/theater_groups");
 
         theaterGroups.value = data["hydra:member"].map((theaterGroup) => ({
             ...theaterGroup,
