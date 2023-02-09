@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref, onMounted } from "vue";
-import { apiFetch } from "../utils/apiFetch";
+import { apiFetch } from "../../utils/apiFetch";
 import { useToast } from "vue-toastification";
 
 const props = defineProps({
@@ -32,10 +32,7 @@ const source = computed(
 </script>
 
 <template>
-    <section
-        v-if="!isLoading"
-        class="flex flex-col items-center justify-center"
-    >
+    <section v-if="!isLoading">
         <h1 class="text-xl">Theater group</h1>
         <div class="flex flex-row gap-3">
             <div class="flex flex-col gap-1">
