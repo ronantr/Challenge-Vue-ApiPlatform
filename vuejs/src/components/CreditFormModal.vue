@@ -3,7 +3,7 @@
         <div class="flex justify-center">
             <button
                 @click="openModal"
-                class="px-6 py-2 text-white bg-blue-600 rounded shadow"
+                class="px-6 py-2 text-white bg-blue-600 rounded shadow mb-4"
                 type="button"
             >
                 Ajouter du crédit
@@ -48,7 +48,7 @@
                                 @submit.prevent="handleSubmit"
                             >
                                 <div>
-                                    <label for="amount">Amount</label>
+                                    <label for="amount">Montant</label>
                                     <input
                                         type="number"
                                         name="amount"
