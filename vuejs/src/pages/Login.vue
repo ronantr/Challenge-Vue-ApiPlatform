@@ -4,8 +4,8 @@ import DynamicForm from "../components/DynamicForm.vue";
 import { useRouter } from "vue-router";
 import decode from "jwt-decode";
 import { useAuthStore } from "../stores";
-import { axios } from "../libs";
 import { useToast } from "vue-toastification";
+import { apiFetch } from "../utils/apiFetch";
 
 const toast = useToast();
 const router = useRouter();
@@ -34,13 +34,16 @@ const fields = [
 
 async function onSubmit(credentials) {
     try {
-        const response = await axios.post("/login", credentials);
+        const response = await apiFetch("/login", credentials, {
+            method: "POST",
+        });
+
         const { token } = response.data;
 
         setToken(token);
 
         const { roles, sub } = decode(token);
-        const { data } = await axios.get("/users/" + sub);
+        const { data } = await apiFetch("/users/" + sub);
         const isAdmin = roles.includes("ROLE_ADMIN");
 
         setUser({
