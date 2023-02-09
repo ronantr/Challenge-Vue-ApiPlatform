@@ -11,7 +11,7 @@ const Join = () => import("../pages/Join.vue");
 const Upload = () => import("../pages/Upload.vue");
 const UpdatePassword = () => import("../pages/UpdatePassword.vue");
 const ResetPassword = () => import("../pages/ResetPassword.vue");
-const Theater = () => import("../pages/Theater.vue");
+const TheaterGroup = () => import("../pages/TheaterGroup.vue");
 const Admin = () => import("../pages/Admin/Admin.vue");
 const AdminTheaterGroups = () => import("../pages/Admin/TheaterGroups.vue");
 const AdminTheaterGroup = () => import("../pages/Admin/TheaterGroup.vue");
@@ -73,9 +73,10 @@ const routes = [
     component: Upload,
   },
   {
-    path: "/theater",
-    name: "theater",
-    component: Theater,
+    path: "/theater-group/:id",
+    name: "theater-group",
+    component: TheaterGroup,
+    props: ({ params }) => ({ id: params.id }),
   },
   {
     path: "/admin",
@@ -88,7 +89,7 @@ const routes = [
         component: AdminTheaterGroups,
       },
       {
-        path: "theater-groups/:id",
+        path: "theater-group/:id",
         name: "admin-theater-group",
         component: AdminTheaterGroup,
         props: ({ params }) => ({ id: params.id }),

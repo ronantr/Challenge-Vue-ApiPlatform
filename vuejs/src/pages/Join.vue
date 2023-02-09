@@ -1,5 +1,5 @@
 <script setup>
-import { object, string } from "yup";
+import { object, string, mixed } from "yup";
 import { useToast } from "vue-toastification";
 import { useRouter } from "vue-router";
 import DynamicForm from "../components/DynamicForm.vue";
@@ -17,6 +17,7 @@ const validationSchema = object({
             "Invalid phone number"
         )
         .required(),
+    receipt: mixed().required(),
 });
 
 const fields = [
@@ -32,13 +33,29 @@ const fields = [
         as: "input",
         type: "text",
     },
+    {
+        label: "Receipt",
+        name: "receipt",
+        as: "input",
+        type: "file",
+    },
 ];
 
 async function onSubmit(fields, { setErrors }) {
     try {
-        await apiFetch("/join", fields, { method: "POST" });
+        const formData = new FormData();
 
-        router.push("/theater-group");
+        for (const [key, value] of Object.entries(fields)) {
+            formData.append(key, value);
+        }
+
+        const { data } = await apiFetch("/join", formData, {
+            method: "POST",
+        });
+
+        const id = data["@id"].split("/").pop();
+
+        router.push("/theater-group/" + id);
     } catch (error) {
         if (isConstraintViolation(error)) {
             const errors = formatConstraintViolation(error);

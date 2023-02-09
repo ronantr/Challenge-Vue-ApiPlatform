@@ -4,13 +4,14 @@ export async function apiFetch(endpoint, body, options = {}) {
   const { token } = useAuthStore();
   const apiURL = new URL(endpoint, import.meta.env.VITE_API_URL);
 
+  const isFormData = body instanceof FormData;
+  const isJSON = body && !isFormData;
+
   const headers = {
-    "Content-Type": "application/json",
+    ...(isJSON ? { "Content-Type": "application/json" } : {}),
     ...(token ? { Authorization: "Bearer " + token } : {}),
     ...options.headers,
   };
-
-  const isJSON = /json/.test(headers["Content-Type"]);
 
   const response = await fetch(apiURL, {
     ...options,
@@ -25,9 +26,15 @@ export async function apiFetch(endpoint, body, options = {}) {
     throw error;
   }
 
-  const data = await response.json();
+  try {
+    const data = await response.json();
 
-  return {
-    data,
-  };
+    return {
+      data,
+    };
+  } catch (error) {
+    return {
+      data: null,
+    };
+  }
 }
