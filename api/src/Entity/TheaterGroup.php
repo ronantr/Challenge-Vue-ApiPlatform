@@ -16,6 +16,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\HttpFoundation\File\File;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 #[Vich\Uploadable]
 #[ApiResource(
@@ -82,8 +84,46 @@ class TheaterGroup
   #[Groups([TheaterGroup::WRITE, TheaterGroup::PATCH])]
   public ?File $receipt = null;
 
-   #[ORM\Column(nullable: true)]
+  #[ORM\Column(nullable: true)]
   public ?string $receiptPath = null;
+
+  #[ORM\OneToMany(mappedBy: 'theaterGroup', targetEntity: Event::class)]
+  private Collection $events;
+
+  public function __construct()
+  {
+    $this->events = new ArrayCollection();
+  }
+
+  /**
+   * @return Collection<int, Event>
+   */
+  public function getEvents(): Collection
+  {
+    return $this->events;
+  }
+
+  public function addEvent(Event $event): self
+  {
+    if (!$this->events->contains($event)) {
+      $this->events[] = $event;
+      $event->setTheaterGroup($this);
+    }
+
+    return $this;
+  }
+
+  public function removeEvent(Event $event): self
+  {
+    if ($this->events->removeElement($event)) {
+      // set the owning side to null (unless already changed)
+      if ($event->getTheaterGroup() === $this) {
+        $event->setTheaterGroup(null);
+      }
+    }
+    return $this;
+  }
+
 
   public function getId(): ?int
   {

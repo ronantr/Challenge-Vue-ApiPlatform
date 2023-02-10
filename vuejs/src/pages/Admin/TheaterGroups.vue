@@ -33,7 +33,10 @@ const headers = [
 ];
 
 const onClickRow = (item) => {
-    router.push({ name: "admin-theater-group", params: { id: item.id } });
+    router.push({
+        name: "admin-theater-group",
+        params: { theaterGroupId: item.id },
+    });
 };
 </script>
 
