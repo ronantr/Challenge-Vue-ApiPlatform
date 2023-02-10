@@ -5,39 +5,38 @@ namespace App\DataFixtures;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use App\Entity\Event;
-use App\Entity\User;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Faker\Factory;
 
 class EventFixtures extends Fixture implements DependentFixtureInterface
 {
-    public function load(ObjectManager $manager): void
-    {
-        $faker = Factory::create('fr_FR');
+  public function load(ObjectManager $manager): void
+  {
+    $faker = Factory::create('fr_FR');
 
-        //get all Users with role ROLE_THEATER
-        $theaterGroup = $manager->getRepository(User::class)->findByRole('ROLE_THEATER');
-        for ($i = 0; $i < 10; $i++) {
+    for ($i = 0; $i < 10; $i++) {
+      $event = new Event();
+      $theaterGroup = $this->getReference('theaterGroup_' . $i);
 
-            $object = (new Event())
-                ->setName($faker->word)
-                ->setDate($faker->dateTimeBetween('now', '+2 months'))
-                ->setLocation($faker->address)
-                ->setDescription($faker->text)
-                ->setImage($faker->imageUrl())
-                ->setVideo($faker->url)
-                ->setCapacity(rand(50, 200))
-                ->setTheaterGroup($faker->randomElement($theaterGroup));
-            $manager->persist($object);
-        }
-        $manager->flush();
+      $event
+        ->setName($faker->word)
+        ->setDate($faker->dateTimeBetween('now', '+2 months'))
+        ->setLocation($faker->address)
+        ->setDescription($faker->text)
+        ->setVideo($faker->url)
+        ->setCapacity(rand(50, 200))
+        ->setTheaterGroup($theaterGroup);
+
+      $manager->persist($event);
     }
+    
+    $manager->flush();
+  }
 
-
-    public function getDependencies()
-    {
-        return [
-            UserFixtures::class,
-        ];
-    }
+  public function getDependencies()
+  {
+    return [
+      TheaterGroupFixtures::class,
+    ];
+  }
 }
