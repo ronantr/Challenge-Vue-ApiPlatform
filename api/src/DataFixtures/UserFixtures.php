@@ -2,17 +2,20 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Level;
+use Faker\Factory;
 use App\Entity\User;
+use App\Entity\Level;
+use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
-use Doctrine\Persistence\ObjectManager;
-use Faker\Factory;
 
 class UserFixtures extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager): void
     {
+
+        $events = $manager->getRepository(User::class)->findAll();
+        $orders = $manager->getRepository(User::class)->findAll();
         //get levelNumber 1
         $level = $manager->getRepository(Level::class)->findOneByLevelNumber(1);
         
@@ -57,6 +60,26 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
             ->setIsVerified(true);
 
         $manager->persist($theater);
+
+
+
+    for ($i = 0; $i < 5; $i++) {
+        $user = new User();
+
+        $user
+            ->setEmail($faker->email)
+            ->setFirstname($faker->firstName)
+            ->setLastname($faker->lastName)
+            ->setRoles(['ROLE_USER'])
+            ->setPassword($password)
+            ->setCredit(0)
+            ->setPoints(0)
+            ->setIsVerified(true);
+
+
+        $manager->persist($user);
+    }
+
 
         $manager->flush();
     }

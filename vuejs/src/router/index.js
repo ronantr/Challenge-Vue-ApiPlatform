@@ -2,6 +2,14 @@ import { createWebHistory, createRouter } from "vue-router";
 import Home from "../pages/Home.vue";
 import Login from "../pages/Login.vue";
 import Register from "../pages/Register.vue";
+import About from "../pages/About.vue";
+import Contact from "../pages/Contact.vue";
+import LegalNotices from "../pages/LegalNotices.vue";
+import PrivacyPolicy from "../pages/PrivacyPolicy.vue";
+import Faq from "../pages/Faq.vue";
+import Cart from "../pages/Cart.vue";
+import Cgv from "../pages/Cgv.vue";
+import Fidelitycard from "../pages/FidelityCard.vue";
 import { useAuthStore } from "../stores/auth";
 
 // lazy-loaded
@@ -26,6 +34,46 @@ const routes = [
     path: "/",
     name: "home",
     component: Home,
+  },
+  {
+    path: "/about",
+    name: "about",
+    component: About,
+  },
+  {
+    path: "/legalnotices",
+    name: "legalnotices",
+    component: LegalNotices,
+  },
+  {
+    path: "/faq",
+    name: "faq",
+    component: Faq,
+  },
+  {
+    path: "/privacypolicy",
+    name: "privacypolicy",
+    component: PrivacyPolicy,
+  },
+  {
+    path: "/cgv",
+    name: "cgv",
+    component: Cgv,
+  },
+  {
+    path: "/fidelitycard",
+    name: "fidelitycard",
+    component: Fidelitycard,
+  },
+  {
+    path: "/contact",
+    name: "contact",
+    component: Contact,
+  },
+  {
+    path: "/cart",
+    name: "cart",
+    component: Cart,
   },
   {
     path: "/login",
@@ -141,6 +189,12 @@ router.beforeEach(async ({ name, path, query }, _from, next) => {
     "home",
     "update-password",
     "reset-password",
+    "about",
+    "contact",
+    "faq",
+    "legalnotices",
+    "privacypolicy",
+    "fidelitycard",
   ];
 
   const isAuthRoute = authRoutes.includes(name);

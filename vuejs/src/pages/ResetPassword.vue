@@ -39,9 +39,14 @@ async function onSubmit(values, { resetForm }) {
 </script>
 
 <template>
-    <DynamicForm
-        :validation-schema="validationSchema"
-        :fields="fields"
-        :on-submit="onSubmit"
-    />
+    <div class="flex justify-center">
+        <div class="flex flex-col max-w-md p-6 rounded-md sm:p-10 dark:bg-gray-900 dark:text-gray-100">
+            <div class="mb-8 text-center">
+                <h1 class="my-3 text-4xl font-bold">Mot de passe oublié</h1>
+                <p class="text-sm dark:text-gray-400">Renseignez votre mail afin de réinitialiser votre mot de passe</p>
+            </div>
+            <DynamicForm :validation-schema="validationSchema" :fields="fields" :on-submit="onSubmit" />
+        </div>
+    </div>
+
 </template>
