@@ -119,11 +119,13 @@ const theaterGroupLink = computed(() => {
                             </router-link>
                         </div>
                         <div class="mt-2 mx-5">
-                            <router-link
-                                to="/cart"
-                                class="text-white hover:text-gray-500"
-                            >
-                                <FontAwesomeIcon icon="shopping-cart" /> Panier
+                            <router-link to="/events" class="text-white hover:text-gray-500">
+                                <FontAwesomeIcon icon="cart-shopping" /> Evénements
+                            </router-link>
+                        </div>
+                        <div class="mt-2 mx-5">
+                            <router-link to="/cart" class="text-white hover:text-gray-500">
+                                <FontAwesomeIcon icon="cart-shopping" /> Panier
                             </router-link>
                         </div>
                         <div v-if="user?.isAdmin" class="mt-2 mx-5">

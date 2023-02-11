@@ -43,6 +43,7 @@ security:
     - { path: ^/cgv, roles: PUBLIC_ACCESS }
     - { path: ^/cart, roles: PUBLIC_ACCESS }
     - { path: ^/fidelitycard, roles: PUBLIC_ACCESS }
+    - { path: ^/events, roles: PUBLIC_ACCESS }
     - { path: ^/faq, roles: PUBLIC_ACCESS }
     - { path: ^/verify, roles: PUBLIC_ACCESS, method: POST }
     - { path: ^/reset-password, roles: PUBLIC_ACCESS, method: POST }
