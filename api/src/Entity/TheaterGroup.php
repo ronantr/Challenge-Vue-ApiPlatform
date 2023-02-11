@@ -34,6 +34,7 @@ denormalizationContext: ['groups' => [TheaterGroup::WRITE]],
 securityPostDenormalize: 'is_granted("theater_group_create", object)',
 securityPostDenormalizeMessage: 'You already have a theater group submission that is not closed.',
 inputFormats: ['multipart' => ['multipart/form-data']],
+validationContext: ['groups' => ["Default", TheaterGroup::WRITE]],
 )]
 #[Patch(
 denormalizationContext: ['groups' => [TheaterGroup::PATCH]],
@@ -81,6 +82,13 @@ class TheaterGroup
   public ?string $contentUrl = null;
 
   #[Vich\UploadableField(mapping: "media_object", fileNameProperty: "receiptPath")]
+  #[Assert\NotBlank(message: 'Please upload a receipt', groups: [TheaterGroup::WRITE])]
+  #[Assert\File(
+    maxSize: "1024k",
+    maxSizeMessage: "The file is too large ({{ size }}). Allowed maximum size is {{ limit }}",
+    mimeTypes: ["application/pdf", "application/x-pdf"],
+    mimeTypesMessage: "Please upload a valid PDF",
+  )]
   #[Groups([TheaterGroup::WRITE, TheaterGroup::PATCH])]
   public ?File $receipt = null;
 

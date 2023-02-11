@@ -37,6 +37,7 @@ controller: GetTheaterGroupEventsController::class
 denormalizationContext: ['groups' => [Event::WRITE]],
 securityPostDenormalize: "is_granted('event_create', object)",
 inputFormats: ['multipart' => ['multipart/form-data']],
+validationContext: ['groups' => ["Default", Event::WRITE]],
 )]
 #[Patch(
 denormalizationContext: ['groups' => [Event::PATCH]],
@@ -92,7 +93,7 @@ class Event
   public ?string $contentUrl = null;
 
   #[Vich\UploadableField(mapping: "media_object", fileNameProperty: "coverPath")]
-  #[Assert\NotNull(groups: [Event::WRITE])]
+  #[Assert\NotBlank(message: 'Please, upload the cover as a JPEG or PNG file.', groups: [Event::WRITE])]
   #[Assert\File(
   maxSize: '5M',
   maxSizeMessage: 'The file is too large ({{ size }} {{ suffix }}). Allowed maximum size is {{ limit }} {{ suffix }}.',
