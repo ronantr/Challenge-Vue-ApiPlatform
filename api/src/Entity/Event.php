@@ -42,7 +42,7 @@ validationContext: ['groups' => ["Default", Event::WRITE]],
 )]
 #[Patch(
 denormalizationContext: ['groups' => [Event::PATCH]],
-security: 'is_granted("ROLE_ADMIN") or object.getTheaterGroup().getRepresentative() == user',
+securityPostDenormalize: 'is_granted("ROLE_ADMIN") or object.getTheaterGroup().getRepresentative() == user',
 )]
 #[Delete(
 security: 'is_granted("ROLE_ADMIN") or object.getTheaterGroup().getRepresentative() == user',
@@ -134,9 +134,8 @@ class Event
   #[ORM\OneToMany(mappedBy: 'event', targetEntity: Ticket::class)]
   private Collection $tickets;
 
-  #[ORM\Column(type: 'boolean', options: ['default' => false])]
-  #[Groups([Event::READ, Event::LIST_THEATER_GROUP])]
-  #[ApiProperty(security: 'is_granted("ROLE_ADMIN") or object.getTheaterGroup().getRepresentative() == user')]
+  #[ORM\Column(options: ['default' => false])]
+  #[Groups([Event::READ, Event::PATCH, Event::LIST_THEATER_GROUP])]
   public ?bool $isPublished = false;
 
   public function __construct()
