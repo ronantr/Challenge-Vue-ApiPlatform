@@ -82,7 +82,7 @@
         "symfony/polyfill-php73": "*",
         "symfony/polyfill-php72": "*",
         "symfony/polyfill-php71": "*",
-        "symfony/polyfill-intl-idn":"*"
+        "symfony/polyfill-intl-normalizer":"*"
     },
     "scripts": {
         "auto-scripts": {
