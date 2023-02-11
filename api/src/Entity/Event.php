@@ -18,6 +18,7 @@ use ApiPlatform\Metadata\Delete;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\HttpFoundation\File\File;
 use App\Controller\GetTheaterGroupEventsController;
+use ApiPlatform\Metadata\ApiProperty;
 
 #[Vich\Uploadable]
 #[ApiResource]
@@ -86,7 +87,7 @@ class Event
   #[ORM\Column(type: Types::TEXT, nullable: true)]
   #[Assert\NotBlank]
   #[Assert\Length(max: 2000)]
-  #[Groups([Event::READ, Event::WRITE, Event::PATCH, Event::LIST ])]
+  #[Groups([Event::READ, Event::WRITE, Event::PATCH, Event::LIST])]
   private ?string $description = null;
 
   #[Groups([Event::READ])]
@@ -134,7 +135,9 @@ class Event
   private Collection $tickets;
 
   #[ORM\Column(type: 'boolean', options: ['default' => false])]
-  private ?bool $isPublished = false;
+  #[Groups([Event::READ, Event::LIST_THEATER_GROUP])]
+  #[ApiProperty(security: 'is_granted("ROLE_ADMIN") or object.getTheaterGroup().getRepresentative() == user')]
+  public ?bool $isPublished = false;
 
   public function __construct()
   {
@@ -259,7 +262,7 @@ class Event
     return $this;
   }
 
-  public function isPublished(): ?bool
+  public function getIsPublished(): ?bool
   {
     return $this->isPublished;
   }
