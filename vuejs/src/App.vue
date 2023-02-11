@@ -4,7 +4,7 @@ import { storeToRefs } from "pinia";
 
 const authStore = useAuthStore();
 const { logout } = authStore;
-const { user, isAuthenticated, isAdmin, isAttempted } = storeToRefs(authStore);
+const { user, isAuthenticated, isAttempted } = storeToRefs(authStore);
 </script>
 
 <template>
@@ -59,7 +59,7 @@ const { user, isAuthenticated, isAdmin, isAttempted } = storeToRefs(authStore);
                                 <FontAwesomeIcon icon="cart-shopping" /> Panier
                             </router-link>
                         </div>
-                        <div v-if="isAdmin" class="mt-2 mx-5">
+                        <div v-if="user?.isAdmin" class="mt-2 mx-5">
                             <router-link to="/admin" class="text-white hover:text-gray-500">Admin Board</router-link>
                         </div>
                     </div>

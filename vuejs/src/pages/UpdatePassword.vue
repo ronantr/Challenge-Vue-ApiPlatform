@@ -2,7 +2,7 @@
 import { object, string, ref } from "yup";
 import { useToast } from "vue-toastification";
 import DynamicForm from "../components/DynamicForm.vue";
-import { axios } from "../libs";
+import { apiFetch } from "../utils/apiFetch";
 
 const props = defineProps({
     token: {
@@ -43,10 +43,16 @@ const fields = [
 
 async function onSubmit({ password }, { setErrors }) {
     try {
-        const { data } = await axios.patch("/update-password", {
-            token: props.token,
-            password,
-        });
+        const { data } = await apiFetch(
+            "/update-password",
+            {
+                token: props.token,
+                password,
+            },
+            {
+                method: "PATCH",
+            }
+        );
 
         toast.success(data.message);
     } catch (error) {

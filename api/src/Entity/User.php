@@ -104,12 +104,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
   #[ORM\OneToMany(mappedBy: 'theater_group', targetEntity: Event::class)]
   private Collection $events;
 
-  #[ORM\Column(length: 255, nullable: true)]
-  private ?string $theater_group_name = null;
-
-  #[ORM\Column(length: 255, nullable: true)]
-  private ?string $theater_group_email = null;
-
   #[ORM\OneToMany(mappedBy: 'user', targetEntity: Transaction::class)]
   private Collection $transactions;
 
@@ -121,11 +115,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
   #[Groups([User::READ])]
   #[ORM\Column]
   private ?int $points = 0;
+
   #[ORM\OneToMany(mappedBy: 'customer', targetEntity: Token::class, orphanRemoval: true)]
   private Collection $tokens;
 
   #[ORM\Column(options: ['default' => false])]
   private ?bool $isVerified = false;
+
+  #[ORM\OneToMany(mappedBy: 'representative', targetEntity: TheaterGroup::class, orphanRemoval: true)]
+  private Collection $theaterGroups;
+
+  #[ORM\OneToMany(mappedBy: 'owner', targetEntity: MediaObject::class)]
+  private Collection $mediaObjects;
 
   public function __construct()
   {
@@ -133,6 +134,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     $this->events = new ArrayCollection();
     $this->transactions = new ArrayCollection();
     $this->tokens = new ArrayCollection();
+    $this->mediaObjects = new ArrayCollection();
+    $this->theaterGroups = new ArrayCollection();
+
+    $this->roles = ['ROLE_USER'];
   }
 
   public function getId(): ?int
@@ -306,31 +311,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     return $this;
   }
 
-
-  public function getTheaterGroupName(): ?string
-  {
-    return $this->theater_group_name;
-  }
-
-  public function setTheaterGroupName(?string $theater_group_name): self
-  {
-    $this->theater_group_name = $theater_group_name;
-
-    return $this;
-  }
-
-  public function getTheaterGroupEmail(): ?string
-  {
-    return $this->theater_group_email;
-  }
-
-  public function setTheaterGroupEmail(?string $theater_group_email): self
-  {
-    $this->theater_group_email = $theater_group_email;
-
-    return $this;
-  }
-
   /**
    * @return Collection<int, Transaction>
    */
@@ -426,5 +406,65 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     $this->isVerified = $isVerified;
 
     return $this;
+  }
+
+  /**
+   * @return Collection<int, TheaterGroup>
+   */
+  public function getTheaterGroups(): Collection
+  {
+      return $this->theaterGroups;
+  }
+
+  public function addTheaterGroup(TheaterGroup $theaterGroup): self
+  {
+    if (!$this->theaterGroups->contains($theaterGroup)) {
+      $this->theaterGroups[] = $theaterGroup;
+      $theaterGroup->setRepresentative($this);
+    }
+
+    return $this;
+  }
+
+  public function removeTheaterGroup(TheaterGroup $theaterGroup): self
+  {
+    if ($this->theaterGroups->removeElement($theaterGroup)) {
+      // set the owning side to null (unless already changed)
+      if ($theaterGroup->getRepresentative() === $this) {
+        $theaterGroup->setRepresentative(null);
+      }
+    }
+
+    return $this;
+  }
+
+  /**
+   * @return Collection<int, MediaObject>
+   */
+  public function getMediaObjects(): Collection
+  {
+      return $this->mediaObjects;
+  }
+
+  public function addMediaObject(MediaObject $mediaObject): self
+  {
+      if (!$this->mediaObjects->contains($mediaObject)) {
+          $this->mediaObjects[] = $mediaObject;
+          $mediaObject->setOwner($this);
+      }
+
+      return $this;
+  }
+
+  public function removeMediaObject(MediaObject $mediaObject): self
+  {
+      if ($this->mediaObjects->removeElement($mediaObject)) {
+          // set the owning side to null (unless already changed)
+          if ($mediaObject->getOwner() === $this) {
+              $mediaObject->setOwner(null);
+          }
+      }
+
+      return $this;
   }
 }

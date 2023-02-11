@@ -80,11 +80,11 @@
     </div>
 </template>
 <script setup>
-import { axios } from "../libs";
 import { loadStripe } from "@stripe/stripe-js";
 import { onMounted, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "../stores";
+import { apiFetch } from "../utils/apiFetch";
 
 const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
@@ -124,11 +124,15 @@ async function handleSubmit() {
         //     token: token.id,
         //     amount: amount.value,
         // });
-        const response = await axios.post("transactions", {
-            token: token.id,
-            user: user.value["@id"],
-            amount: amount.value,
-        });
+        const response = await apiFetch(
+            "transactions",
+            {
+                token: token.id,
+                user: user.value["@id"],
+                amount: amount.value,
+            },
+            { method: "POST" }
+        );
         // Handle successful response
         if (response.status === 200) {
             // Show success message
