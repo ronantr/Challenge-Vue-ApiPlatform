@@ -88,4 +88,4 @@ jobs:
           npm install
           npm run build
           cd ..
-          docker compose up -d
+          docker-compose up -d
