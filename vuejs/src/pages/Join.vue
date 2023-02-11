@@ -46,7 +46,9 @@ async function onSubmit(fields, { setErrors }) {
         const formData = new FormData();
 
         for (const [key, value] of Object.entries(fields)) {
-            formData.append(key, value);
+            if (value) {
+                formData.append(key, value);
+            }
         }
 
         const { data } = await apiFetch("/join", formData, {
