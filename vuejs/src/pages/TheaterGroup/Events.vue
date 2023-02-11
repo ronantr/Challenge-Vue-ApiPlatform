@@ -39,9 +39,9 @@ const validationSchema = object({
     date: date().required(),
     location: string().required(),
     description: string().max(2000).required(),
-    cover: mixed().required(),
+    cover: mixed(),
     video: string().matches(
-        /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(-nocookie)?\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/,
+        /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(-nocookie)?\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$|^$/,
         "The url is not a vid youtube url"
     ),
     capacity: number().min(1).max(1000).required(),

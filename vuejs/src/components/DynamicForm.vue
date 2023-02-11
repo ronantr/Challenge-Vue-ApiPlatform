@@ -15,10 +15,20 @@ defineProps({
         required: true,
     },
 });
+
+function setFileInputValue(value) {
+    const fileInput = document.querySelector("input[type=file]");
+
+    fileInput.value = value;
+}
 </script>
 
 <template>
-    <Form @submit="onSubmit" :validation-schema="validationSchema">
+    <Form
+        v-slot="{ setFieldValue }"
+        @submit="onSubmit"
+        :validation-schema="validationSchema"
+    >
         <div
             class="mb-4"
             v-for="{ name, label, ...attrs } in fields"
@@ -33,6 +43,16 @@ defineProps({
                 :name="name"
                 v-bind="attrs"
             />
+            <button
+                v-if="attrs.type === 'file'"
+                @click.prevent="
+                    setFieldValue(name, null);
+                    setFileInputValue('');
+                "
+                type="button"
+            >
+                Remove
+            </button>
             <ErrorMessage class="text-red-500" :name="name" />
         </div>
         <div class="flex justify-center">
