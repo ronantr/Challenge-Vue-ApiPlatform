@@ -9,6 +9,7 @@ import PrivacyPolicy from "../pages/PrivacyPolicy.vue";
 import Faq from "../pages/Faq.vue";
 import Cart from "../pages/Cart.vue";
 import Cgv from "../pages/Cgv.vue";
+import ListEvents from "../pages/Event/ListEvents.vue";
 import Fidelitycard from "../pages/FidelityCard.vue";
 import { useAuthStore } from "../stores/auth";
 
@@ -34,6 +35,11 @@ const routes = [
     path: "/",
     name: "home",
     component: Home,
+  },
+  {
+    path: "/events",
+    name: "events",
+    component: ListEvents,
   },
   {
     path: "/about",
@@ -195,6 +201,8 @@ router.beforeEach(async ({ name, path, query }, _from, next) => {
     "legalnotices",
     "privacypolicy",
     "fidelitycard",
+    "cgv",
+    "events"
   ];
 
   const isAuthRoute = authRoutes.includes(name);
