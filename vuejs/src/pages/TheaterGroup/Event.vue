@@ -33,6 +33,27 @@ onMounted(async () => {
 const imageSrc = computed(
     () => import.meta.env.VITE_API_URL + event.value.contentUrl
 );
+
+async function updateEvent(fields) {
+    try {
+        const { data } = await apiFetch("/events/" + props.eventId, fields, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/merge-patch+json",
+            },
+        });
+
+        event.value = data;
+
+        toast.success("Event updated");
+    } catch (error) {
+        toast.error("something went wrong");
+    }
+}
+
+const publish = () => updateEvent({ isPublished: true });
+
+const unpublish = () => updateEvent({ isPublished: false });
 </script>
 
 <template>
@@ -43,6 +64,12 @@ const imageSrc = computed(
         </router-link>
         <div class="flex flex-col gap-3">
             <img :src="imageSrc" alt="event cover" />
+            <div v-if="event.isPublished" class="flex flex-col gap-1">
+                <span>Published</span>
+            </div>
+            <div v-else class="flex flex-col gap-1">
+                <span>Not published</span>
+            </div>
             <div class="flex flex-col gap-1">
                 <span>Name</span>
                 <span>{{ event.name }}</span>
@@ -67,6 +94,16 @@ const imageSrc = computed(
                 <span>Video</span>
                 <span>{{ event.video }}</span>
             </div>
+            <button
+                v-if="event.isPublished"
+                @click="unpublish"
+                class="bg-red-500 text-white"
+            >
+                Mark as not published
+            </button>
+            <button v-else @click="publish" class="bg-blue-500 text-white">
+                Publish
+            </button>
         </div>
     </section>
 </template>
