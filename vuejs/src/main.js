@@ -12,6 +12,6 @@ app.use(pinia);
 app.use(router);
 app.use(toast);
 
-app.component("font-awesome-icon", FontAwesomeIcon);
+app.component("FontAwesomeIcon", FontAwesomeIcon);
 
 app.mount("#app");

@@ -9,6 +9,7 @@ import PrivacyPolicy from "../pages/PrivacyPolicy.vue";
 import Faq from "../pages/Faq.vue";
 import Cart from "../pages/Cart.vue";
 import Cgv from "../pages/Cgv.vue";
+import Fidelitycard from "../pages/FidelityCard.vue";
 import { useAuthStore } from "../stores/auth";
 
 // lazy-loaded
@@ -48,6 +49,11 @@ const routes = [
     path: "/cgv",
     name: "cgv",
     component: Cgv,
+  },
+  {
+    path: "/fidelitycard",
+    name: "fidelitycard",
+    component: Fidelitycard,
   },
   {
     path: "/contact",
@@ -123,7 +129,8 @@ router.beforeEach(async ({ name, query }, _from, next) => {
     "contact",
     "faq",
     "legalnotices",
-    "privacypolicy"
+    "privacypolicy",
+    "fidelitycard",
   ];
   const isAuthRoute = authRoutes.includes(name);
   const isPublicRoute = publicRoutes.includes(name);
