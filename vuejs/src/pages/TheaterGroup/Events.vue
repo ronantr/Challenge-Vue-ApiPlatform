@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { object, string, mixed, date, number } from "yup";
+import dayjs from "../../libs/day";
 import DynamicForm from "../../components/DynamicForm.vue";
 import { formatConstraintViolation, isConstraintViolation } from "../../errors";
 import { apiFetch } from "../../utils/apiFetch";
@@ -37,13 +38,13 @@ const validationSchema = object({
     name: string().min(3).max(255).required(),
     date: date().required(),
     location: string().required(),
-    description: string().max(2000),
+    description: string().max(2000).required(),
     cover: mixed().required(),
     video: string().matches(
         /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(-nocookie)?\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/,
         "The url is not a vid youtube url"
     ),
-    capacity: number().required(),
+    capacity: number().min(1).max(1000).required(),
 });
 
 const fields = [
@@ -57,7 +58,7 @@ const fields = [
         label: "Date",
         name: "date",
         as: "input",
-        type: "date",
+        type: "datetime-local",
     },
     {
         label: "Location",
@@ -94,11 +95,17 @@ async function onSubmit(fields, { setErrors }) {
     try {
         const formData = new FormData();
 
-        for (const [key, value] of Object.entries(fields)) {
+        Object.entries(fields).forEach(([key, value]) => {
             if (value) {
-                formData.append(key, value);
+                if (key === "date") {
+                    const date = dayjs(value).utc().format();
+
+                    return formData.append(key, date);
+                }
+
+                return formData.append(key, value);
             }
-        }
+        });
 
         const { data } = await apiFetch("/events", formData, {
             method: "POST",

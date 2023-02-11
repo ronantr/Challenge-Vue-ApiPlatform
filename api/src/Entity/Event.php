@@ -67,6 +67,12 @@ class Event
   #[ORM\Column(type: Types::DATETIME_MUTABLE)]
   #[Assert\NotBlank]
   #[Assert\Type(type: \DateTimeInterface::class)]
+  #[Assert\GreaterThan('today UTC')]
+  #[Assert\Range(
+  min: '+1 day UTC',
+  max: '+1 year UTC',
+  notInRangeMessage: 'The date must be between {{ min }} and {{ max }}'
+  )]
   #[Groups([Event::READ, Event::WRITE, Event::PATCH, Event::LIST])]
   private ?\DateTimeInterface $date = null;
 
@@ -79,13 +85,20 @@ class Event
   #[ORM\Column(type: Types::TEXT, nullable: true)]
   #[Assert\NotBlank]
   #[Assert\Length(max: 2000)]
-  #[Groups([Event::READ, Event::WRITE, Event::PATCH, Event::LIST])]
+  #[Groups([Event::READ, Event::WRITE, Event::PATCH, Event::LIST ])]
   private ?string $description = null;
 
   #[Groups([Event::READ])]
   public ?string $contentUrl = null;
 
   #[Vich\UploadableField(mapping: "media_object", fileNameProperty: "coverPath")]
+  #[Assert\NotNull(groups: [Event::WRITE])]
+  #[Assert\File(
+  maxSize: '5M',
+  maxSizeMessage: 'The file is too large ({{ size }} {{ suffix }}). Allowed maximum size is {{ limit }} {{ suffix }}.',
+  mimeTypes: ['image/jpeg', 'image/png'],
+  mimeTypesMessage: 'The file is not a valid image ({{ type }}). Allowed mime types are {{ types }}.'
+  )]
   #[Groups([Event::WRITE, Event::PATCH])]
   public ?File $cover = null;
 
@@ -93,8 +106,12 @@ class Event
   public ?string $coverPath = null;
 
   #[ORM\Column(length: 255, nullable: true)]
+  #[Assert\Regex(
+  pattern: '/^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(-nocookie)?\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/',
+  message: 'The url is not a valid youtube url'
+  )]
+  #[Assert\Length(max: 255)]
   #[Groups([Event::READ, Event::WRITE, Event::PATCH])]
-  #[Assert\Regex(pattern: '/^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(-nocookie)?\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/', message: 'The url is not a valid youtube url')]
   private ?string $video = null;
 
   #[ORM\ManyToOne(inversedBy: 'events')]
@@ -103,7 +120,12 @@ class Event
 
   #[ORM\Column]
   #[Assert\NotBlank]
-  #[Assert\Positive]
+  #[Assert\Range(
+  min: 1,
+  max: 1000,
+  notInRangeMessage: 'The capacity must be between {{ min }} and {{ max }}'
+  )]
+
   #[Groups([Event::READ, Event::WRITE, Event::PATCH])]
   private ?int $capacity = null;
 
@@ -238,13 +260,13 @@ class Event
 
   public function isPublished(): ?bool
   {
-      return $this->isPublished;
+    return $this->isPublished;
   }
 
   public function setIsPublished(bool $isPublished): self
   {
-      $this->isPublished = $isPublished;
+    $this->isPublished = $isPublished;
 
-      return $this;
+    return $this;
   }
 }
