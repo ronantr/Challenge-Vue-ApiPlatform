@@ -32,9 +32,20 @@ final class PublishedEventsExtension implements QueryCollectionExtensionInterfac
   {
     $isEvent = $resourceClass === Event::class;
     $isAdmin = $this->security->isGranted('ROLE_ADMIN');
+
+    if (!$isEvent || $isAdmin) {
+      return;
+    }
+
+    $rootAlias = $queryBuilder->getRootAliases()[0];
+
     $user = $this->security->getUser();
 
-    if (!$isEvent || $isAdmin || !$user) {
+    if (!$user) {
+      $rootAlias = $queryBuilder->getRootAliases()[0];
+      $queryBuilder->andWhere(sprintf('%s.isPublished = :isPublished', $rootAlias));
+      $queryBuilder->setParameter('isPublished', true);
+
       return;
     }
 
@@ -43,7 +54,13 @@ final class PublishedEventsExtension implements QueryCollectionExtensionInterfac
       'status' => 'verified'
     ]);
     
-    $rootAlias = $queryBuilder->getRootAliases()[0];
+    if (!$verifiedTheaterGroup) {
+      $queryBuilder->andWhere(sprintf('%s.isPublished = :isPublished', $rootAlias));
+      $queryBuilder->setParameter('isPublished', true);
+
+      return;
+    }
+
     $queryBuilder->andWhere(sprintf('%s.isPublished = :isPublished OR %s.theaterGroup = :verifiedTheaterGroup', $rootAlias, $rootAlias));
     $queryBuilder->setParameter('isPublished', true);
     $queryBuilder->setParameter('verifiedTheaterGroup', $verifiedTheaterGroup);
