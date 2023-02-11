@@ -110,6 +110,9 @@ class Event
   #[ORM\OneToMany(mappedBy: 'event', targetEntity: Ticket::class)]
   private Collection $tickets;
 
+  #[ORM\Column(type: 'boolean', options: ['default' => false])]
+  private ?bool $isPublished = false;
+
   public function __construct()
   {
     $this->tickets = new ArrayCollection();
@@ -231,5 +234,17 @@ class Event
       }
     }
     return $this;
+  }
+
+  public function isPublished(): ?bool
+  {
+      return $this->isPublished;
+  }
+
+  public function setIsPublished(bool $isPublished): self
+  {
+      $this->isPublished = $isPublished;
+
+      return $this;
   }
 }
