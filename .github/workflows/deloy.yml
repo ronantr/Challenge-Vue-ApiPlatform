@@ -83,9 +83,9 @@ jobs:
         PASSWORD: ${{ secrets.PASSWORD }}
         #KEY: ${{ secrets.SSHKEY }}
         script: |
-          unzip -o /root/Challenge-Vue-ApiPlatform.zip
+          unzip -o /root/Challenge-Vue-ApiPlatform.zip -d /root/Challenge-Vue-ApiPlatform
           cd /root/Challenge-Vue-ApiPlatform/vuejs
           npm install
           npm run build
           cd ..
-          docker stack deploy
+          docker compose up -d
