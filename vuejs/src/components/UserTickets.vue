@@ -2,7 +2,7 @@
     <div class="inline-block m-5">
         <div class="relative h-64">
             <img class="object-cover h-full w-64"
-                src="https://d1k4bi32qf3nf2.cloudfront.net/thumb@3x/product/2022/12/ladelicatesse_1671639392.jpg.webp"
+                src="https://img.freepik.com/vecteurs-premium/ticket-cinema_1459-2366.jpg?w=2000"
                 alt="" />
         </div>
         <div class="text-center mt-2">
