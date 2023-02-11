@@ -2,7 +2,7 @@
 import { object, string } from "yup";
 import { useToast } from "vue-toastification";
 import DynamicForm from "../components/DynamicForm.vue";
-import { axios } from "../libs";
+import { apiFetch } from "../utils/apiFetch";
 
 const toast = useToast();
 
@@ -21,7 +21,9 @@ const fields = [
 
 async function onSubmit(values, { resetForm }) {
     try {
-        const { data } = await axios.post("/reset-password", values);
+        const { data } = await apiFetch("/reset-password", values, {
+            method: "POST",
+        });
 
         resetForm();
 

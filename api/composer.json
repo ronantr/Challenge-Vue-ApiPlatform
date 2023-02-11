@@ -34,7 +34,8 @@
         "symfony/serializer": "6.1.*",
         "symfony/twig-bundle": "6.1.*",
         "symfony/validator": "6.1.*",
-        "symfony/yaml": "6.1.*"
+        "symfony/yaml": "6.1.*",
+        "vich/uploader-bundle": "^2.0"
     },
     "require-dev": {
         "api-platform/schema-generator": "^4.0",

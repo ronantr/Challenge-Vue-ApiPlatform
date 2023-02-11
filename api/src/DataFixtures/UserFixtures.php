@@ -54,8 +54,6 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
             ->setFirstname("theater")
             ->setLastname("theater")
             ->setRoles(['ROLE_THEATER'])
-            ->setTheaterGroupEmail($faker->email)
-            ->setTheaterGroupName($faker->company)
             ->setPassword($password)
             ->setCredit(0)
             ->setPoints(0)
