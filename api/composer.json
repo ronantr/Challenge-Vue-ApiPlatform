@@ -81,8 +81,7 @@
         "symfony/polyfill-php74": "*",
         "symfony/polyfill-php73": "*",
         "symfony/polyfill-php72": "*",
-        "symfony/polyfill-php71": "*",
-        "symfony/polyfill-intl":"*"
+        "symfony/polyfill-php71": "*"
     },
     "scripts": {
         "auto-scripts": {
