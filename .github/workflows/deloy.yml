@@ -18,7 +18,7 @@ jobs:
       - name: Pull images
         run: docker compose pull --ignore-pull-failures || true
       - name: Start services
-        run: docker compose up --build -d
+        run: docker compose up -d
       - name: Run Vuejs tests
         run: |
           cd vuejs
