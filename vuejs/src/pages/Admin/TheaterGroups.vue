@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, watchEffect } from "vue";
 import { useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
 import { apiFetch } from "../../utils/apiFetch";
@@ -10,6 +10,13 @@ const router = useRouter();
 const toast = useToast();
 const searchField = ref("name");
 const searchValue = ref("");
+const serverItemsLength = ref(0);
+const serverOptions = ref({
+    page: 1,
+    rowsPerPage: 10,
+    sortBy: "status",
+    sortType: "desc",
+});
 
 const status = {
     closed: "Fermé",
@@ -20,27 +27,11 @@ const status = {
 const searchables = ["id", "name", "phoneNumber"];
 const selectables = ["status"];
 
-onMounted(async () => {
-    try {
-        const { data } = await apiFetch("/theater_groups");
-
-        theaterGroups.value = data["hydra:member"].map((theaterGroup) => ({
-            ...theaterGroup,
-            id: theaterGroup["@id"].split("/").pop(),
-            status: status[theaterGroup.status],
-        }));
-    } catch (error) {
-        toast.error(error.message);
-    } finally {
-        isLoading.value = false;
-    }
-});
-
 const headers = [
     { text: "ID", value: "id" },
-    { text: "Nom", value: "name" },
-    { text: "Numéro de téléphone", value: "phoneNumber" },
-    { text: "Status", value: "status" },
+    { text: "Nom", value: "name", sortable: true },
+    { text: "Numéro de téléphone", value: "phoneNumber", sortable: true },
+    { text: "Status", value: "status", sortable: true },
 ];
 
 const onClickRow = (item) => {
@@ -49,6 +40,37 @@ const onClickRow = (item) => {
         params: { theaterGroupId: item.id },
     });
 };
+
+watchEffect(async () => {
+    try {
+        isLoading.value = true;
+
+        const urlSearchParams = new URLSearchParams();
+
+        urlSearchParams.append("page", serverOptions.value.page);
+        urlSearchParams.append("itemsPerPage", serverOptions.value.rowsPerPage);
+        urlSearchParams.append(
+            `order[${serverOptions.value.sortBy ?? "status"}]`,
+            serverOptions.value.sortType ?? "desc"
+        );
+
+        const { data } = await apiFetch(
+            "/theater_groups?" + urlSearchParams.toString()
+        );
+
+        theaterGroups.value = data["hydra:member"].map((theaterGroup) => ({
+            ...theaterGroup,
+            id: theaterGroup["@id"].split("/").pop(),
+            status: status[theaterGroup.status],
+        }));
+
+        serverItemsLength.value = data["hydra:totalItems"];
+    } catch (error) {
+        toast.error(error.message);
+    } finally {
+        isLoading.value = false;
+    }
+});
 </script>
 
 <template>
@@ -99,10 +121,11 @@ const onClickRow = (item) => {
             </div>
         </div>
         <EasyDataTable
+            v-model:server-options="serverOptions"
+            :server-items-length="serverItemsLength"
+            buttons-pagination
             :headers="headers"
             :items="theaterGroups"
-            :search-field="searchField"
-            :search-value="searchValue"
             :loading="isLoading"
             @click-row="onClickRow"
             alternating
