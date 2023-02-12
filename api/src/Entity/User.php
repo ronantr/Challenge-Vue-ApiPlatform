@@ -101,9 +101,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
   #[ORM\OneToMany(mappedBy: 'customer', targetEntity: Order::class)]
   private Collection $orders;
 
-  #[ORM\OneToMany(mappedBy: 'theater_group', targetEntity: Event::class)]
-  private Collection $events;
-
   #[ORM\OneToMany(mappedBy: 'user', targetEntity: Transaction::class)]
   private Collection $transactions;
 
@@ -131,7 +128,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
   public function __construct()
   {
     $this->orders = new ArrayCollection();
-    $this->events = new ArrayCollection();
     $this->transactions = new ArrayCollection();
     $this->tokens = new ArrayCollection();
     $this->mediaObjects = new ArrayCollection();
@@ -278,36 +274,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
       }
     }
 
-    return $this;
-  }
-
-
-  /**
-   * @return Collection<int, Event>
-   */
-  public function getEvents(): Collection
-  {
-    return $this->events;
-  }
-
-  public function addEvent(Event $event): self
-  {
-    if (!$this->events->contains($event)) {
-      $this->events[] = $event;
-      $event->setTheaterGroup($this);
-    }
-
-    return $this;
-  }
-
-  public function removeEvent(Event $event): self
-  {
-    if ($this->events->removeElement($event)) {
-      // set the owning side to null (unless already changed)
-      if ($event->getTheaterGroup() === $this) {
-        $event->setTheaterGroup(null);
-      }
-    }
     return $this;
   }
 

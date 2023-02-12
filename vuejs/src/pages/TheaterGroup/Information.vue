@@ -4,7 +4,7 @@ import { apiFetch } from "../../utils/apiFetch";
 import { useToast } from "vue-toastification";
 
 const props = defineProps({
-    id: {
+    theaterGroupId: {
         type: String,
         required: true,
     },
@@ -16,7 +16,9 @@ const toast = useToast();
 
 onMounted(async () => {
     try {
-        const { data } = await apiFetch("/theater_groups/" + props.id);
+        const { data } = await apiFetch(
+            "/theater_groups/" + props.theaterGroupId
+        );
 
         theaterGroup.value = data;
     } catch (error) {
