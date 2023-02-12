@@ -22,8 +22,9 @@ const status = {
     pending: "En attente",
 };
 
-const searchables = ["id", "name", "phoneNumber"];
+const writables = ["name", "phoneNumber"];
 const selectables = ["status"];
+const searchables = [...writables, ...selectables];
 
 const headers = [
     { text: "ID", value: "id" },
@@ -90,18 +91,20 @@ watchEffect(async () => {
                     @change="searchValue = ''"
                 >
                     <option
-                        v-for="header in headers"
-                        :key="header.value"
-                        :value="header.value"
+                        v-for="name in searchables"
+                        :key="name"
+                        :value="name"
                     >
-                        {{ header.text }}
+                        {{
+                            headers.find((header) => header.value === name).text
+                        }}
                     </option>
                 </select>
             </div>
             <div class="flex flex-row gap-1">
                 <label for="search-value">Valeur</label>
                 <input
-                    v-if="searchables.includes(searchField)"
+                    v-if="writables.includes(searchField)"
                     v-model="searchValue"
                     type="text"
                     id="search-value"
