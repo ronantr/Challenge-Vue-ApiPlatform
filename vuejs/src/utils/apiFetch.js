@@ -20,8 +20,11 @@ export async function apiFetch(endpoint, body, options = {}) {
   });
 
   if (!response.ok) {
+    console.error("API error", response);
+
     const error = new Error(response.statusText);
-    error.response = response;
+
+    error.data = await response.json();
 
     throw error;
   }

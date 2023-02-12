@@ -1,6 +1,6 @@
 <script setup>
 defineProps({
-    id: {
+    theaterGroupId: {
         type: String,
         required: true,
     },
@@ -15,7 +15,7 @@ defineProps({
         <nav>
             <ul class="flex flex-row gap-3">
                 <li>
-                    <router-link :to="`/theater-group/${id}/events`"
+                    <router-link :to="`/theater-group/${theaterGroupId}/events`"
                         >Events</router-link
                     >
                 </li>

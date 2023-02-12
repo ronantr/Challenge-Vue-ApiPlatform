@@ -16,6 +16,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\HttpFoundation\File\File;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 #[Vich\Uploadable]
 #[ApiResource(
@@ -32,6 +34,7 @@ denormalizationContext: ['groups' => [TheaterGroup::WRITE]],
 securityPostDenormalize: 'is_granted("theater_group_create", object)',
 securityPostDenormalizeMessage: 'You already have a theater group submission that is not closed.',
 inputFormats: ['multipart' => ['multipart/form-data']],
+validationContext: ['groups' => ["Default", TheaterGroup::WRITE]],
 )]
 #[Patch(
 denormalizationContext: ['groups' => [TheaterGroup::PATCH]],
@@ -79,11 +82,56 @@ class TheaterGroup
   public ?string $contentUrl = null;
 
   #[Vich\UploadableField(mapping: "media_object", fileNameProperty: "receiptPath")]
+  #[Assert\NotBlank(message: 'Please upload a receipt', groups: [TheaterGroup::WRITE])]
+  #[Assert\File(
+    maxSize: "1024k",
+    maxSizeMessage: "The file is too large ({{ size }}). Allowed maximum size is {{ limit }}",
+    mimeTypes: ["application/pdf", "application/x-pdf"],
+    mimeTypesMessage: "Please upload a valid PDF",
+  )]
   #[Groups([TheaterGroup::WRITE, TheaterGroup::PATCH])]
   public ?File $receipt = null;
 
-   #[ORM\Column(nullable: true)]
+  #[ORM\Column(nullable: true)]
   public ?string $receiptPath = null;
+
+  #[ORM\OneToMany(mappedBy: 'theaterGroup', targetEntity: Event::class)]
+  private Collection $events;
+
+  public function __construct()
+  {
+    $this->events = new ArrayCollection();
+  }
+
+  /**
+   * @return Collection<int, Event>
+   */
+  public function getEvents(): Collection
+  {
+    return $this->events;
+  }
+
+  public function addEvent(Event $event): self
+  {
+    if (!$this->events->contains($event)) {
+      $this->events[] = $event;
+      $event->setTheaterGroup($this);
+    }
+
+    return $this;
+  }
+
+  public function removeEvent(Event $event): self
+  {
+    if ($this->events->removeElement($event)) {
+      // set the owning side to null (unless already changed)
+      if ($event->getTheaterGroup() === $this) {
+        $event->setTheaterGroup(null);
+      }
+    }
+    return $this;
+  }
+
 
   public function getId(): ?int
   {

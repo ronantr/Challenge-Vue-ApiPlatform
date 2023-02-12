@@ -47,6 +47,7 @@ security:
     - { path: ^/verify, roles: PUBLIC_ACCESS, method: POST }
     - { path: ^/reset-password, roles: PUBLIC_ACCESS, method: POST }
     - { path: ^/update-password, roles: PUBLIC_ACCESS, method: PATCH }
+    - { path: ^/events$, roles: PUBLIC_ACCESS, method: GET }
     - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
 
   role_hierarchy:
