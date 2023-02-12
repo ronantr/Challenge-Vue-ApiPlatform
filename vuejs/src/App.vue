@@ -56,7 +56,7 @@ const { user, isAuthenticated, isAttempted } = storeToRefs(authStore);
                         </div>
                         <div class="mt-2 mx-5">
                             <router-link to="/cart" class="text-white hover:text-gray-500">
-                                <FontAwesomeIcon icon="cart-shopping" /> Panier
+                                <FontAwesomeIcon icon="shopping-cart" /> Panier
                             </router-link>
                         </div>
                         <div v-if="user?.isAdmin" class="mt-2 mx-5">
