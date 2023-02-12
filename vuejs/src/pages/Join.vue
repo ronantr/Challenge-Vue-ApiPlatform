@@ -75,6 +75,11 @@ async function onSubmit(fields, { setErrors }) {
 </script>
 
 <template>
+    <p>
+        Vous voilà enfin prêt à rejoindre Thealty ? Remplissez ce formulaire et
+        rejoignez-nous ! Un membre de notre équipe vous contactera dans les plus
+        brefs délais.
+    </p>
     <DynamicForm
         :validation-schema="validationSchema"
         :fields="fields"
