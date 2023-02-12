@@ -54,6 +54,14 @@ watchEffect(async () => {
             serverOptions.value.sortType ?? "desc"
         );
 
+        if (searchables.includes(searchField.value)) {
+            urlSearchParams.append(searchField.value, searchValue.value);
+        } else if (selectables.includes(searchField.value)) {
+            if (searchValue.value) {
+                urlSearchParams.append(searchField.value, searchValue.value);
+            }
+        }
+
         const { data } = await apiFetch(
             "/theater_groups?" + urlSearchParams.toString()
         );
@@ -110,9 +118,9 @@ watchEffect(async () => {
                 >
                     <option value="">Tous</option>
                     <option
-                        v-for="value in Object.values(status)"
-                        :key="value"
-                        :value="value"
+                        v-for="(value, key) in status"
+                        :key="key"
+                        :value="key"
                     >
                         {{ value }}
                     </option>
