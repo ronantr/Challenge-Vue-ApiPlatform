@@ -32,14 +32,8 @@ const headers = [
     { text: "Nom", value: "name", sortable: true },
     { text: "Numéro de téléphone", value: "phoneNumber", sortable: true },
     { text: "Status", value: "status", sortable: true },
+    { text: "Représentant", value: "representative", sortable: true },
 ];
-
-const onClickRow = (item) => {
-    router.push({
-        name: "admin-theater-group",
-        params: { theaterGroupId: item.id },
-    });
-};
 
 watchEffect(async () => {
     try {
@@ -70,6 +64,10 @@ watchEffect(async () => {
             ...theaterGroup,
             id: theaterGroup["@id"].split("/").pop(),
             status: status[theaterGroup.status],
+            representative: {
+                id: theaterGroup.representative["@id"].split("/").pop(),
+                name: `${theaterGroup.representative.firstName} ${theaterGroup.representative.lastName}`,
+            },
         }));
 
         serverItemsLength.value = data["hydra:totalItems"];
@@ -135,8 +133,44 @@ watchEffect(async () => {
             :headers="headers"
             :items="theaterGroups"
             :loading="isLoading"
-            @click-row="onClickRow"
             alternating
-        />
+            :rows-items="[10, 25, 50]"
+            :rows-of-page-separator-message="'sur'"
+            :rows-per-page-message="'Résultats par page'"
+            :empty-message="'Aucun résultat'"
+            must-sort
+        >
+            <template #item-name="item">
+                <router-link
+                    :to="{
+                        name: 'admin-theater-group',
+                        params: { theaterGroupId: item.id },
+                    }"
+                >
+                    {{ item.name }}
+                </router-link>
+            </template>
+            <template #item-representative="item">
+                <router-link
+                    :to="{
+                        name: 'admin-user',
+                        params: { userId: item.representative.id },
+                    }"
+                >
+                    {{ item.representative.name }}
+                </router-link>
+            </template>
+        </EasyDataTable>
     </div>
 </template>
+
+<style scoped>
+a {
+    color: black;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+</style>
