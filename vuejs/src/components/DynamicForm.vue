@@ -10,6 +10,10 @@ defineProps({
         type: Object,
         required: true,
     },
+    initialValues: {
+        type: Object,
+        required: true,
+    },
     onSubmit: {
         type: Function,
         required: true,
@@ -28,6 +32,7 @@ function setFileInputValue(value) {
         v-slot="{ setFieldValue }"
         @submit="onSubmit"
         :validation-schema="validationSchema"
+        :initial-values="initialValues"
     >
         <div
             class="mb-4"

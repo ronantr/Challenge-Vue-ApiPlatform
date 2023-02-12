@@ -18,7 +18,7 @@ use ApiPlatform\Metadata\Delete;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\HttpFoundation\File\File;
 use App\Controller\GetTheaterGroupEventsController;
-use ApiPlatform\Metadata\ApiProperty;
+use App\Controller\UpdateEventCoverController;
 
 #[Vich\Uploadable]
 #[ApiResource]
@@ -40,6 +40,14 @@ securityPostDenormalize: "is_granted('event_create', object)",
 inputFormats: ['multipart' => ['multipart/form-data']],
 validationContext: ['groups' => ["Default", Event::WRITE]],
 )]
+#[Post(
+uriTemplate: '/update_cover/{id}',
+denormalizationContext: ['groups' => [Event::COVER]],
+read: false,
+inputFormats: ['multipart' => ['multipart/form-data']],
+// validationContext: ['groups' => ["Default", Event::COVER]],
+controller: UpdateEventCoverController::class
+)]
 #[Patch(
 denormalizationContext: ['groups' => [Event::PATCH]],
 securityPostDenormalize: 'is_granted("ROLE_ADMIN") or object.getTheaterGroup().getRepresentative() == user',
@@ -54,6 +62,7 @@ class Event
   const LIST_THEATER_GROUP = 'event:list_theater_group';
   const WRITE = 'event:write';
   const PATCH = 'event:patch';
+  const COVER = 'event:cover';
 
   #[ORM\Id]
   #[ORM\GeneratedValue]
@@ -101,7 +110,7 @@ class Event
   mimeTypes: ['image/jpeg', 'image/png'],
   mimeTypesMessage: 'The file is not a valid image ({{ type }}). Allowed mime types are {{ types }}.'
   )]
-  #[Groups([Event::WRITE, Event::PATCH])]
+  #[Groups([Event::WRITE, Event::PATCH, Event::COVER])]
   public ?File $cover = null;
 
   #[ORM\Column(nullable: true)]
@@ -137,6 +146,10 @@ class Event
   #[ORM\Column(options: ['default' => false])]
   #[Groups([Event::READ, Event::PATCH, Event::LIST_THEATER_GROUP])]
   public ?bool $isPublished = false;
+
+
+  #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true, options: ['default' => 'CURRENT_TIMESTAMP'])]
+  public ?\DateTimeInterface $updatedAt = null;
 
   public function __construct()
   {
