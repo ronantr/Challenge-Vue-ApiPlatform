@@ -80,13 +80,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
   private ?string $password = null;
 
   #[ORM\Column(length: 255)]
-  #[Groups([User::READ, User::WRITE, User::PATCH, User::REGISTER])]
+  #[Groups([User::READ, User::WRITE, User::PATCH, User::REGISTER, TheaterGroup::READ])]
   #[NotBlank]
   #[Type('string')]
   private ?string $firstName = null;
 
   #[ORM\Column(length: 255)]
-  #[Groups([User::READ, User::WRITE, User::PATCH, User::REGISTER])]
+  #[Groups([User::READ, User::WRITE, User::PATCH, User::REGISTER, TheaterGroup::READ])]
   #[NotBlank]
   #[Type('string')]
   private ?string $lastName = null;
