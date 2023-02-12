@@ -1,12 +1,10 @@
 <script setup>
 import { ref, watchEffect } from "vue";
-import { useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
 import { apiFetch } from "../../utils/apiFetch";
 
 const theaterGroups = ref([]);
 const isLoading = ref(true);
-const router = useRouter();
 const toast = useToast();
 const searchField = ref("name");
 const searchValue = ref("");
@@ -32,29 +30,30 @@ const headers = [
     { text: "Nom", value: "name", sortable: true },
     { text: "Numéro de téléphone", value: "phoneNumber", sortable: true },
     { text: "Status", value: "status", sortable: true },
-    { text: "Représentant", value: "representative", sortable: true },
+    { text: "Représentant", value: "representative" },
 ];
+
+function getURLSearchParams() {
+    const urlSearchParams = new URLSearchParams();
+
+    const { page, rowsPerPage, sortBy, sortType } = serverOptions.value;
+
+    urlSearchParams.append("page", page);
+    urlSearchParams.append("itemsPerPage", rowsPerPage);
+    urlSearchParams.append(`order[${sortBy}]`, sortType);
+
+    if (searchValue.value) {
+        urlSearchParams.append(searchField.value, searchValue.value);
+    }
+
+    return urlSearchParams;
+}
 
 watchEffect(async () => {
     try {
         isLoading.value = true;
 
-        const urlSearchParams = new URLSearchParams();
-
-        urlSearchParams.append("page", serverOptions.value.page);
-        urlSearchParams.append("itemsPerPage", serverOptions.value.rowsPerPage);
-        urlSearchParams.append(
-            `order[${serverOptions.value.sortBy ?? "status"}]`,
-            serverOptions.value.sortType ?? "desc"
-        );
-
-        if (searchables.includes(searchField.value)) {
-            urlSearchParams.append(searchField.value, searchValue.value);
-        } else if (selectables.includes(searchField.value)) {
-            if (searchValue.value) {
-                urlSearchParams.append(searchField.value, searchValue.value);
-            }
-        }
+        const urlSearchParams = getURLSearchParams();
 
         const { data } = await apiFetch(
             "/theater_groups?" + urlSearchParams.toString()
