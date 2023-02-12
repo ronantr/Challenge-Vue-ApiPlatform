@@ -151,6 +151,16 @@ class Event
   #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true, options: ['default' => 'CURRENT_TIMESTAMP'])]
   public ?\DateTimeInterface $updatedAt = null;
 
+  #[ORM\Column]
+  #[Groups([Event::WRITE, Event::READ, Event::PATCH, Event::LIST])]
+  #[Assert\NotBlank]
+  #[Assert\Range(
+  min: 0,
+  max: 2000,
+  notInRangeMessage: "The price must be between 0€ and 200€" 
+  )]
+  private ?int $priceInCents = null;
+
   public function __construct()
   {
     $this->tickets = new ArrayCollection();
@@ -284,5 +294,17 @@ class Event
     $this->isPublished = $isPublished;
 
     return $this;
+  }
+
+  public function getPriceInCents(): ?int
+  {
+      return $this->priceInCents;
+  }
+
+  public function setPriceInCents(int $priceInCents): self
+  {
+      $this->priceInCents = $priceInCents;
+
+      return $this;
   }
 }

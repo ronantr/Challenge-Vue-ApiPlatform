@@ -37,6 +37,7 @@ onMounted(async () => {
 const validationSchema = object({
     name: string().min(3).max(255).required(),
     date: date().required(),
+    price: number().min(0).max(200).required(),
     location: string().required(),
     description: string().max(2000).required(),
     cover: mixed(),
@@ -59,6 +60,12 @@ const fields = [
         name: "date",
         as: "input",
         type: "datetime-local",
+    },
+    {
+        label: "Price",
+        name: "price",
+        as: "input",
+        type: "number",
     },
     {
         label: "Location",
@@ -103,6 +110,10 @@ async function onSubmit(fields, { setErrors }) {
                     return formData.append(key, date);
                 }
 
+                if (key === "price") {
+                    return formData.append("priceInCents", value * 100);
+                }
+
                 return formData.append(key, value);
             }
         });
@@ -118,7 +129,10 @@ async function onSubmit(fields, { setErrors }) {
         if (isConstraintViolation(error)) {
             const errors = formatConstraintViolation(error);
 
-            return setErrors(errors);
+            return setErrors({
+                ...errors,
+                price: errors.priceInCents,
+            });
         }
 
         if (error.status === 403) {
