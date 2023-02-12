@@ -41,9 +41,14 @@ export const useAuthStore = defineStore("auth", () => {
       const { data } = await apiFetch("/users/" + sub);
       const isAdmin = roles.includes("ROLE_ADMIN");
 
+      const theaterGroup = data.theaterGroups?.find(
+        (theaterGroup) => theaterGroup.status === "verified"
+      );
+
       setUser({
         ...data,
         isAdmin,
+        theaterGroup: theaterGroup || null,
       });
     } catch (error) {
       token.value = null;
