@@ -1,11 +1,13 @@
 <script setup>
 import { ref, watchEffect } from "vue";
 import { useToast } from "vue-toastification";
+import { useRouter } from "vue-router";
 import { apiFetch } from "../../utils/apiFetch";
 
 const users = ref([]);
 const isLoading = ref(true);
 const toast = useToast();
+const router = useRouter();
 const searchField = ref("email");
 const searchValue = ref("");
 const serverItemsLength = ref(0);
@@ -83,6 +85,13 @@ watchEffect(async () => {
         isLoading.value = false;
     }
 });
+
+function onClickRow(item) {
+    router.push({
+        name: "admin-user",
+        params: { userId: item.id },
+    });
+}
 </script>
 
 <template>
@@ -148,6 +157,7 @@ watchEffect(async () => {
             :rows-per-page-message="'Résultats par page'"
             :empty-message="'Aucun résultat'"
             must-sort
+            @click-row="onClickRow"
         >
             <template #item-theaterGroup="item">
                 <router-link
