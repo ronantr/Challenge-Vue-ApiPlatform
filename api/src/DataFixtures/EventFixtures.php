@@ -26,7 +26,8 @@ class EventFixtures extends Fixture implements DependentFixtureInterface
         ->setVideo($faker->url)
         ->setCapacity(rand(50, 200))
         ->setTheaterGroup($theaterGroup)
-        ->setIsPublished(false);
+        ->setIsPublished(false)
+        ->setPriceInCents(rand(1000, 5000));
 
       $manager->persist($event);
     }

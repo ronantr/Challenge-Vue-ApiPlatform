@@ -23,6 +23,7 @@ class EventDenormalizer implements ContextAwareDenormalizerInterface, Denormaliz
   public function denormalize($data, $class, $format = null, array $context = [])
   {
     $data["capacity"] = (int) $data["capacity"];
+    $data["priceInCents"] = (int) $data["priceInCents"];
 
     return $this->denormalizer->denormalize($data, $class, $format, $context + [__CLASS__ => true]);
   }

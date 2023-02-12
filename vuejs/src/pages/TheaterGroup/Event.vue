@@ -5,6 +5,7 @@ import { useToast } from "vue-toastification";
 import dayjs from "../../libs/day";
 import DynamicForm from "../../components/DynamicForm.vue";
 import { apiFetch } from "../../utils/apiFetch";
+import { formatConstraintViolation, isConstraintViolation } from "../../errors";
 
 const props = defineProps({
     eventId: {
@@ -42,6 +43,7 @@ const imageSrc = computed(
 const validationSchema = object({
     name: string().min(3).max(255).required(),
     date: date().required(),
+    price: number().min(0).max(200).required(),
     location: string().required(),
     description: string().max(2000).required(),
     video: string().matches(
@@ -63,6 +65,12 @@ const fields = [
         name: "date",
         as: "input",
         type: "datetime-local",
+    },
+    {
+        label: "Price",
+        name: "price",
+        as: "input",
+        type: "number",
     },
     {
         label: "Location",
@@ -89,13 +97,15 @@ const fields = [
     },
 ];
 
-async function updateEvent(payload) {
+async function updateEvent(payload, { setErrors }) {
     try {
         const fields = {
             ...payload,
             ...(payload.date && {
                 date: dayjs(payload.date).utc().format("YYYY-MM-DDTHH:mm:ssZ"),
             }),
+            ...(payload.price && { priceInCents: payload.price * 100 }),
+            price: undefined,
         };
 
         const updatedFields = Object.keys(fields).reduce((acc, key) => {
@@ -129,6 +139,15 @@ async function updateEvent(payload) {
 
         toast.success("Event updated");
     } catch (error) {
+        if (isConstraintViolation(error)) {
+            const errors = formatConstraintViolation(error);
+
+            return setErrors({
+                ...errors,
+                price: errors.priceInCents,
+            });
+        }
+
         toast.error("something went wrong");
     }
 }
@@ -140,6 +159,7 @@ const unpublish = () => updateEvent({ isPublished: false });
 const initialValues = computed(() => ({
     ...event.value,
     date: dayjs.utc(event.value.date).local().format("YYYY-MM-DDTHH:mm"),
+    price: event.value.priceInCents / 100,
 }));
 
 function deleteImage() {
