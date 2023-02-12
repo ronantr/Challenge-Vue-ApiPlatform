@@ -3,7 +3,7 @@
         <div class="flex justify-center">
             <button
                 @click="openModal"
-                class="px-6 py-2 text-white bg-blue-600 rounded shadow mb-4"
+                class="bg-pink-500 active:bg-pink-600 uppercase text-white font-bold hover:shadow-md shadow text-xs px-4 py-2 rounded outline-none focus:outline-none sm:mr-2 mb-1 ease-linear transition-all duration-150"
                 type="button"
             >
                 Ajouter du crédit
@@ -11,9 +11,9 @@
 
             <div
                 v-show="isOpen"
-                class="absolute inset-0 flex items-center justify-center bg-gray-700 bg-opacity-80"
+                class="absolute inset-0 flex items-center justify-center bg-gray-700 bg-opacity-80 z-50" 
             >
-                <div class="relative w-full h-full max-w-md md:h-auto z-50">
+                <div class="relative w-full h-full max-w-md md:h-auto z-50" style="top: 50%; left: 50%; transform: translate(-50%, -50%);">
                     <!-- Modal content -->
                     <div class="relative bg-white rounded-lg shadow">
                         <button
@@ -60,7 +60,6 @@
                                     Credit or debit card
                                 </label>
                                 <div id="card-element"></div>
-
                                 <div>
                                     <button
                                         class="block w-full max-w-xs mx-auto bg-indigo-500 hover:bg-indigo-700 focus:bg-indigo-700 text-white rounded-lg px-3 py-3 font-semibold"

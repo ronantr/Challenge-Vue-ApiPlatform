@@ -1,31 +1,6 @@
 <template>
     <div class="container mx-auto">
         <ProfileInfos />
-        <CreditFormModal />
-        <section class="bg-gray-100 p-6 rounded-lg">
-            <div class="relative overflow-hidden">
-                <div class="relative z-10 flex items-center justify-center h-48 bg-gray-800">
-                    <h1 class="text-white text-lg font-medium">Récement vu</h1>
-                </div>
-                <div class="relative z-0">
-                    <div class="overflow-x-auto">
-                        <TheatherCard />
-                    </div>
-                </div>
-            </div>
-        </section>
-        <section class="bg-gray-100 p-6 rounded-lg">
-            <div class="relative overflow-hidden">
-                <div class="relative z-10 flex items-center justify-center h-48 bg-gray-800">
-                    <h1 class="text-white text-lg font-medium">Mes billets</h1>
-                </div>
-                <div class="relative z-0">
-                    <div class="overflow-x-auto">
-                        <UserTickets />
-                    </div>
-                </div>
-            </div>
-        </section>
     </div>
 </template>
 
@@ -50,5 +25,4 @@ if (!currentUser.value) {
     router.push("/login");
 }
 
-console.log("test", currentUser.value);
 </script>
