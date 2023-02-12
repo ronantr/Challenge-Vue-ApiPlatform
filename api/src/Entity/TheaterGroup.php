@@ -18,11 +18,17 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\HttpFoundation\File\File;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 
 #[Vich\Uploadable]
 #[ApiResource(
 normalizationContext: ['groups' => [TheaterGroup::READ]],
 denormalizationContext: ['groups' => [TheaterGroup::WRITE]],
+)]
+#[ApiFilter(
+OrderFilter::class,
+properties: ["status" => "DESC", "name" => "ASC", "phoneNumber" => "ASC",],
 )]
 #[Get(security: 'is_granted("ROLE_ADMIN") or object.getRepresentative() == user')]
 #[GetCollection(
