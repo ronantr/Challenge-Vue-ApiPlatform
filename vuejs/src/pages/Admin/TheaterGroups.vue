@@ -29,7 +29,6 @@ const headers = [
     { text: "Name", value: "name" },
     { text: "Phone Number", value: "phoneNumber" },
     { text: "Status", value: "status" },
-    { text: "Actions", value: "actions", sortable: false },
 ];
 
 const onClickRow = (item) => {
