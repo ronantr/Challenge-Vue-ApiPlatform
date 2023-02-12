@@ -19,15 +19,16 @@ use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotCompromisedPassword;
 use Symfony\Component\Validator\Constraints\Type;
-use Symfony\Component\Security\Core\Annotation\IsGranted;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Validator\Constraints\Regex;
+use ApiPlatform\Metadata\ApiProperty;
 
 #[ApiResource(
 normalizationContext: ['groups' => [User::READ]],
 denormalizationContext: ['groups' => [User::WRITE]],
 )]
-#[Get]
+#[Get(
+security: 'is_granted("ROLE_ADMIN") or object == user',
+)]
 #[GetCollection]
 #[Post]
 #[Post(
