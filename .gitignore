@@ -3,3 +3,4 @@
 !/helm/api-platform/charts/.gitignore
 *DS_Store
 /vuejs_old/*
+/vuejs/*

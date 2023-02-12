@@ -22,13 +22,32 @@
             </div>
 
             <ul class="grid gap-4 mt-4 sm:grid-cols-2 lg:grid-cols-4">
-                <TheatherCard />
+                <li v-for="event in events">
+                    <TheatherCard :event="event"/>
+                    <button @click="addToCart(item)">Add to Cart</button>
+                </li>
             </ul>
         </div>
     </section>
 </template>
 
 <script setup>
+import { onBeforeMount, ref } from "vue";
 import TheatherCard from "../../components/TheatherCard.vue";
+import { apiFetch } from "../../utils/apiFetch";
+
+const events = ref([]);
+const addToCart = (item) => {
+    console.log(item);
+};
+
+const fetchEvents = async () => {
+    const response = await apiFetch("events");
+    events.value = await response.data["hydra:member"]
+};
+
+
+fetchEvents();
+
 
 </script>

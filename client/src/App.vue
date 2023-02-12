@@ -23,10 +23,8 @@ const theaterGroupLink = computed(() => {
     />
     <Transition>
         <div id="app" v-if="isAttempted">
-            <nav class="bg-gray-900">
-                <div
-                    class="container mx-auto flex items-center justify-between px-4 py-3"
-                >
+            <nav class="bg-gray-900 px-2">
+                <div class="container mx-auto flex items-center justify-between px-4 py-3">
                     <div class="flex">
                         <div class="ml-4">
                             <router-link
@@ -181,7 +179,7 @@ const theaterGroupLink = computed(() => {
                     </div>
                 </div>
             </nav>
-            <div class="p-4">
+            <div>
                 <router-view />
             </div>
         </div>
