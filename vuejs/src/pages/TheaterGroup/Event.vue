@@ -152,9 +152,21 @@ async function updateEvent(payload, { setErrors }) {
     }
 }
 
-const publish = () => updateEvent({ isPublished: true });
+const publish = () =>
+    updateEvent(
+        { isPublished: true },
+        {
+            setErrors: null,
+        }
+    );
 
-const unpublish = () => updateEvent({ isPublished: false });
+const unpublish = () =>
+    updateEvent(
+        { isPublished: false },
+        {
+            setErrors: null,
+        }
+    );
 
 const initialValues = computed(() => ({
     ...event.value,

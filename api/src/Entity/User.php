@@ -121,6 +121,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
   private ?bool $isVerified = false;
 
   #[ORM\OneToMany(mappedBy: 'representative', targetEntity: TheaterGroup::class, orphanRemoval: true)]
+  #[Groups([User::READ])]
   private Collection $theaterGroups;
 
   #[ORM\OneToMany(mappedBy: 'owner', targetEntity: MediaObject::class)]

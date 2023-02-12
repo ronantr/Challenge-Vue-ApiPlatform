@@ -59,14 +59,14 @@ class TheaterGroup
   private ?User $representative = null;
 
   #[ORM\Column(length: 255, options: ['default' => 'pending'])]
-  #[Groups([TheaterGroup::READ, TheaterGroup::PATCH])]
+  #[Groups([TheaterGroup::READ, TheaterGroup::PATCH, User::READ])]
   #[Assert\Choice(['pending', 'verified', 'closed'], message: 'Please choose a valid status, pending, verified or closed')]
   #[Assert\NotBlank(message: 'Please choose a status')]
   #[ApiProperty(security: "is_granted('ROLE_ADMIN') or is_granted('theater_group_view_status', object)")]
   private ?string $status = "pending";
 
   #[ORM\Column(length: 255)]
-  #[Groups([TheaterGroup::READ, TheaterGroup::WRITE, TheaterGroup::PATCH])]
+  #[Groups([TheaterGroup::READ, TheaterGroup::WRITE, TheaterGroup::PATCH, User::READ])]
   #[Assert\NotBlank(message: 'Please enter a name')]
   #[Assert\Length(min: 3, max: 255)]
   private ?string $name = null;
