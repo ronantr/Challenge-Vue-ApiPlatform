@@ -25,7 +25,7 @@ class TheaterGroupFixtures extends Fixture implements DependentFixtureInterface
 
     $manager->persist($theaterGroup);
 
-    for ($i = 0; $i < 10; $i++) {
+    for ($i = 0; $i < 100; $i++) {
       $user = $this->getReference('user_' . $i);
       $theaterGroup = new TheaterGroup();
 

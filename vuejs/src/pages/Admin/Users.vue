@@ -1,37 +1,39 @@
 <script setup>
 import { ref, watchEffect } from "vue";
 import { useToast } from "vue-toastification";
+import { useRouter } from "vue-router";
 import { apiFetch } from "../../utils/apiFetch";
 
-const theaterGroups = ref([]);
+const users = ref([]);
 const isLoading = ref(true);
 const toast = useToast();
-const searchField = ref("name");
+const router = useRouter();
+const searchField = ref("email");
 const searchValue = ref("");
 const serverItemsLength = ref(0);
 const serverOptions = ref({
     page: 1,
     rowsPerPage: 10,
-    sortBy: "status",
-    sortType: "desc",
+    sortBy: "email",
+    sortType: "asc",
 });
 
-const status = {
-    closed: "Fermé",
-    verified: "Vérifié",
-    pending: "En attente",
+const roles = {
+    ["ROLE_ADMIN"]: "Administrateur",
+    ["ROLE_USER"]: "Utilisateur",
 };
 
-const writables = ["name", "phoneNumber"];
-const selectables = ["status"];
+const writables = ["lastName", "firstName", "email"];
+const selectables = ["roles"];
 const searchables = [...writables, ...selectables];
 
 const headers = [
     { text: "ID", value: "id" },
-    { text: "Nom", value: "name", sortable: true },
-    { text: "Numéro de téléphone", value: "phoneNumber", sortable: true },
-    { text: "Status", value: "status", sortable: true },
-    { text: "Représentant", value: "representative" },
+    { text: "Prénom", value: "firstName", sortable: true },
+    { text: "Nom", value: "lastName", sortable: true },
+    { text: "Email", value: "email", sortable: true },
+    { text: "Rôle", value: "roles" },
+    { text: "Group de théâtre", value: "theaterGroup" },
 ];
 
 function getURLSearchParams() {
@@ -56,19 +58,25 @@ watchEffect(async () => {
 
         const urlSearchParams = getURLSearchParams();
 
-        const { data } = await apiFetch(
-            "/theater_groups?" + urlSearchParams.toString()
-        );
+        const { data } = await apiFetch("/users?" + urlSearchParams.toString());
 
-        theaterGroups.value = data["hydra:member"].map((theaterGroup) => ({
-            ...theaterGroup,
-            id: theaterGroup["@id"].split("/").pop(),
-            status: status[theaterGroup.status],
-            representative: {
-                id: theaterGroup.representative["@id"].split("/").pop(),
-                name: `${theaterGroup.representative.firstName} ${theaterGroup.representative.lastName}`,
-            },
-        }));
+        users.value = data["hydra:member"].map((user) => {
+            const theaterGroup = user.theaterGroups?.find(
+                (theaterGroup) => theaterGroup.status === "verified"
+            );
+
+            return {
+                ...user,
+                id: user["@id"].split("/").pop(),
+                roles: user.roles.map((role) => roles[role]),
+                ...(theaterGroup && {
+                    theaterGroup: {
+                        id: theaterGroup["@id"].split("/").pop(),
+                        name: theaterGroup.name,
+                    },
+                }),
+            };
+        });
 
         serverItemsLength.value = data["hydra:totalItems"];
     } catch (error) {
@@ -77,10 +85,17 @@ watchEffect(async () => {
         isLoading.value = false;
     }
 });
+
+function onClickRow(item) {
+    router.push({
+        name: "admin-user",
+        params: { userId: item.id },
+    });
+}
 </script>
 
 <template>
-    <h1 class="text-xl">Theater groups</h1>
+    <h1 class="text-xl">Users</h1>
     <div class="flex flex-col gap-3">
         <div class="flex flex-row gap-3">
             <div class="flex flex-row gap-1">
@@ -96,7 +111,8 @@ watchEffect(async () => {
                         :value="name"
                     >
                         {{
-                            headers.find((header) => header.value === name).text
+                            headers.find((header) => header.value === name)
+                                ?.text
                         }}
                     </option>
                 </select>
@@ -118,7 +134,7 @@ watchEffect(async () => {
                 >
                     <option value="">Tous</option>
                     <option
-                        v-for="(value, key) in status"
+                        v-for="(value, key) in roles"
                         :key="key"
                         :value="key"
                     >
@@ -133,7 +149,7 @@ watchEffect(async () => {
             :server-items-length="serverItemsLength"
             buttons-pagination
             :headers="headers"
-            :items="theaterGroups"
+            :items="users"
             :loading="isLoading"
             alternating
             :rows-items="[10, 25, 50]"
@@ -141,25 +157,17 @@ watchEffect(async () => {
             :rows-per-page-message="'Résultats par page'"
             :empty-message="'Aucun résultat'"
             must-sort
+            @click-row="onClickRow"
         >
-            <template #item-name="item">
+            <template #item-theaterGroup="item">
                 <router-link
+                    v-if="item.theaterGroup"
                     :to="{
                         name: 'admin-theater-group',
-                        params: { theaterGroupId: item.id },
+                        params: { theaterGroupId: item.theaterGroup.id },
                     }"
                 >
-                    {{ item.name }}
-                </router-link>
-            </template>
-            <template #item-representative="item">
-                <router-link
-                    :to="{
-                        name: 'admin-user',
-                        params: { userId: item.representative.id },
-                    }"
-                >
-                    {{ item.representative.name }}
+                    {{ item.theaterGroup.name }}
                 </router-link>
             </template>
         </EasyDataTable>

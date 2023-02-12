@@ -18,11 +18,27 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\HttpFoundation\File\File;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 
 #[Vich\Uploadable]
 #[ApiResource(
 normalizationContext: ['groups' => [TheaterGroup::READ]],
 denormalizationContext: ['groups' => [TheaterGroup::WRITE]],
+)]
+#[ApiFilter(
+OrderFilter::class,
+properties: ["status" => "DESC", "name" => "ASC", "phoneNumber" => "ASC",],
+)]
+#[ApiFilter(
+SearchFilter::class,
+properties: [
+'name' => 'partial',
+'phoneNumber' => 'partial',
+'status' => 'exact',
+'representative' => 'exact',
+],
 )]
 #[Get(security: 'is_granted("ROLE_ADMIN") or object.getRepresentative() == user')]
 #[GetCollection(
@@ -84,10 +100,10 @@ class TheaterGroup
   #[Vich\UploadableField(mapping: "media_object", fileNameProperty: "receiptPath")]
   #[Assert\NotBlank(message: 'Please upload a receipt', groups: [TheaterGroup::WRITE])]
   #[Assert\File(
-    maxSize: "1024k",
-    maxSizeMessage: "The file is too large ({{ size }}). Allowed maximum size is {{ limit }}",
-    mimeTypes: ["application/pdf", "application/x-pdf"],
-    mimeTypesMessage: "Please upload a valid PDF",
+  maxSize: "1024k",
+  maxSizeMessage: "The file is too large ({{ size }}). Allowed maximum size is {{ limit }}",
+  mimeTypes: ["application/pdf", "application/x-pdf"],
+  mimeTypesMessage: "Please upload a valid PDF",
   )]
   #[Groups([TheaterGroup::WRITE, TheaterGroup::PATCH])]
   public ?File $receipt = null;

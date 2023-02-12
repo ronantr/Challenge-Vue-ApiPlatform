@@ -20,11 +20,25 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotCompromisedPassword;
 use Symfony\Component\Validator\Constraints\Type;
 use Symfony\Component\Validator\Constraints\Regex;
-use ApiPlatform\Metadata\ApiProperty;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 
 #[ApiResource(
 normalizationContext: ['groups' => [User::READ]],
 denormalizationContext: ['groups' => [User::WRITE]],
+)]
+#[ApiFilter(
+OrderFilter::class,
+properties: ["firstName", "lastName", "email"],
+)]
+#[ApiFilter(
+SearchFilter::class,
+properties: [
+'firstName' => 'partial',
+'lastName' => 'partial',
+'email' => 'partial',
+],
 )]
 #[Get(
 security: 'is_granted("ROLE_ADMIN") or object == user',
@@ -63,6 +77,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
   private ?string $email = null;
 
   #[ORM\Column]
+  #[Groups([User::READ])]
   private array $roles = [];
 
   /**
@@ -80,13 +95,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
   private ?string $password = null;
 
   #[ORM\Column(length: 255)]
-  #[Groups([User::READ, User::WRITE, User::PATCH, User::REGISTER])]
+  #[Groups([User::READ, User::WRITE, User::PATCH, User::REGISTER, TheaterGroup::READ])]
   #[NotBlank]
   #[Type('string')]
   private ?string $firstName = null;
 
   #[ORM\Column(length: 255)]
-  #[Groups([User::READ, User::WRITE, User::PATCH, User::REGISTER])]
+  #[Groups([User::READ, User::WRITE, User::PATCH, User::REGISTER, TheaterGroup::READ])]
   #[NotBlank]
   #[Type('string')]
   private ?string $lastName = null;
@@ -171,8 +186,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
   public function getRoles(): array
   {
     $roles = $this->roles;
-    // guarantee every user at least has ROLE_USER
-    $roles[] = 'ROLE_USER';
 
     return array_unique($roles);
   }

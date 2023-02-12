@@ -22,6 +22,8 @@ const ResetPassword = () => import("../pages/ResetPassword.vue");
 const Admin = () => import("../pages/Admin/Admin.vue");
 const AdminTheaterGroups = () => import("../pages/Admin/TheaterGroups.vue");
 const AdminTheaterGroup = () => import("../pages/Admin/TheaterGroup.vue");
+const AdminUsers = () => import("../pages/Admin/Users.vue");
+const AdminUser = () => import("../pages/Admin/User.vue");
 const NotFound = () => import("../pages/Errors/NotFound.vue");
 const TheaterGroup = () => import("../pages/TheaterGroup/TheaterGroup.vue");
 const TheaterGroupEvents = () => import("../pages/TheaterGroup/Events.vue");
@@ -168,6 +170,17 @@ const routes = [
         name: "admin-theater-group",
         component: AdminTheaterGroup,
         props: ({ params }) => ({ theaterGroupId: params.theaterGroupId }),
+      },
+      {
+        path: "users",
+        name: "admin-users",
+        component: AdminUsers,
+      },
+      {
+        path: "user/:userId",
+        name: "admin-user",
+        component: AdminUser,
+        props: ({ params }) => ({ userId: params.userId }),
       },
     ],
   },
