@@ -22,9 +22,12 @@
             </div>
 
             <ul class="grid gap-4 mt-4 sm:grid-cols-2 lg:grid-cols-4">
-                <li v-for="event in events">
+                <li v-for="event in events" :key="event.id">
                     <TheatherCard :event="event"/>
-                    <button @click="addToCart(item)">Add to Cart</button>
+                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                            @click="addToCart(event)">
+                        Ajouter au panier
+                    </button>
                 </li>
             </ul>
         </div>
@@ -37,8 +40,17 @@ import TheatherCard from "../../components/TheatherCard.vue";
 import { apiFetch } from "../../utils/apiFetch";
 
 const events = ref([]);
+const cart = JSON.parse(localStorage.getItem("cart")) || [];
 const addToCart = (item) => {
-    console.log(item);
+    //add to cart array in local storage
+    const itemAlreadyExist = cart.find((i) => i.id === item.id);
+    if (itemAlreadyExist) {
+        itemAlreadyExist.quantity++;
+        localStorage.setItem("cart", JSON.stringify(cart));
+        return;
+    }
+    cart.push({...item, quantity: 1});
+    localStorage.setItem("cart", JSON.stringify(cart));
 };
 
 const fetchEvents = async () => {
