@@ -28,7 +28,7 @@ onMounted(async () => {
     }
 });
 
-const verify = async () => {
+async function verify() {
     try {
         const { data } = await apiFetch(
             "/theater_groups/" + props.theaterGroupId,
@@ -49,7 +49,7 @@ const verify = async () => {
     } catch (error) {
         toast.error(error.message);
     }
-};
+}
 
 const source = computed(
     () => import.meta.env.VITE_API_URL + theaterGroup.value?.contentUrl
