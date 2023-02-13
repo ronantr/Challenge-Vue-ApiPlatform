@@ -22,8 +22,8 @@ const theaterGroupLink = computed(() => {
         href="https://cdn.jsdelivr.net/npm/@mdi/font@5.8.55/css/materialdesignicons.min.css"
     />
     <Transition>
-        <div id="app" v-if="isAttempted">
-            <nav class="bg-gray-900 px-2">
+        <div v-if="isAttempted">
+            <nav class="bg-gray-800 px-2">
                 <div class="container mx-auto flex items-center justify-between px-4 py-3">
                     <div class="flex">
                         <div class="ml-4">
@@ -186,12 +186,10 @@ const theaterGroupLink = computed(() => {
     </Transition>
     <!-- TODO: revoir footer fixe en bas : pb  position:fixed;-->
     <footer
-        class="px-4 divide-y bg-gray-800 text-gray-100"
-        style="bottom: 0; width: 100%"
+        class="px-4 divide-y bg-gray-800 text-gray-100 relative bottom-0 left-0 right-0"
     >
         <div
-            class="container flex flex-col justify-between py-10 mx-auto space-y-8 lg:flex-row lg:space-y-0"
-        >
+            class="container flex flex-col justify-between py-10 mx-auto space-y-8 lg:flex-row lg:space-y-0">
             <div class="lg:w-1/3">
                 <a
                     rel="noopener noreferrer"

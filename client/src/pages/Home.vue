@@ -216,7 +216,7 @@
             </div>
         </div>
     </section>
-    <section class="bg-gray-800">
+    <section class="bg-gray-900">
         <div
             class="mx-auto max-w-screen-xl px-4 py-12 sm:px-6 md:py-16 lg:px-8"
         >

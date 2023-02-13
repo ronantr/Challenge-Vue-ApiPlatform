@@ -23,15 +23,6 @@
                 effectué au moment de la réservation et peut être effectué à l'aide de cartes de crédit ou de débit
                 acceptées.
             </p>
-
-            <h2 class="text-2xl font-bold mb-4">Annulation et remboursement</h2>
-
-            <p class="mb-4">
-                Les réservations de billets ne sont pas remboursables sauf en cas d'annulation ou de modification du
-                spectacle par les organisateurs. Dans ce cas, vous serez remboursé pour le montant des billets
-                achetés.
-            </p>
-
             <h2 class="text-2xl font-bold mb-4">Conditions d'utilisation</h2>
 
             <p class="mb-4">
@@ -39,12 +30,6 @@
                 commerciales sans notre autorisation écrite préalable.
             </p>
 
-            <h2 class="text-2xl font-bold mb-4">Modifications des conditions générales de vente</h2>
-
-            <p class="mb-4">
-                Nous nous réservons le droit de modifier ces conditions générales de vente de temps à autre. Nous vous
-                encourageons à consulter régulièrement ces conditions pour être informé de tout changement.
-            </p>
         </div>
     </div>
 </template>

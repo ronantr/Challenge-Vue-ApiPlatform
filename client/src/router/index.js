@@ -21,6 +21,7 @@ const Upload = () => import("../pages/Upload.vue");
 const UpdatePassword = () => import("../pages/UpdatePassword.vue");
 const ResetPassword = () => import("../pages/ResetPassword.vue");
 const Admin = () => import("../pages/Admin/Admin.vue");
+const AdminHome = () => import("../pages/Admin/AdminHome.vue");
 const AdminTheaterGroups = () => import("../pages/Admin/TheaterGroups.vue");
 const AdminTheaterGroup = () => import("../pages/Admin/TheaterGroup.vue");
 const AdminUsers = () => import("../pages/Admin/Users.vue");
@@ -166,6 +167,11 @@ const routes = [
     name: "admin",
     component: Admin,
     children: [
+      {
+        path: "",
+        name: "admin-home",
+        component: AdminHome,
+      },
       {
         path: "theater-groups",
         name: "admin-theater-groups",
