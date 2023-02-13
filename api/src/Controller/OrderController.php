@@ -35,7 +35,17 @@ class OrderController extends AbstractController
         try {
             $charge=$this->stripeService->charge($order->getAmount(), $order->getToken());
             $order->setStatus($charge->status);
-            $order->setAmount($charge->amount);
+
+            //count toal price of tickets in order and compare to amount
+            $totalPrice = 0;
+            foreach($order->getTickets() as $ticket){
+                $totalPrice += $ticket->getEvent()->getPriceInCents()* $ticket->getQuantity();
+            }
+
+            if( $order->getAmount() != $totalPrice ){
+                throw new \Exception("Amounts do not match ". $totalPrice. " ".$order->getAmount() );
+            }
+
 
             foreach($order->getTickets() as $ticket){
                 $event = $ticket->getEvent();
