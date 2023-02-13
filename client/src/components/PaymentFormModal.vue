@@ -76,11 +76,13 @@ import { useAuthStore } from "../stores";
 import { apiFetch } from "../utils/apiFetch";
 
 import { useCartStore } from "../stores/cartStore";
+import { useToast } from "vue-toastification";
 const cart = useCartStore();
 
 const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
 
+const toast = useToast();
 const props = defineProps({
     closeModal: {
         type: Function,
@@ -137,14 +139,15 @@ async function handleSubmit() {
             },
             { method: "POST" }
         );
-        // Handle successful response
-        if (response.status === 200) {
-            // Show success message
-            console.log("Payment succeeded");
-            cart.clearCart();
-            close();
-            resetForm();
-        }
+
+        console.log("response", response);
+
+        // Show success message
+        console.log("Payment succeeded");
+        cart.clearCart();
+        close();
+        resetForm();
+        toast.success(`Paiement effectué avec succès`);
     } catch (error) {
         // Handle error
         console.log(error);
