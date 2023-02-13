@@ -2,6 +2,9 @@
 import { computed } from "vue";
 import { useAuthStore } from "./stores";
 import { storeToRefs } from "pinia";
+import { useCartStore } from "./stores/cartStore";
+
+const cart = useCartStore();
 
 const authStore = useAuthStore();
 const { logout } = authStore;
@@ -117,13 +120,26 @@ const theaterGroupLink = computed(() => {
                             </router-link>
                         </div>
                         <div class="mt-2 mx-5">
-                            <router-link to="/events" class="text-white hover:text-gray-500">
-                                <FontAwesomeIcon icon="cart-shopping" /> Evénements
+                            <router-link
+                                to="/events"
+                                class="text-white hover:text-gray-500"
+                            >
+                                <FontAwesomeIcon icon="cart-shopping" />
+                                Evénements
                             </router-link>
                         </div>
                         <div class="mt-2 mx-5">
-                            <router-link to="/cart" class="text-white hover:text-gray-500">
+                            <router-link
+                                to="/cart"
+                                class="text-white hover:text-gray-500"
+                            >
                                 <FontAwesomeIcon icon="cart-shopping" /> Panier
+                                <span
+                                    v-if="cart.cartTotalItems() > 0"
+                                    class="text-red-500"
+                                >
+                                    {{ cart.cartTotalItems() }}
+                                </span>
                             </router-link>
                         </div>
                         <div v-if="user?.isAdmin" class="mt-2 mx-5">

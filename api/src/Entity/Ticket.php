@@ -5,9 +5,9 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\TicketRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ApiResource(
-    
 )]
 #[ORM\Entity(repositoryClass: TicketRepository::class)]
 class Ticket
@@ -21,12 +21,14 @@ class Ticket
     private ?int $price = null;
 
     #[ORM\Column]
+    #[Groups([Order::WRITE])]
     private ?int $quantity = null;
 
     #[ORM\Column(length: 255)]
     private ?string $status = null;
 
     #[ORM\ManyToOne(inversedBy: 'tickets')]
+    #[Groups([Order::WRITE])]
     private ?Event $event = null;
 
     #[ORM\ManyToOne(inversedBy: 'tickets')]

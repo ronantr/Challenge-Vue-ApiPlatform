@@ -5,7 +5,7 @@
         <h2 class="text-xl font-semibold text-center">Votre Panier</h2>
         <ul class="flex flex-col divide-y divide-gray-700">
             <li
-                v-for="item in reactiveCart"
+                v-for="item in cart.getCart()"
                 :key="item.id"
                 class="flex flex-col py-6 sm:flex-row sm:justify-between"
             >
@@ -125,12 +125,12 @@
 </template>
 
 <script setup>
-import { computed, reactive, ref, watch } from "vue";
+import { computed, reactive, ref } from "vue";
 import { useCartStore } from "../stores/cartStore";
 import PaymentFormModal from "../components/PaymentFormModal.vue";
 
-const { cart, updateCart, removeFromCart } = useCartStore();
-const reactiveCart = reactive(cart);
+const cart = useCartStore();
+// const reactiveCart = reactive(cart);
 
 const isModalPaymentOpen = ref(false);
 
@@ -144,52 +144,22 @@ const closeModalPayment = () => {
 };
 
 const totalPrice = computed(() => {
-    return cart.reduce((total, item) => {
+    return cart.getCart().reduce((total, item) => {
         return total + item.priceInCents * item.quantity;
     }, 0);
 });
 
 const incrementQuantity = (item) => {
-    const quantity = item.quantity++;
-    updateCart(item, quantity);
+    const quantity = item.quantity + 1;
+    cart.updateCart(item, quantity);
 };
 
 const decrementQuantity = (item) => {
-    const quantity = item.quantity--;
-    updateCart(item, quantity);
+    const quantity = item.quantity - 1;
+    cart.updateCart(item, quantity);
 };
 
 const removeItem = (item) => {
-    removeFromCart(item);
+    cart.removeFromCart(item);
 };
-
-// const items = reactive(JSON.parse(localStorage.getItem('cart')) || []);
-
-// const totalPrice = computed(() => {
-// 	return items.reduce((total, item) => {
-// 		return total + item.price * item.quantity;
-// 	}, 0);
-// });
-// const incrementQuantity = (item) => {
-// 	item.quantity++;
-// 	saveCartToLocalStorage();
-// };
-
-// const decrementQuantity = (item) => {
-// 	item.quantity--;
-// 	if(item.quantity <= 0) {
-// 		removeItem(item);
-// 		return;
-// 	}
-// 	saveCartToLocalStorage();
-// };
-
-// const removeItem = (item) => {
-// 	items.splice(items.indexOf(item), 1);
-// 	saveCartToLocalStorage();
-// };
-
-// const saveCartToLocalStorage = () => {
-//       localStorage.setItem('cart', JSON.stringify(items));
-//     }
 </script>
