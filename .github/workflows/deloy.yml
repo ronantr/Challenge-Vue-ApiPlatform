@@ -19,8 +19,9 @@ jobs:
         run: docker compose pull --ignore-pull-failures || true
       - name: Create Env file
         run: |
+          touch client/.env
           echo "VITE_APP_STRIPE_PUBLIC_KEY=${{secrets.VITE_APP_STRIPE_PUBLIC_KEY}}" >> ./client/.env \
-          echo "VITE_API_URL=${{secrets.VITE_API_URL}}" >> ./client/.env \
+          echo "VITE_API_URL=${{secrets.VITE_API_URL}}" >> ./client/.env 
       - name: Start services
         run: docker compose up -d
       - name: Run Vuejs tests
