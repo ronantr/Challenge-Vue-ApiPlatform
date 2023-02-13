@@ -1,6 +1,6 @@
 <template>
     <div
-        class="flex flex-col max-w-3xl mx-auto p-6 space-y-4 sm:p-10 bg-gray-800 text-gray-100"
+        class="flex flex-col max-w-3xl mx-auto p-6 space-y-4 sm:p-10 bg-gray-800 text-gray-100 mt-96 mb-96"
     >
         <h2 class="text-xl font-semibold text-center">Votre Panier</h2>
         <ul class="flex flex-col divide-y divide-gray-700">

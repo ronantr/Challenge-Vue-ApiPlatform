@@ -5,16 +5,6 @@
         <section class="bg-gray-100 p-6 rounded-lg">
             <div class="relative overflow-hidden">
                 <div class="relative z-10 flex items-center justify-center h-48 bg-gray-800">
-                    <h1 class="text-white text-lg font-medium">Récement vu</h1>
-                </div>
-                <ul class="grid gap-4 mt-4 sm:grid-cols-2 lg:grid-cols-4">
-                   
-                </ul>
-            </div>
-        </section>
-        <section class="bg-gray-100 p-6 rounded-lg">
-            <div class="relative overflow-hidden">
-                <div class="relative z-10 flex items-center justify-center h-48 bg-gray-800">
                     <h1 class="text-white text-lg font-medium">Mes billets</h1>
                 </div>
                 <div class="relative z-0">
@@ -33,7 +23,6 @@ import { computed } from "vue";
 import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "../stores";
-import TheatherCard from "../components/TheatherCard.vue";
 import ProfileInfos from "../components/ProfileInfos.vue";
 import UserTickets from "../components/UserTickets.vue";
 
@@ -47,4 +36,6 @@ const currentUser = computed(() => {
 if (!currentUser.value) {
     router.push("/login");
 }
+
+
 </script>

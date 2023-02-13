@@ -80,8 +80,8 @@ watchEffect(async () => {
 </script>
 
 <template>
-    <h1 class="text-xl">Theater groups</h1>
-    <div class="flex flex-col gap-3">
+    <div class="flex flex-col gap-3 mb-72 mt-20">
+        <h1 class="text-xl">Groupe de Théâtre</h1>
         <div class="flex flex-row gap-3">
             <div class="flex flex-row gap-1">
                 <label for="search-field">Champ</label>

@@ -9,18 +9,6 @@
 						<p>Il suffit de sélectionner le spectacle que vous souhaitez voir, de choisir les places souhaitées et de procéder au paiement en ligne en utilisant un moyen de paiement sécurisé. Vous recevrez une confirmation de votre réservation par email.</p>
 					</div>
 				</details>
-				<details>
-					<summary class="py-2 outline-none cursor-pointer focus:underline">Est-il possible de changer ou d'annuler ma réservation ?</summary>
-					<div class="px-4 pb-4">
-						<p>Oui, vous pouvez annuler ou changer votre réservation en ligne jusqu'à 24 heures avant le début du spectacle. Veuillez consulter les conditions générales de vente pour plus d'informations sur les frais d'annulation potentiels.</p>
-					</div>
-				</details>
-                <details>
-					<summary class="py-2 outline-none cursor-pointer focus:underline">Est-ce que je peux acheter des billets pour un autre jour ou un autre spectacle ?</summary>
-					<div class="px-4 pb-4">
-						<p> Oui, vous pouvez acheter des billets pour n'importe quel autre jour ou spectacle disponible sur notre site. Il suffit de sélectionner le spectacle souhaité et de procéder à la réservation en ligne.</p>
-					</div>
-				</details>
                 <details>
 					<summary class="py-2 outline-none cursor-pointer focus:underline">Comment puis-je être sûr que mes billets sont valides ?</summary>
 					<div class="px-4 pb-4">
