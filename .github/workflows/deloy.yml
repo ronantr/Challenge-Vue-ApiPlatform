@@ -35,6 +35,8 @@ jobs:
           echo "SENDIN_BLUE_API_KEY=${{secrets.SENDIN_BLUE_API_KEY}}" >> ./api/.env
           echo "APP_SECRET=${{secrets.APP_SECRET}}" >> ./api/.env
           echo "APP_SECRET=${{secrets.APP_SECRET}}" >> ./api/.env
+          echo "CORS_ALLOW_ORIGIN=${{secrets.CORS_ALLOW_ORIGIN}}" >> ./api/.env
+
       - name: Start services
         run: docker compose up -d
       - name: Run Vuejs tests
@@ -119,6 +121,7 @@ jobs:
           echo "SENDIN_BLUE_API_KEY=${{secrets.SENDIN_BLUE_API_KEY}}" >> ./api/.env
           echo "APP_SECRET=${{secrets.APP_SECRET}}" >> ./api/.env
           echo "APP_SECRET=${{secrets.APP_SECRET}}" >> ./api/.env
+          echo "CORS_ALLOW_ORIGIN=${{secrets.CORS_ALLOW_ORIGIN}}" >> ./api/.env
           npm install
           npm run build
           cd ..
