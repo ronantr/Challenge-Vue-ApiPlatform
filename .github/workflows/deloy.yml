@@ -20,7 +20,7 @@ jobs:
       - name: Create Env file
         run: |
           touch client/.env
-          touche api/.env
+          touch api/.env
           echo "VITE_APP_STRIPE_PUBLIC_KEY=${{secrets.VITE_APP_STRIPE_PUBLIC_KEY}}" >> ./client/.env \
           echo "VITE_API_URL=${{secrets.VITE_API_URL}}" >> ./client/.env 
           echo "APP_SECRET=${{secrets.APP_SECRET}}" >> ./api/.env 
@@ -106,7 +106,7 @@ jobs:
           unzip -o /root/Challenge-Vue-ApiPlatform.zip -d /root/Challenge-Vue-ApiPlatform
           cd /root/Challenge-Vue-ApiPlatform/client
           touch client/.env
-          touche api/.env
+          touch api/.env
           echo "VITE_APP_STRIPE_PUBLIC_KEY=${{secrets.VITE_APP_STRIPE_PUBLIC_KEY}}" >> ./client/.env \
           echo "VITE_API_URL=${{secrets.VITE_API_URL}}" >> ./client/.env 
           echo "APP_SECRET=${{secrets.APP_SECRET}}" >> ./api/.env 
