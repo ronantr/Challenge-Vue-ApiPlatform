@@ -29,7 +29,7 @@
                     <TheaterCard :event="event" />
                     <button
                         class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                        @click="addToCart(event)"
+                        @click="addEventToCart(event)"
                     >
                         Ajouter au panier
                     </button>
@@ -44,9 +44,16 @@ import { onBeforeMount, ref } from "vue";
 import { useCartStore } from "../stores/cartStore";
 import TheaterCard from "../components/TheatherCard.vue";
 import { apiFetch } from "../utils/apiFetch";
+import { useToast } from "vue-toastification";
 
 const events = ref([]);
+const toast = useToast();
 const { addToCart } = useCartStore();
+
+const addEventToCart = (event) => {
+    addToCart(event);
+    toast.success(`L'événement "${event.name}" a été ajouté au panier`);
+};
 // const cart = JSON.parse(localStorage.getItem("cart")) || [];
 // const addToCart = (item) => {
 //     item.price = 25;
