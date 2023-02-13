@@ -94,19 +94,13 @@
                 </div>
             </li>
         </ul>
-        <div class="space-y-1 text-right">
+        <div class="space-y-1 text-right" v-if="totalPrice > 0">
             <p>
                 Total (TTC):
                 <span class="font-semibold">{{ totalPrice / 100 }}€</span>
             </p>
         </div>
-        <div class="flex justify-end space-x-4">
-            <button
-                type="button"
-                class="px-6 py-2 border rounded-md dark:border-violet-400"
-            >
-                <span class="sr-only sm:not-sr-only">Retour</span>
-            </button>
+        <div class="flex justify-end space-x-4" v-if="totalPrice > 0">
             <button
                 type="button"
                 class="px-6 py-2 border rounded-md dark:bg-violet-400 dark:text-gray-900 dark:border-violet-400"
