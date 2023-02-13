@@ -78,7 +78,7 @@ services:
 ###> symfony/mercure-bundle ###
 ###< symfony/mercure-bundle ###
   client:
-    image: ronantr/client_vuejs:latest
+    image: ronantr/client_vuejs:1.1
     restart: always
     env_file:
       - ./client/.env
