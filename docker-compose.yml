@@ -77,7 +77,15 @@ services:
 # Mercure is installed as a Caddy module, prevent the Flex recipe from installing another service
 ###> symfony/mercure-bundle ###
 ###< symfony/mercure-bundle ###
-
+  client:
+    image: ronantr/client_vuejs:1.1
+    restart: always
+    env_file:
+      - ./client/.env
+    ports:
+      - 8888:80
+    volumes:
+      - ./client:/usr/src/app
 
 volumes:
   php_socket:

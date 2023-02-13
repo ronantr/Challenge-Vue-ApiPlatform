@@ -17,11 +17,16 @@ jobs:
         uses: actions/checkout@v2
       - name: Pull images
         run: docker compose pull --ignore-pull-failures || true
+      - name: Create Env file
+        run: |
+          touch client/.env
+          echo "VITE_APP_STRIPE_PUBLIC_KEY=${{secrets.VITE_APP_STRIPE_PUBLIC_KEY}}" >> ./client/.env \
+          echo "VITE_API_URL=${{secrets.VITE_API_URL}}" >> ./client/.env 
       - name: Start services
         run: docker compose up -d
       - name: Run Vuejs tests
         run: |
-          cd vuejs
+          cd client
           npm install
           npm run build
       - name: Wait for services
@@ -84,7 +89,10 @@ jobs:
         #KEY: ${{ secrets.SSHKEY }}
         script: |
           unzip -o /root/Challenge-Vue-ApiPlatform.zip -d /root/Challenge-Vue-ApiPlatform
-          cd /root/Challenge-Vue-ApiPlatform/vuejs
+          cd /root/Challenge-Vue-ApiPlatform/client
+          touch .env
+          echo "VITE_APP_STRIPE_PUBLIC_KEY=${{secrets.VITE_APP_STRIPE_PUBLIC_KEY}}" >> .env \
+          echo "VITE_API_URL=${{secrets.VITE_API_URL}}" >> .env 
           npm install
           npm run build
           cd ..

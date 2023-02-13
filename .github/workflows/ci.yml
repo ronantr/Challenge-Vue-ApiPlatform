@@ -15,6 +15,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Create Env file
+        run: |
+          echo "VITE_APP_STRIPE_PUBLIC_KEY=${{secrets.VITE_APP_STRIPE_PUBLIC_KEY}}" >> ./client/.env \
+          echo "VITE_API_URL=${{secrets.VITE_API_URL}}" >> ./client/.env \
+          
       - name: Pull images
         run: docker compose pull --ignore-pull-failures || true
       - name: Start services
