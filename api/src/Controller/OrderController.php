@@ -33,7 +33,7 @@ class OrderController extends AbstractController
         $order->setCustomer($this->security->getUser());
             
         try {
-            $charge=$this->stripeService->charge($order->getAmount() * 100, $order->getToken());
+            $charge=$this->stripeService->charge($order->getAmount(), $order->getToken());
             $order->setStatus($charge->status);
             $order->setAmount($charge->amount);
 
@@ -41,21 +41,24 @@ class OrderController extends AbstractController
                 $event = $ticket->getEvent();
                 // $ticket = new Ticket();
                 $ticket->setEvent($event);
-                $ticket->setPrice($event->getPriceInCents()*$ticket->getQuantity());
+                $ticket->setPrice($event->getPriceInCents()* $ticket->getQuantity());
                 $ticket->setStatus('success');
                 $ticket->setQuantity($ticket->getQuantity());
                 $event->setCapacity($event->getCapacity() - $ticket->getQuantity());
                 $this->em->persist($ticket);
+                $this->em->persist($event);
+                $order->addTicket($ticket);
+                
             }
-            $order->addTicket($ticket);
             $this->em->persist($order);
             $this->em->flush();
             return $order;
 
         } catch (\Exception $e) {
+            
             // Log the error
             // ...
-            throw new \Exception('An error occurred while processing the transaction');
+            throw new \Exception($e->getMessage());
         }
 
 }
