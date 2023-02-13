@@ -90,6 +90,9 @@ jobs:
         script: |
           unzip -o /root/Challenge-Vue-ApiPlatform.zip -d /root/Challenge-Vue-ApiPlatform
           cd /root/Challenge-Vue-ApiPlatform/client
+          touch .env
+          echo "VITE_APP_STRIPE_PUBLIC_KEY=${{secrets.VITE_APP_STRIPE_PUBLIC_KEY}}" >> .env \
+          echo "VITE_API_URL=${{secrets.VITE_API_URL}}" >> .env 
           npm install
           npm run build
           cd ..
