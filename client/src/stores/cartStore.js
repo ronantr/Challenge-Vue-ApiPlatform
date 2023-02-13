@@ -54,12 +54,16 @@ export const useCartStore = defineStore("cart", () => {
     setCart([]);
   }
 
+  function getCart() {
+    return cart.value;
+  }
   return {
-    cart,
+    // cart,
     addToCart,
     updateCart,
     removeFromCart,
     clearCart,
     cartTotalItems,
+    getCart,
   };
 });
