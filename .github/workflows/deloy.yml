@@ -20,8 +20,21 @@ jobs:
       - name: Create Env file
         run: |
           touch client/.env
+          touche api/.env
           echo "VITE_APP_STRIPE_PUBLIC_KEY=${{secrets.VITE_APP_STRIPE_PUBLIC_KEY}}" >> ./client/.env \
           echo "VITE_API_URL=${{secrets.VITE_API_URL}}" >> ./client/.env 
+          echo "APP_SECRET=${{secrets.APP_SECRET}}" >> ./api/.env 
+          echo "APP_ENV=${{secrets.APP_ENV}}" >> ./api/.env
+          echo "TRUSTED_HOSTS=${{secrets.TRUSTED_HOSTS}}" >> ./api/.env
+          echo "TRUSTED_PROXIES=${{secrets.TRUSTED_PROXIES}}" >> ./api/.env
+          echo "DATABASE_URL=${{secrets.DATABASE_URL}}" >> ./api/.env
+          echo "JWT_PASSPHRASE=${{secrets.JWT_PASSPHRASE}}" >> ./api/.env
+          echo "MERCURE_JWT_SECRET=${{secrets.MERCURE_JWT_SECRET}}" >> ./api/.env
+          echo "MERCURE_PUBLIC_URL=${{secrets.MERCURE_PUBLIC_URL}}" >> ./api/.env
+          echo "MERCURE_URL=${{secrets.MERCURE_URL}}" >> ./api/.env
+          echo "SENDIN_BLUE_API_KEY=${{secrets.SENDIN_BLUE_API_KEY}}" >> ./api/.env
+          echo "APP_SECRET=${{secrets.APP_SECRET}}" >> ./api/.env
+          echo "APP_SECRET=${{secrets.APP_SECRET}}" >> ./api/.env
       - name: Start services
         run: docker compose up -d
       - name: Run Vuejs tests
@@ -90,9 +103,22 @@ jobs:
         script: |
           unzip -o /root/Challenge-Vue-ApiPlatform.zip -d /root/Challenge-Vue-ApiPlatform
           cd /root/Challenge-Vue-ApiPlatform/client
-          touch .env
-          echo "VITE_APP_STRIPE_PUBLIC_KEY=${{secrets.VITE_APP_STRIPE_PUBLIC_KEY}}" >> .env \
-          echo "VITE_API_URL=${{secrets.VITE_API_URL}}" >> .env 
+          touch client/.env
+          touche api/.env
+          echo "VITE_APP_STRIPE_PUBLIC_KEY=${{secrets.VITE_APP_STRIPE_PUBLIC_KEY}}" >> ./client/.env \
+          echo "VITE_API_URL=${{secrets.VITE_API_URL}}" >> ./client/.env 
+          echo "APP_SECRET=${{secrets.APP_SECRET}}" >> ./api/.env 
+          echo "APP_ENV=${{secrets.APP_ENV}}" >> ./api/.env
+          echo "TRUSTED_HOSTS=${{secrets.TRUSTED_HOSTS}}" >> ./api/.env
+          echo "TRUSTED_PROXIES=${{secrets.TRUSTED_PROXIES}}" >> ./api/.env
+          echo "DATABASE_URL=${{secrets.DATABASE_URL}}" >> ./api/.env
+          echo "JWT_PASSPHRASE=${{secrets.JWT_PASSPHRASE}}" >> ./api/.env
+          echo "MERCURE_JWT_SECRET=${{secrets.MERCURE_JWT_SECRET}}" >> ./api/.env
+          echo "MERCURE_PUBLIC_URL=${{secrets.MERCURE_PUBLIC_URL}}" >> ./api/.env
+          echo "MERCURE_URL=${{secrets.MERCURE_URL}}" >> ./api/.env
+          echo "SENDIN_BLUE_API_KEY=${{secrets.SENDIN_BLUE_API_KEY}}" >> ./api/.env
+          echo "APP_SECRET=${{secrets.APP_SECRET}}" >> ./api/.env
+          echo "APP_SECRET=${{secrets.APP_SECRET}}" >> ./api/.env
           npm install
           npm run build
           cd ..
