@@ -77,7 +77,20 @@ services:
 # Mercure is installed as a Caddy module, prevent the Flex recipe from installing another service
 ###> symfony/mercure-bundle ###
 ###< symfony/mercure-bundle ###
-
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    restart: always
+    user: "node"
+    stdin_open: true
+    tty: true
+    env_file:
+      - ./client/.env
+    ports:
+      - 8888:80
+    volumes:
+      - ./client:/usr/src/app
 
 volumes:
   php_socket:
