@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col items-center p-10">
+    <div class="flex flex-col items-center p-10 mb-96 mt-36">
         <h1 class="text-5xl font-bold text-center">À propos de nous</h1>
         <p class="text-lg mt-5">Theatly est un site dédié à tout ce qui concerne le théâtre. Nous sommes une communauté
             de passionnés qui partageons notre amour pour cette forme d'art vivante avec le monde entier. Nous croyons

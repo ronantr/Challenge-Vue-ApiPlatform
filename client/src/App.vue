@@ -314,11 +314,7 @@ const theaterGroupLink = computed(() => {
                         <li>
                             <a rel="noopener noreferrer" href="/faq">FAQ</a>
                         </li>
-                        <li>
-                            <a rel="noopener noreferrer" href="/contact"
-                                >Contact</a
-                            >
-                        </li>
+                        
                     </ul>
                 </div>
             </div>

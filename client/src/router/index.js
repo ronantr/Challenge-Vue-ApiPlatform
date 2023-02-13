@@ -3,7 +3,6 @@ import Home from "../pages/Home.vue";
 import Login from "../pages/Login.vue";
 import Register from "../pages/Register.vue";
 import About from "../pages/About.vue";
-import Contact from "../pages/Contact.vue";
 import LegalNotices from "../pages/LegalNotices.vue";
 import PrivacyPolicy from "../pages/PrivacyPolicy.vue";
 import Faq from "../pages/Faq.vue";
@@ -73,11 +72,6 @@ const routes = [
     path: "/fidelitycard",
     name: "fidelitycard",
     component: Fidelitycard,
-  },
-  {
-    path: "/contact",
-    name: "contact",
-    component: Contact,
   },
   {
     path: "/cart",
@@ -218,7 +212,6 @@ router.beforeEach(async ({ name, path, query }, _from, next) => {
     "update-password",
     "reset-password",
     "about",
-    "contact",
     "faq",
     "legalnotices",
     "privacypolicy",

@@ -1,5 +1,5 @@
 <template>
-	<section class="dark:bg-gray-800 dark:text-gray-100">
+	<section class="dark:bg-gray-800 dark:text-gray-100 mb-96 mt-48">
 		<div class="container flex flex-col justify-center p-4 mx-auto md:p-8">
 			<p class="mb-12 text-4xl font-bold leading-none text-center sm:text-5xl">Foire aux questions</p>
 			<div class="flex flex-col divide-y sm:px-8 lg:px-12 xl:px-32 divide-gray-700">

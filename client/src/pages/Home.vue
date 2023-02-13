@@ -20,12 +20,6 @@
                 </p>
 
                 <div class="mt-8 flex flex-wrap justify-center gap-4">
-                    <a
-                        class="block w-full rounded border border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-white hover:bg-transparent hover:text-white focus:outline-none focus:ring active:text-opacity-75 sm:w-auto"
-                        href="/get-started"
-                    >
-                        Réserver
-                    </a>
 
                     <router-link
                         class="block w-full rounded border border-blue-600 px-12 py-3 text-sm font-medium text-white hover:bg-blue-600 focus:outline-none focus:ring active:bg-blue-500 sm:w-auto"
@@ -68,12 +62,7 @@
                             tout en poursuivant son poursuivant implacable,
                             l'inspecteur Javert.
                         </p>
-                        <a
-                            href="#"
-                            class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
-                        >
-                            En savoir plus
-                        </a>
+                        
                     </div>
                 </div>
                 <div
@@ -102,12 +91,7 @@
                             si cela signifie se cacher derrière l'identité d'un
                             autre."
                         </p>
-                        <a
-                            href="#"
-                            class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
-                        >
-                            En savoir plus
-                        </a>
+                        
                     </div>
                 </div>
                 <div
@@ -132,13 +116,7 @@
                             de familles ennemies captivera les spectateurs avec
                             sa romance passionnée et son drame intense."
                         </p>
-                        <!-- TODO: mettre la route pour l'event selectionné -->
-                        <a
-                            href="#"
-                            class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
-                        >
-                            En savoir plus
-                        </a>
+                        
                     </div>
                 </div>
             </div>

@@ -75,14 +75,15 @@ async function onSubmit(fields, { setErrors }) {
 </script>
 
 <template>
-    <p>
-        Vous voilà enfin prêt à rejoindre Thealty ? Remplissez ce formulaire et
-        rejoignez-nous ! Un membre de notre équipe vous contactera dans les plus
-        brefs délais.
-    </p>
-    <DynamicForm
-        :validation-schema="validationSchema"
-        :fields="fields"
-        :on-submit="onSubmit"
-    />
-</template>
+    <div class="bg-gray-100 min-h-screen py-10">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-8">Rejoindre Thealty</h2>
+            <p class="text-lg text-gray-600 text-center mb-8">
+                Vous êtes prêt à faire partie de notre équipe chez Thealty ? Remplissez le formulaire ci-dessous pour
+                nous faire parvenir votre candidature. Un de nos représentants vous contactera sous peu.
+            </p>
+            <DynamicForm :validation-schema="validationSchema" :fields="fields" :on-submit="onSubmit"
+                class="bg-white rounded-lg shadow-md p-4" />
+        </div>
+    </div>
+</template> 
