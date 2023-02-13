@@ -114,13 +114,21 @@ async function handleSubmit() {
 
     try {
         const { token } = await stripe.createToken(cardElement);
+        //get @id and quantity from cart items
+        const items = [];
+        for (let i = 0; i < cart.length; i++) {
+            items.push({
+                event: cart[i]["@id"],
+                quantity: cart[i].quantity,
+            });
+        }
+
         const response = await apiFetch(
             "orders",
             {
                 token: token.id,
-                customer: user.value["@id"],
                 amount: props.totalPrice,
-                items: cart,
+                tickets: items,
             },
             { method: "POST" }
         );

@@ -20,9 +20,7 @@ use ApiPlatform\Metadata\ApiFilter;
 #[ORM\Entity(repositoryClass: TransactionRepository::class)]
 #[ApiResource(
     denormalizationContext: ['groups' => [Transaction::WRITE]],
-    normalizationContext: ['groups' => [Transaction::READ]
-
-],
+    normalizationContext: ['groups' => [Transaction::READ]],
     operations: [
         new Get(
     security: "is_granted('view', object)",
