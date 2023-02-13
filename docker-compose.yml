@@ -78,9 +78,7 @@ services:
 ###> symfony/mercure-bundle ###
 ###< symfony/mercure-bundle ###
   client:
-    build:
-      context: ./client
-      dockerfile: Dockerfile
+    image: ronantr/client_vuejs:latest
     restart: always
     env_file:
       - ./client/.env
