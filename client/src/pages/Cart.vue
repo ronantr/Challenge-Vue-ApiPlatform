@@ -118,7 +118,7 @@
 
         <PaymentFormModal
             v-if="isModalPaymentOpen"
-            @close="closeModalPayment"
+            :closeModal="closeModalPayment"
             :totalPrice="totalPrice"
         />
     </div>
@@ -140,6 +140,7 @@ const openModalPayment = () => {
 };
 
 const closeModalPayment = () => {
+    console.log("openModalPayment");
     isModalPaymentOpen.value = false;
 };
 

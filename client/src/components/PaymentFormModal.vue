@@ -76,25 +76,32 @@ import { useAuthStore } from "../stores";
 import { apiFetch } from "../utils/apiFetch";
 
 import { useCartStore } from "../stores/cartStore";
-const { cart, clearCart } = useCartStore();
+import { useToast } from "vue-toastification";
+const cart = useCartStore();
 
 const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
 
+const toast = useToast();
 const props = defineProps({
-    closeModal: Function,
+    closeModal: {
+        type: Function,
+        required: true,
+    },
     totalPrice: Number,
 });
 let stripe;
 
 console.log("props", props);
 let cardElement = null;
+const amountEuro = props.totalPrice / 100;
+
 onMounted(async () => {
     stripe = await loadStripe(import.meta.env.VITE_APP_STRIPE_PUBLIC_KEY);
     cardElement = stripe.elements().create("card");
     cardElement.update({
         value: {
-            amount: props.totalPrice.toString(),
+            amount: amountEuro.toString(),
         },
     });
     cardElement.mount("#card-element");
@@ -116,10 +123,10 @@ async function handleSubmit() {
         const { token } = await stripe.createToken(cardElement);
         //get @id and quantity from cart items
         const items = [];
-        for (let i = 0; i < cart.length; i++) {
+        for (let i = 0; i < cart.getCart().length; i++) {
             items.push({
-                event: cart[i]["@id"],
-                quantity: cart[i].quantity,
+                event: cart.getCart()[i]["@id"],
+                quantity: cart.getCart()[i].quantity,
             });
         }
 
@@ -132,14 +139,15 @@ async function handleSubmit() {
             },
             { method: "POST" }
         );
-        // Handle successful response
-        if (response.status === 200) {
-            // Show success message
-            console.log("Payment succeeded");
-            clearCart();
-            close();
-            resetForm();
-        }
+
+        console.log("response", response);
+
+        // Show success message
+        console.log("Payment succeeded");
+        cart.clearCart();
+        close();
+        resetForm();
+        toast.success(`Paiement effectué avec succès`);
     } catch (error) {
         // Handle error
         console.log(error);
