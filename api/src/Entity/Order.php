@@ -4,13 +4,21 @@ namespace App\Entity;
 
 use App\Repository\OrderRepository;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Post;
+use App\Controller\OrderController;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-#[ApiResource]
+#[ApiResource(
+)]
+#[Post(
+  uriTemplate: '/orders',
+  controller: OrderController::class,
+  denormalizationContext: ['groups' => [Order::WRITE]],
+)]
 #[ORM\Entity(repositoryClass: OrderRepository::class)]
 #[ORM\Table(name: '`order`')]
 class Order
@@ -18,7 +26,6 @@ class Order
 
   const READ = 'order:read';
   const WRITE = 'order:write';
-  
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -29,6 +36,7 @@ class Order
     private ?User $customer = null;
 
     #[ORM\Column]
+    #[Groups([Order::WRITE])]
     private ?int $amount = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
@@ -37,7 +45,8 @@ class Order
     #[ORM\Column(length: 255)]
     private ?string $status = null;
 
-    #[ORM\OneToMany(mappedBy: 'order', targetEntity: Ticket::class)]
+    #[ORM\OneToMany(mappedBy: 'order', targetEntity: Ticket::class, cascade: ['persist'])]
+    #[Groups([Order::WRITE])]
     private Collection $tickets;
 
     #[Groups([Order::WRITE])]
@@ -45,7 +54,6 @@ class Order
 
     #[Groups([Order::WRITE])]
     private ?array $items = [];
-
 
     public function __construct()
     {
