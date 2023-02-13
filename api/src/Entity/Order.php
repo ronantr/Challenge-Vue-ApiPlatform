@@ -8,12 +8,18 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ApiResource]
 #[ORM\Entity(repositoryClass: OrderRepository::class)]
 #[ORM\Table(name: '`order`')]
 class Order
 {
+
+  const READ = 'order:read';
+  const WRITE = 'order:write';
+  
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column()]
@@ -33,6 +39,13 @@ class Order
 
     #[ORM\OneToMany(mappedBy: 'order', targetEntity: Ticket::class)]
     private Collection $tickets;
+
+    #[Groups([Order::WRITE])]
+    private ?string $token ="";
+
+    #[Groups([Order::WRITE])]
+    private ?array $items = [];
+
 
     public function __construct()
     {
@@ -118,5 +131,24 @@ class Order
       }
     }
 }
+
+public function getToken(): ?string
+{
+    return $this->token;
+}
+
+public function setToken(string $token): self
+{
+    $this->token = $token;
+
+    return $this;
+}
+
+public function getItems(): ?array
+{
+    return $this->items;
+
+}
+
 }
   

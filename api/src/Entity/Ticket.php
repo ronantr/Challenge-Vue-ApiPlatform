@@ -6,7 +6,9 @@ use ApiPlatform\Metadata\ApiResource;
 use App\Repository\TicketRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ApiResource]
+#[ApiResource(
+    
+)]
 #[ORM\Entity(repositoryClass: TicketRepository::class)]
 class Ticket
 {
@@ -18,6 +20,9 @@ class Ticket
     #[ORM\Column]
     private ?int $price = null;
 
+    #[ORM\Column]
+    private ?int $quantity = null;
+
     #[ORM\Column(length: 255)]
     private ?string $status = null;
 
@@ -26,6 +31,8 @@ class Ticket
 
     #[ORM\ManyToOne(inversedBy: 'tickets')]
     private ?Order $order = null;
+
+
 
     public function __construct()
     {
@@ -44,6 +51,17 @@ class Ticket
     public function setPrice(int $price): self
     {
         $this->price = $price;
+
+        return $this;
+    }
+    public function getQuantity(): ?int
+    {
+        return $this->quantity;
+    }
+
+    public function setQuantity(int $quantity): self
+    {
+        $this->quantity = $quantity;
 
         return $this;
     }
