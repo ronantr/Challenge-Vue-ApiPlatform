@@ -17,8 +17,23 @@ jobs:
         uses: actions/checkout@v2
       - name: Create Env file
         run: |
+          touch client/.env
+          touche api/.env
           echo "VITE_APP_STRIPE_PUBLIC_KEY=${{secrets.VITE_APP_STRIPE_PUBLIC_KEY}}" >> ./client/.env \
-          echo "VITE_API_URL=${{secrets.VITE_API_URL}}" >> ./client/.env \
+          echo "VITE_API_URL=${{secrets.VITE_API_URL}}" >> ./client/.env 
+          echo "APP_SECRET=${{secrets.APP_SECRET}}" >> ./api/.env 
+          echo "APP_ENV=${{secrets.APP_ENV}}" >> ./api/.env
+          echo "TRUSTED_HOSTS=${{secrets.TRUSTED_HOSTS}}" >> ./api/.env
+          echo "TRUSTED_PROXIES=${{secrets.TRUSTED_PROXIES}}" >> ./api/.env
+          echo "DATABASE_URL=${{secrets.DATABASE_URL}}" >> ./api/.env
+          echo "JWT_PASSPHRASE=${{secrets.JWT_PASSPHRASE}}" >> ./api/.env
+          echo "MERCURE_JWT_SECRET=${{secrets.MERCURE_JWT_SECRET}}" >> ./api/.env
+          echo "MERCURE_PUBLIC_URL=${{secrets.MERCURE_PUBLIC_URL}}" >> ./api/.env
+          echo "MERCURE_URL=${{secrets.MERCURE_URL}}" >> ./api/.env
+          echo "SENDIN_BLUE_API_KEY=${{secrets.SENDIN_BLUE_API_KEY}}" >> ./api/.env
+          echo "APP_SECRET=${{secrets.APP_SECRET}}" >> ./api/.env
+          echo "APP_SECRET=${{secrets.APP_SECRET}}" >> ./api/.env
+          echo "CORS_ALLOW_ORIGIN=${{secrets.CORS_ALLOW_ORIGIN}}" >> ./api/.env
           
       - name: Pull images
         run: docker compose pull --ignore-pull-failures || true
