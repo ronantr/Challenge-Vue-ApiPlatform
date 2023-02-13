@@ -1,4 +1,5 @@
 # Challenge-Vue-ApiPlatform
+[![Deploy](https://github.com/ronantr/Challenge-Vue-ApiPlatform/actions/workflows/deloy.yml/badge.svg?branch=main)](https://github.com/ronantr/Challenge-Vue-ApiPlatform/actions/workflows/deloy.yml)
 
 Challenge VueJS ApiPlatform
 
