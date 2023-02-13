@@ -37,7 +37,6 @@ security:
     - { path: ^/users$, roles: ROLE_ADMIN }
     - { path: ^/register, roles: PUBLIC_ACCESS, method: POST }
     - { path: ^/about, roles: PUBLIC_ACCESS }
-    - { path: ^/contact, roles: PUBLIC_ACCESS }
     - { path: ^/legalnotices, roles: PUBLIC_ACCESS }
     - { path: ^/privacypolicy, roles: PUBLIC_ACCESS }
     - { path: ^/cgv, roles: PUBLIC_ACCESS }

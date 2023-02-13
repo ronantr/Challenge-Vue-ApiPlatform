@@ -1,5 +1,5 @@
 <template>
-    <div class="py-6 bg-gray-800 text-gray-50 max-w-6xl mx-auto text-center">
+    <div class="py-6 bg-gray-800 text-gray-50 max-w-6xl mx-auto text-center mt-16 mb-96">
         <h1 class="text-5xl font-bold text-center">Conditions générales de vente</h1>
         <div class="mt-5 text-left ml-5 mr-5">
             <p class="mb-4">
