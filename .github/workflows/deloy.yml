@@ -25,7 +25,7 @@ jobs:
         run: docker compose up -d
       - name: Run Vuejs tests
         run: |
-          cd vuejs
+          cd client
           npm install
           npm run build
       - name: Wait for services
@@ -88,7 +88,7 @@ jobs:
         #KEY: ${{ secrets.SSHKEY }}
         script: |
           unzip -o /root/Challenge-Vue-ApiPlatform.zip -d /root/Challenge-Vue-ApiPlatform
-          cd /root/Challenge-Vue-ApiPlatform/vuejs
+          cd /root/Challenge-Vue-ApiPlatform/client
           npm install
           npm run build
           cd ..
