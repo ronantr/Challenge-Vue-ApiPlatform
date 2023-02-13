@@ -136,8 +136,7 @@ class Event
   max: 1000,
   notInRangeMessage: 'The capacity must be between {{ min }} and {{ max }}'
   )]
-
-  #[Groups([Event::READ, Event::WRITE, Event::PATCH])]
+  #[Groups([Event::READ,Event::LIST, Event::WRITE, Event::PATCH])]
   private ?int $capacity = null;
 
   #[ORM\OneToMany(mappedBy: 'event', targetEntity: Ticket::class)]

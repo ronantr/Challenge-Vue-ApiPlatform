@@ -67,4 +67,5 @@ class PaymentController extends AbstractController
         }
         return $this->json(['error' => 'Payment failed']);
     }
+
 }

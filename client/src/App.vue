@@ -23,10 +23,8 @@ const theaterGroupLink = computed(() => {
     />
     <Transition>
         <div id="app" v-if="isAttempted">
-            <nav class="bg-gray-900">
-                <div
-                    class="container mx-auto flex items-center justify-between px-4 py-3"
-                >
+            <nav class="bg-gray-900 px-2">
+                <div class="container mx-auto flex items-center justify-between px-4 py-3">
                     <div class="flex">
                         <div class="ml-4">
                             <router-link
@@ -119,11 +117,13 @@ const theaterGroupLink = computed(() => {
                             </router-link>
                         </div>
                         <div class="mt-2 mx-5">
-                            <router-link
-                                to="/cart"
-                                class="text-white hover:text-gray-500"
-                            >
-                                <FontAwesomeIcon icon="shopping-cart" /> Panier
+                            <router-link to="/events" class="text-white hover:text-gray-500">
+                                <FontAwesomeIcon icon="cart-shopping" /> Evénements
+                            </router-link>
+                        </div>
+                        <div class="mt-2 mx-5">
+                            <router-link to="/cart" class="text-white hover:text-gray-500">
+                                <FontAwesomeIcon icon="cart-shopping" /> Panier
                             </router-link>
                         </div>
                         <div v-if="user?.isAdmin" class="mt-2 mx-5">
@@ -179,7 +179,7 @@ const theaterGroupLink = computed(() => {
                     </div>
                 </div>
             </nav>
-            <div class="p-4">
+            <div>
                 <router-view />
             </div>
         </div>

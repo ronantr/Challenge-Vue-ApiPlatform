@@ -14,7 +14,7 @@ class EventFixtures extends Fixture implements DependentFixtureInterface
   {
     $faker = Factory::create('fr_FR');
 
-    for ($i = 0; $i < 10; $i++) {
+    for ($i = 0; $i < 20; $i++) {
       $event = new Event();
       $theaterGroup = $this->getReference('theaterGroup_' . $i);
 
@@ -26,7 +26,7 @@ class EventFixtures extends Fixture implements DependentFixtureInterface
         ->setVideo($faker->url)
         ->setCapacity(rand(50, 200))
         ->setTheaterGroup($theaterGroup)
-        ->setIsPublished(false)
+        ->setIsPublished($faker->boolean)
         ->setPriceInCents(rand(1000, 5000));
 
       $manager->persist($event);

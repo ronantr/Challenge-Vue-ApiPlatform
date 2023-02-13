@@ -24,7 +24,8 @@ class TicketFixtures extends Fixture implements DependentFixtureInterface
                 ->setEvent($event)
                 ->setPrice($faker->randomFloat(2, 1, 100))
                 ->setOrder($faker->randomElement($orders))
-                ->setStatus($faker->randomElement(['reserved', 'failed', 'cancelled']));
+                ->setStatus($faker->randomElement(['reserved', 'failed', 'cancelled']))
+                ->setQuantity($faker->randomNumber(1, 10));
             $manager->persist($object);
         }
         $manager->flush();

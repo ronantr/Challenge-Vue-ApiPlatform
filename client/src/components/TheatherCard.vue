@@ -1,66 +1,38 @@
 <template>
-    <div class="inline-block m-5">
-        <div class="relative h-64">
-            <img class="object-cover h-full w-64"
-                src="https://fr.web.img6.acsta.net/pictures/22/05/10/16/46/2110017.jpg"
-                alt="The Shawshank Redemption" />
-        </div>
-        <div class="text-center mt-2">
-            <p class="text-black">Shark Bay</p>
-            <p class="text-gray-500">2022</p>
-            <p class="text-blue-400">15€</p>
-        </div>
-    </div>
-    <div class="inline-block m-5">
-        <div class="relative h-64">
-            <img class="object-cover h-full w-64"
-                src="https://c8.alamy.com/compfr/cb6d8e/le-parrain-1972-poster-godf-001vs-moviestore-collection-ltd-cb6d8e.jpg"
-                alt="The Godfather" />
-        </div>
-        <div class="text-center mt-2">
-            <p class="text-black">The Godfather</p>
-            <p class="text-gray-500">1972</p>
-            <p class="text-blue-400">15€</p>
-        </div>
-    </div>
-    <div class="inline-block m-5">
-        <div class="relative h-64">
-            <img class="object-cover h-full w-64"
-                src="https://fr.web.img2.acsta.net/medias/nmedia/18/63/97/89/18949761.jpg" alt="The Dark Knight" />
-        </div>
-        <div class="text-center mt-2">
-            <p class="text-black">The Dark Knight</p>
-            <p class="text-gray-500">2008</p>
-            <p class="text-blue-400">20€</p>
-        </div>
+    <a href="#" class="block overflow-hidden group">
+        <img
+            :src="props.event.image"
+            alt=""
+            class="h-[350px] w-full object-cover transition duration-500 group-hover:scale-105 sm:h-[450px]"
+        />
+    </a>
+    <div class="relative pt-3 bg-white">
+        <h3
+            class="text-xl text-gray-700 group-hover:underline group-hover:underline-offset-4"
+        >
+            {{ props.event.name }}
+        </h3>
+        <p class="mt-2 text-sm text-gray-500">
+            {{ props.event.priceInCents / 100 }} €
+        </p>
+
+        <p class="mt-2">
+            <span class="sr-only"> {{ props.event.date }}</span>
+
+            <span class="tracking-wider text-sm text-gray-900"
+                >Capacité : {{ props.event.capacity }} personnes</span
+            >
+        </p>
     </div>
 </template>
 
-<script>
+<script setup>
+import { ref } from "vue";
 
-import { computed } from "vue";
-import { useRouter } from "vue-router";
-import { storeToRefs } from "pinia";
-import { useAuthStore } from "../stores";
-
-const authStore = useAuthStore();
-const router = useRouter();
-const currentUser = computed(() => {
-    const { user } = storeToRefs(authStore);
-    return user.value;
+const props = defineProps({
+    event: {
+        type: Object,
+        required: true,
+    },
 });
-
-if (!currentUser.value) {
-    router.push("/login");
-}
-
-// get orders of the current user
-const orders = computed(() => {
-    const { orders } = storeToRefs(authStore);
-    // return orders.value;
-    console.log(orders.value);
-});
-
-// get movies of the current user
-
 </script>

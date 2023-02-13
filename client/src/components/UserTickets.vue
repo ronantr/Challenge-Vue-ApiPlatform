@@ -30,5 +30,4 @@ if (!currentUser.value) {
     router.push("/login");
 }
 
-console.log("test", currentUser.value);
 </script>
