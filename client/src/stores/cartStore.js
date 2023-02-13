@@ -10,8 +10,7 @@ export const useCartStore = defineStore("cart", () => {
 
   function addToCart(item, quantity = 1) {
     console.log("addToCart", item, quantity);
-    item.price = 25;
-    const itemAlreadyInCart = cart.value.find((i) => i.id === item.id);
+    const itemAlreadyInCart = cart.value.find((i) => i["@id"] === item["@id"]);
     if (itemAlreadyInCart) {
       updateCart(item, itemAlreadyInCart.quantity + quantity);
       return;
@@ -21,7 +20,7 @@ export const useCartStore = defineStore("cart", () => {
 
   function updateCart(item, quantity = 1) {
     console.log("updateCart", item, quantity);
-    const itemIndex = cart.value.findIndex((i) => i.id === item.id);
+    const itemIndex = cart.value.findIndex((i) => i["@id"] === item["@id"]);
     if (itemIndex === -1) {
       if (quantity <= 0) return;
       setCart([...cart.value, { ...item, quantity }]);
@@ -34,7 +33,7 @@ export const useCartStore = defineStore("cart", () => {
     }
     setCart(
       cart.value.map((i) => {
-        if (i.id === item.id) {
+        if (i["@id"] === item["@id"]) {
           return { ...item, quantity };
         }
         return i;
@@ -44,7 +43,7 @@ export const useCartStore = defineStore("cart", () => {
   }
 
   function removeFromCart(item) {
-    setCart(cart.value.filter((i) => i.id !== item.id));
+    setCart(cart.value.filter((i) => i["@id"] !== item["@id"]));
   }
 
   function clearCart() {

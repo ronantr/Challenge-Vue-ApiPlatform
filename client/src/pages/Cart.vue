@@ -47,7 +47,7 @@
                             </div>
                             <div class="text-right">
                                 <p class="text-lg font-semibold">
-                                    {{ item.price }}€
+                                    {{ item.priceInCents / 100 }}€
                                 </p>
                             </div>
                         </div>
@@ -97,7 +97,7 @@
         <div class="space-y-1 text-right">
             <p>
                 Total (TTC):
-                <span class="font-semibold">{{ totalPrice }}€</span>
+                <span class="font-semibold">{{ totalPrice / 100 }}€</span>
             </p>
         </div>
         <div class="flex justify-end space-x-4">
@@ -110,25 +110,42 @@
             <button
                 type="button"
                 class="px-6 py-2 border rounded-md dark:bg-violet-400 dark:text-gray-900 dark:border-violet-400"
+                @click="openModalPayment"
             >
-                <span class="sr-only sm:not-sr-only"
-                    >Passer à l'étape suivante</span
-                >
+                <span class="sr-only sm:not-sr-only">Payer</span>
             </button>
         </div>
+
+        <PaymentFormModal
+            v-if="isModalPaymentOpen"
+            @close="closeModalPayment"
+            :totalPrice="totalPrice"
+        />
     </div>
 </template>
 
 <script setup>
 import { computed, reactive, ref, watch } from "vue";
 import { useCartStore } from "../stores/cartStore";
+import PaymentFormModal from "../components/PaymentFormModal.vue";
 
 const { cart, updateCart, removeFromCart } = useCartStore();
 const reactiveCart = reactive(cart);
 
+const isModalPaymentOpen = ref(false);
+
+const openModalPayment = () => {
+    console.log("openModalPayment");
+    isModalPaymentOpen.value = true;
+};
+
+const closeModalPayment = () => {
+    isModalPaymentOpen.value = false;
+};
+
 const totalPrice = computed(() => {
     return cart.reduce((total, item) => {
-        return total + item.price * item.quantity;
+        return total + item.priceInCents * item.quantity;
     }, 0);
 });
 

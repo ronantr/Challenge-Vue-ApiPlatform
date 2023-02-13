@@ -11,7 +11,10 @@
                 <div>
                     <label for="SortBy" class="sr-only">Trier par</label>
 
-                    <select id="SortBy" class="h-10 text-sm border-gray-300 rounded">
+                    <select
+                        id="SortBy"
+                        class="h-10 text-sm border-gray-300 rounded"
+                    >
                         <option>Trier par</option>
                         <option value="Title, DESC">Titre, DESC</option>
                         <option value="Title, ASC">Titre, ASC</option>
@@ -23,9 +26,11 @@
 
             <ul class="grid gap-4 mt-4 sm:grid-cols-2 lg:grid-cols-4">
                 <li v-for="event in events" :key="event.id">
-                    <TheatherCard :event="event"/>
-                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                            @click="addToCart(event)">
+                    <TheaterCard :event="event" />
+                    <button
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                        @click="addToCart(event)"
+                    >
                         Ajouter au panier
                     </button>
                 </li>
@@ -36,13 +41,12 @@
 
 <script setup>
 import { onBeforeMount, ref } from "vue";
-import TheatherCard from "../../components/TheatherCard.vue";
-import { useCartStore } from "../../stores/cartStore";
-import { apiFetch } from "../../utils/apiFetch";
-
+import { useCartStore } from "../stores/cartStore";
+import TheaterCard from "../components/TheatherCard.vue";
+import { apiFetch } from "../utils/apiFetch";
 
 const events = ref([]);
-const {addToCart} = useCartStore();
+const { addToCart } = useCartStore();
 // const cart = JSON.parse(localStorage.getItem("cart")) || [];
 // const addToCart = (item) => {
 //     item.price = 25;
@@ -59,11 +63,8 @@ const {addToCart} = useCartStore();
 
 const fetchEvents = async () => {
     const response = await apiFetch("events");
-    events.value = await response.data["hydra:member"]
+    events.value = await response.data["hydra:member"];
 };
 
-
 fetchEvents();
-
-
 </script>
