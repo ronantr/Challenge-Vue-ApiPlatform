@@ -37,21 +37,25 @@
 <script setup>
 import { onBeforeMount, ref } from "vue";
 import TheatherCard from "../../components/TheatherCard.vue";
+import { useCartStore } from "../../stores/cartStore";
 import { apiFetch } from "../../utils/apiFetch";
 
+
 const events = ref([]);
-const cart = JSON.parse(localStorage.getItem("cart")) || [];
-const addToCart = (item) => {
-    //add to cart array in local storage
-    const itemAlreadyExist = cart.find((i) => i.id === item.id);
-    if (itemAlreadyExist) {
-        itemAlreadyExist.quantity++;
-        localStorage.setItem("cart", JSON.stringify(cart));
-        return;
-    }
-    cart.push({...item, quantity: 1});
-    localStorage.setItem("cart", JSON.stringify(cart));
-};
+const {addToCart} = useCartStore();
+// const cart = JSON.parse(localStorage.getItem("cart")) || [];
+// const addToCart = (item) => {
+//     item.price = 25;
+//     //add to cart array in local storage
+//     const itemAlreadyExist = cart.find((i) => i.id === item.id);
+//     if (itemAlreadyExist) {
+//         itemAlreadyExist.quantity++;
+//         localStorage.setItem("cart", JSON.stringify(cart));
+//         return;
+//     }
+//     cart.push({...item, quantity: 1});
+//     localStorage.setItem("cart", JSON.stringify(cart));
+// };
 
 const fetchEvents = async () => {
     const response = await apiFetch("events");
