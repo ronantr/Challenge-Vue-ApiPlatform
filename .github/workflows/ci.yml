@@ -26,7 +26,7 @@ jobs:
         run: docker compose up --build -d
       - name: Run Vuejs tests
         run: |
-          cd vuejs
+          cd client
           npm install
           npm run build
       - name: Wait for services

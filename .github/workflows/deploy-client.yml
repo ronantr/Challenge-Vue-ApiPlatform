@@ -1,10 +1,10 @@
-name: Deploy vuejs to Netlify
+name: Deploy client to Netlify
 on:
   push:
     branches:
       - 'main'
     paths:
-      - 'vuejs/**'
+      - 'client/**'
 
   workflow_dispatch:
     inputs:
@@ -15,7 +15,7 @@ on:
 
 defaults:
   run:
-    working-directory: vuejs
+    working-directory: client
 
 jobs:
   build-and-deploy:
